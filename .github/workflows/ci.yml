@@ -10,9 +10,9 @@ name: Java CI with Gradle
 on:
   workflow_dispatch:
   push:
-    branches: [ "feature/ci" ]
+    branches: [ "develop", "main" ]
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "develop", "main" ]
 
 permissions:
   contents: read
@@ -28,6 +28,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2.7.0
         with:
