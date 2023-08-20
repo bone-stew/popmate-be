@@ -21,7 +21,7 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ApiResponse<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    protected <T> ApiResponse<T> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.warn("handleMethodArgumentNotValidException: ", e);
         return ApiResponse.failure(
             ResultCode.BAD_REQUEST,
@@ -36,14 +36,14 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiResponse<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    public <T> ApiResponse<T> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         log.info("HttpMessageNotReadableException: ", e);
         return ApiResponse.failure(ResultCode.BAD_REQUEST, e.getMessage());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public ApiResponse<?> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    public <T> ApiResponse<T> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         log.info("handleHttpRequestMethodNotSupportedException: ", e);
         return ApiResponse.failure(ResultCode.METHOD_NOT_ALLOWED, e.getBody().getTitle());
     }
@@ -53,7 +53,7 @@ public class ApiControllerAdvice {
         Exception.class
     })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiResponse<?> handleException(Exception e) {
+    public <T> ApiResponse<T> handleException(Exception e) {
         log.error("handleException: ", e);
         return ApiResponse.failure(ResultCode.INTERNAL_SERVER_ERROR);
     }
