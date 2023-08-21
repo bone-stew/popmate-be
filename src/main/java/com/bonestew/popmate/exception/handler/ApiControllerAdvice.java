@@ -1,6 +1,8 @@
 package com.bonestew.popmate.exception.handler;
 
 import com.bonestew.popmate.dto.ApiResponse;
+import com.bonestew.popmate.exception.BadRequestException;
+import com.bonestew.popmate.exception.NotFoundException;
 import com.bonestew.popmate.exception.PopMateException;
 import com.bonestew.popmate.exception.enums.ResultCode;
 import java.util.Optional;
@@ -18,6 +20,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class ApiControllerAdvice {
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public <T> ApiResponse<T> handleBadRequestException(BadRequestException e) {
+        log.info("handleBadRequestException: ", e);
+        return ApiResponse.failure(ResultCode.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public <T> ApiResponse<T> handleNotFoundException(NotFoundException e) {
+        log.info("handleNotFoundException: ", e);
+        return ApiResponse.failure(ResultCode.NOT_FOUND, e.getMessage());
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
