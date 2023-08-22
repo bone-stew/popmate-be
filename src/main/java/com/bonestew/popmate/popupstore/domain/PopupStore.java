@@ -14,6 +14,10 @@ import lombok.ToString;
 @AllArgsConstructor
 public class PopupStore {
 
+    private Long popupStoreId;
+    private String name;
+    // 여기서 부터 시작
+    // 위에는 예시 코드를 위에 남겨놓음
     private Long storeId;
     private Long userId;
     private Long departmentId;
