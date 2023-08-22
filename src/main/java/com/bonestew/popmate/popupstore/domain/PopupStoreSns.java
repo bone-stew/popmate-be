@@ -1,5 +1,6 @@
 package com.bonestew.popmate.popupstore.domain;
 
+import com.bonestew.popmate.date.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +12,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PopupStoreSns {
+public class PopupStoreSns extends BaseTime {
 
     private Long snsId;
-    private Long storeId;
     private String platform;
-    private String snsUrl;
+    private String url;
 }

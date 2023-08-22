@@ -1,6 +1,6 @@
 package com.bonestew.popmate.chat.domain;
 
-import com.bonestew.popmate.date.BaseEntity;
+import com.bonestew.popmate.date.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Chat extends BaseEntity {
+public class ChatRoom extends BaseTime {
 
     private Long chatRoomId;
 }

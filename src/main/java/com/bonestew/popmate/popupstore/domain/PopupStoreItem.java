@@ -1,5 +1,6 @@
 package com.bonestew.popmate.popupstore.domain;
 
+import com.bonestew.popmate.date.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +12,13 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PopupStoreItem {
+public class PopupStoreItem extends BaseTime {
 
-    private Long tbItemId;
-    private Long storeId;
+    private Long popupStoreItemId;
+    private PopupStore popupStore;
     private String name;
-    private int price;
     private String imgUrl;
+    private int amount;
     private int stock;
     private int orderLimit;
 }

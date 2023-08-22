@@ -1,6 +1,6 @@
 package com.bonestew.popmate.auth.domain;
 
-import com.bonestew.popmate.date.BaseEntity;
+import com.bonestew.popmate.date.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class OauthToken extends BaseEntity {
+public class OauthToken extends BaseTime {
 
     // 이건 나중에
     private Long aaId;

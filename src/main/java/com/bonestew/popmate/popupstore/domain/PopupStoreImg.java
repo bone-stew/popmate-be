@@ -1,5 +1,6 @@
 package com.bonestew.popmate.popupstore.domain;
 
+import com.bonestew.popmate.date.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,8 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PopupStoreImg {
+public class PopupStoreImg extends BaseTime {
 
-    private Long imgId;
-    private Long storeId;
+    private Long popupStoreImgId;
     private String imgUrl;
 }

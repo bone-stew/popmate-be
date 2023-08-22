@@ -1,6 +1,6 @@
 package com.bonestew.popmate.order.domain;
 
-import com.bonestew.popmate.date.BaseEntity;
+import com.bonestew.popmate.date.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +12,10 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderItem extends BaseEntity {
+public class OrderItem extends BaseTime {
 
-    private Long orderId;
-    private Long tbItemId;
+    private Long orderItemId;
+    private Order order;
     private int totalQuantity;
     private int totalAmount;
 }

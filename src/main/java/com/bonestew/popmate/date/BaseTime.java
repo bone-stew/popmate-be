@@ -1,7 +1,10 @@
 package com.bonestew.popmate.date;
 
 import java.time.LocalDateTime;
+import lombok.Getter;
 
-public abstract class BaseEntity {
+@Getter
+public abstract class BaseTime {
+
     private LocalDateTime createdAt;
 }

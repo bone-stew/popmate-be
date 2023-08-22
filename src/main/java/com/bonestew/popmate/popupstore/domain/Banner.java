@@ -1,6 +1,6 @@
 package com.bonestew.popmate.popupstore.domain;
 
-import com.bonestew.popmate.date.BaseEntity;
+import com.bonestew.popmate.date.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +12,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class MainBannerImg extends BaseEntity {
+public class Banner extends BaseTime {
     
     private Long bannerId;
     private String imgUrl;
-    private Long storeId;
+    private PopupStore popupStore;
 }
