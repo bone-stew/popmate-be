@@ -17,6 +17,7 @@ public class PopupStoreController {
 
     private final PopupStoreService popupStoreService;
 
+
     @GetMapping("/{popupStoreId}")
     public ApiResponse<PopupStoreResponse> getPopupStore(@PathVariable("popupStoreId") Long popupStoreId) {
         PopupStore popupStore = popupStoreService.getPopupStore(popupStoreId);
