@@ -9,6 +9,6 @@ public record PopupStoreResponse(
 ) {
 
     public static PopupStoreResponse from(PopupStore popupStore) {
-        return new PopupStoreResponse(popupStore.getPopupStoreId(), popupStore.getName(), popupStore.getDescription());
+        return new PopupStoreResponse(popupStore.getPopupStoreId(), popupStore.getTitle(), popupStore.getDescription());
     }
 }
