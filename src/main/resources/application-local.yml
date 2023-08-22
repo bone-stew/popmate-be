@@ -14,3 +14,7 @@ mybatis:
 jasypt:
   encryptor:
     password: ${encrypt_key}
+
+logging:
+  level:
+    com.bonestew.popmate: debug
