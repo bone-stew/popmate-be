@@ -13,6 +13,7 @@ public class PopupStoreService {
     private final PopupStoreDao popupStoreDao;
 
     public PopupStore getPopupStore(Long popupStoreId) {
-        return popupStoreDao.findById(popupStoreId).orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
+        return popupStoreDao.findById(popupStoreId)
+            .orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
     }
 }
