@@ -14,6 +14,7 @@ endif::[]
 == Index
 
 - link:popup-store[팝업스토어 API, window=_blank]
-- link:popup-store[팝업스토어 API, window=_blank]
-- link:popup-store[팝업스토어 API, window=_blank]
-- link:popup-store[팝업스토어 API, window=_blank]
+- link:order[상품 주문 API, window=_blank]
+- link:reservation[예약 API, window=_blank]
+- link:chat[채팅 API, window=_blank]
+- link:auth[인증/인가 API, window=_blank]
