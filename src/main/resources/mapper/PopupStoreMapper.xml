@@ -6,7 +6,7 @@
 
   <select id="findById" parameterType="long" resultType="PopupStore">
     SELECT *
-    FROM popup_store
+    FROM TB_POPUP_STORE
     WHERE popup_store_id = #{popupStoreId}
   </select>
 
