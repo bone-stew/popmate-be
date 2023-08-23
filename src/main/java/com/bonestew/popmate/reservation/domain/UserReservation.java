@@ -18,7 +18,7 @@ public class UserReservation extends BaseTime {
     private Long userReservationId;
     private User user;
     private Reservation reservation;
-    private int status;
     private int guestCount;
     private String qrImgUrl;
+    private boolean isVisited;
 }
