@@ -37,7 +37,7 @@ class PopupStoreControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void 팝업스토어를_생성한다() throws Exception {
+    void 팝업스토어를_조회한다() throws Exception {
         // given
         Long popupStoreId = 1L;
         LocalDateTime dateTime = LocalDateTime.of(2023, 8, 30, 9, 0);

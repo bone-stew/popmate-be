@@ -11,10 +11,10 @@
 == 팝업스토어를 조회한다
 
 === Request
-include::{snippets}/popup-store-controller-test/팝업스토어를_생성한다/path-parameters.adoc[]
+include::{snippets}/popup-store-controller-test/팝업스토어를_조회한다/path-parameters.adoc[]
 
 === Response
-operation::popup-store-controller-test/팝업스토어를_생성한다[snippets='response-fields']
+operation::popup-store-controller-test/팝업스토어를_조회한다[snippets='response-fields']
 
 // 여러개의 스니펫을 사용하는 경우
 // operation::popup-store-controller-test/팝업스토어를_생성한다[snippets='path-parameters,response-fields']
