@@ -4,6 +4,10 @@ spring:
     url: jdbc:oracle:thin:@localhost:1521/xepdb1
     username: ace
     password: me
+  data:
+    mongodb:
+      uri: ENC(fD/x2SaGuMq7ZtsPQkiTkWaxD+eod8OtHZ/ZkR8BCrdQ3X7WgxJgacRKWLWNpyDc1/MWdq+/zUw+ko9PdHZaS0ne6+hljBkZqlOhLCfuDqaP7s9d8G5ZOLv5MO6QD9V1/h+/WpvjObMw1NsGYH/MB9CP5HtitAgv)
+      database: popmate
 
 mybatis:
   type-aliases-package: com.bonestew.popmate.*.domain
@@ -18,3 +22,4 @@ jasypt:
 logging:
   level:
     com.bonestew.popmate: debug
+
