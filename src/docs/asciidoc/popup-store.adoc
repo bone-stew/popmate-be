@@ -5,8 +5,8 @@
 :toclevels: 4
 :sectlinks:
 
-[[post-api]]
-= POPUP-STORE-API
+[[popup-store-api]]
+= POPUP STORE API 문서
 
 == 팝업스토어를 조회한다
 

@@ -1,0 +1,19 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+
+= PingPong API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[Index]]
+== Index
+
+- link:popup-store[팝업스토어 API, window=_blank]
+- link:popup-store[팝업스토어 API, window=_blank]
+- link:popup-store[팝업스토어 API, window=_blank]
+- link:popup-store[팝업스토어 API, window=_blank]
