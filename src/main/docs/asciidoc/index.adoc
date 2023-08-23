@@ -1,0 +1,12 @@
+= PingPong API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[Index]]
+== Index
+
+- link:popup-store-api.html[PopupStore API, window=_blank]
