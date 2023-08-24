@@ -1,11 +1,12 @@
 package com.bonestew.popmate.reservation.presentation.dto;
 
 import com.bonestew.popmate.reservation.domain.UserReservation;
+import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import java.time.LocalDateTime;
 
 public record ReservationResponse(
     Long reservationId,
-    int reservationStatus,
+    UserReservationStatus reservationStatus,
     LocalDateTime startTime,
     LocalDateTime endTime,
     Long popupStoreId,

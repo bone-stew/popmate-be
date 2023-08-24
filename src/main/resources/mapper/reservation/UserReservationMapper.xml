@@ -40,7 +40,8 @@
 
   <resultMap id="userReservationMap" type="UserReservation">
     <result column="user_reservation_id" property="userReservationId"/>
-    <result column="status" property="status"/>
+    <result column="status" property="status"
+      typeHandler="com.bonestew.popmate.reservation.persistence.typehandler.UserReservationStatusTypeHandler"/>
     <result column="guest_count" property="guestCount"/>
     <result column="qr_img_url" property="qrImgUrl"/>
     <result column="created_at" property="createdAt"/>
