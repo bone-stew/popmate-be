@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@localhost:1521/xepdb1
-    username: ace
-    password: me
+    url: ENC(OV0B51cIHNM4LG1E1tj/OR/9p7qp4JtiaWU53oBll9g2igOKv7oTY/8c+PXcALbKdTZOY1nsQ9zy9TQN+ewAFtmCymmFuBdrEKVhJlZbWjnUFx7KIw/08x8XOz84fl+OKu/jeyN9+wM=)
+    username: ENC(wBHUWwDVvq08Jpj1rnOW+w==)
+    password: ENC(55txUH4/nlUxflvU8lto/42P7YyRQrf3)
 
 mybatis:
   type-aliases-package: com.bonestew.popmate.*.domain
