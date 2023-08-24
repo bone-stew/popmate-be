@@ -2,8 +2,8 @@ package com.bonestew.popmate.reservation.presentation;
 
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
-import com.bonestew.popmate.reservation.application.dto.ActiveReservationResponse;
-import com.bonestew.popmate.reservation.application.dto.DailyReservationResponse;
+import com.bonestew.popmate.reservation.presentation.dto.ActiveReservationResponse;
+import com.bonestew.popmate.reservation.presentation.dto.DailyReservationResponse;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import java.time.LocalDate;
 import java.util.List;

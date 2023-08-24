@@ -1,4 +1,4 @@
-package com.bonestew.popmate.reservation.application.dto;
+package com.bonestew.popmate.reservation.presentation.dto;
 
 import com.bonestew.popmate.reservation.domain.Reservation;
 import java.time.LocalDateTime;
