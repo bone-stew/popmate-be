@@ -20,7 +20,7 @@ public class KakaoUserResponse {
     }
 
     public OauthKakaoUser toUser() {
-        OauthKakaoUser oauthKakaoUser = new OauthKakaoUser(); ;
+        OauthKakaoUser oauthKakaoUser = new OauthKakaoUser();
         oauthKakaoUser.setName(this.kakao_account.getProfile().getNickname());
         oauthKakaoUser.setEmail(this.kakao_account.getEmail());
         oauthKakaoUser.setProvider("Kakao");
