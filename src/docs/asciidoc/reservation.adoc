@@ -7,3 +7,11 @@
 
 [[reservation-api]]
 = RESERVATION API 문서
+
+== 진행 중인 예약을 조회한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/진행_중인_예약을_조회한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/진행_중인_예약을_조회한다/response-fields.adoc[]
