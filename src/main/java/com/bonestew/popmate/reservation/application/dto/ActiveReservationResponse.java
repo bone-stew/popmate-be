@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public record ActiveReservationResponse(
     LocalDateTime startTime,
     LocalDateTime endTime,
-    boolean isActive,
+    int status,
     String popupStoreTitle,
     String description,
     LocalDateTime popupStoreOpenTime,
@@ -17,7 +17,7 @@ public record ActiveReservationResponse(
         return new ActiveReservationResponse(
             reservation.getStartTime(),
             reservation.getEndTime(),
-            reservation.isActive(),
+            reservation.getStatus(),
             reservation.getPopupStore().getTitle(),
             reservation.getPopupStore().getDescription(),
             reservation.getPopupStore().getOpenTime(),
