@@ -9,7 +9,7 @@ public record DailyReservationResponse(
     LocalDateTime endTime,
     int guestLimit,
     int currentGuestCount,
-    int status
+    String status
 ) {
 
     public static DailyReservationResponse from(Reservation reservation) {
@@ -19,6 +19,6 @@ public record DailyReservationResponse(
             reservation.getEndTime(),
             reservation.getGuestLimit(),
             reservation.getCurrentGuestCount(),
-            reservation.getStatus());
+            reservation.getStatus().getDescription());
     }
 }
