@@ -46,4 +46,12 @@
       AND end_time > SYSDATE
   </select>
 
+  <select id="findByPopupStoreIdAndStartDate" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE popup_store_id = #{popupStoreId}
+      AND TRUNC(start_time) = #{date}
+    ORDER BY start_time
+  </select>
+
 </mapper>
