@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public enum ReservationStatus {
 
-    CANCELLED(0, "예약 취소"),
+    CANCELED(0, "예약 취소"),
 
     PENDING(1, "예약 대기"),
 
