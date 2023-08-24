@@ -12,8 +12,13 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class OauthToken extends BaseTime {
+public class OauthKakaoUser extends BaseTime {
 
     // 이건 나중에
-    private Long aaId;
+    private Long userId;
+    private String email;
+    private String password;
+    private String name;
+    private String provider;
+    private String role;
 }
