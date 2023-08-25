@@ -4,7 +4,6 @@ import com.bonestew.popmate.auth.domain.OauthUser;
 import com.bonestew.popmate.auth.persistence.OauthDao;
 import com.bonestew.popmate.security.application.AuthenticationService;
 import com.bonestew.popmate.security.application.JwtAuthenticationResponse;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,6 @@
 package com.bonestew.popmate.auth.persistence;
 
 import com.bonestew.popmate.auth.domain.OauthUser;
-import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

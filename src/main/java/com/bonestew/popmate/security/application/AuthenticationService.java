@@ -1,7 +1,6 @@
 package com.bonestew.popmate.security.application;
 
 import com.bonestew.popmate.auth.domain.OauthUser;
-import java.util.Optional;
 
 public interface AuthenticationService {
 

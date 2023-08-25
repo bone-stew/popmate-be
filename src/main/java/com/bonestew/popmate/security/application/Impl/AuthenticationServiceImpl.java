@@ -6,7 +6,6 @@ import com.bonestew.popmate.security.application.JwtAuthenticationResponse;
 import com.bonestew.popmate.security.application.JwtService;
 import com.bonestew.popmate.security.domain.User;
 import com.bonestew.popmate.security.persistence.UserDao;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;

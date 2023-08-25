@@ -1,6 +1,5 @@
 package com.bonestew.popmate.security.domain;
 
-import com.bonestew.popmate.date.BaseTime;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import lombok.AllArgsConstructor;

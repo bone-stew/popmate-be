@@ -2,12 +2,10 @@ package com.bonestew.popmate.auth.presentation;
 
 import com.bonestew.popmate.auth.application.OauthService;
 import com.bonestew.popmate.auth.domain.OauthUser;
-import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.security.application.AuthenticationService;
 import com.bonestew.popmate.security.application.JwtAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
