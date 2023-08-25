@@ -33,6 +33,7 @@ public class OauthController {
     @PostMapping("/oauth/google")
     @ResponseBody
     public ApiResponse<OauthUser> googleOauth(@RequestBody OauthUser oauthUser){
+        System.out.println("fdfd");
         OauthUser user = oauthService.loginGoogleOauthService(oauthUser);
 
         return ApiResponse.success(user);
