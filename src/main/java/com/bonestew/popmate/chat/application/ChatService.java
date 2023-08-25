@@ -29,13 +29,14 @@ public class ChatService {
         return chatRoomDao.findById(roomId).orElseThrow(ChatRoomNotFoundException::new);
     }
 
-    public void enterChatRoom(String roomId) {
+    public ChatRoom enterChatRoom(String roomId) {
         ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomId);
         if(chatRoom == null) {
             chatRoom = chatRoomDao.findById(roomId).orElseThrow(ChatRoomNotFoundException::new);
             redisMessageListenerContainer.addMessageListener(redisSubscriber, getTopic(roomId));
             chatRoomRepository.registerChatRoom(chatRoom);
         }
+        return chatRoom;
     }
 
     public ChannelTopic getTopic(String roomId) {

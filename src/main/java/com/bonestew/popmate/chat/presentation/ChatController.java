@@ -36,9 +36,8 @@ public class ChatController {
      * @param roomId 채팅방 ID
      */
     @GetMapping("/enter/{roomId}")
-    public ApiResponse<String> enter(@PathVariable String roomId) {
-        chatService.enterChatRoom(roomId);
-        return ApiResponse.success("입장 성공");
+    public ApiResponse<ChatRoom> enter(@PathVariable String roomId) {
+        return ApiResponse.success(chatService.enterChatRoom(roomId));
     }
 
     /**
