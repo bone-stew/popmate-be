@@ -1,7 +1,7 @@
 package com.bonestew.popmate.auth.application;
 
 import com.bonestew.popmate.auth.domain.KakaoUserResponse;
-import com.bonestew.popmate.auth.domain.OauthKakaoUser;
+import com.bonestew.popmate.auth.domain.OauthUser;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,7 +19,7 @@ public class KaKaoClient {
         this.restTemplate = restTemplate;
     }
 
-    public OauthKakaoUser getUserInfo(String code){
+    public OauthUser getUserInfo(String code){
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(code);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
@@ -32,7 +32,6 @@ public class KaKaoClient {
         );
 
         if(response.getStatusCode() == HttpStatus.OK){
-            System.out.println(response.getBody());
             KakaoUserResponse kakaoUserResponse = response.getBody();
             if(kakaoUserResponse != null){
                 return kakaoUserResponse.toUser();

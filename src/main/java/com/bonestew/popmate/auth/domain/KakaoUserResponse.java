@@ -19,11 +19,11 @@ public class KakaoUserResponse {
         }
     }
 
-    public OauthKakaoUser toUser() {
-        OauthKakaoUser oauthKakaoUser = new OauthKakaoUser();
-        oauthKakaoUser.setName(this.kakao_account.getProfile().getNickname());
-        oauthKakaoUser.setEmail(this.kakao_account.getEmail());
-        oauthKakaoUser.setProvider("Kakao");
-        return oauthKakaoUser;
+    public OauthUser toUser() {
+        OauthUser oauthUser = new OauthUser();
+        oauthUser.setName(this.kakao_account.getProfile().getNickname());
+        oauthUser.setEmail(this.kakao_account.getEmail());
+        oauthUser.setProvider("Kakao");
+        return oauthUser;
     }
 }

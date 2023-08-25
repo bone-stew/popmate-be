@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class OauthKakaoUser extends BaseTime {
+public class OauthUser extends BaseTime {
 
     // 이건 나중에
     private Long userId;
