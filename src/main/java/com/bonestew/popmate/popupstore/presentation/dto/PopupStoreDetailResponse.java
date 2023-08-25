@@ -40,7 +40,7 @@ public record PopupStoreDetailResponse(
                 popupStoreDto.getPopupStore().getCloseDate(),
                 popupStoreDto.getPopupStore().getOpenTime(),
                 popupStoreDto.getPopupStore().getCloseTime(),
-                popupStoreDto.getUserReservation().getStatus(),
+                popupStoreDto.getUserReservation().getStatus().getCode(),
                 popupStoreDto.getDepartment().getName(),
                 popupStoreDto.getDepartment().getPlaceDescription(),
                 popupStoreDto.getDepartment().getLatitude(),
