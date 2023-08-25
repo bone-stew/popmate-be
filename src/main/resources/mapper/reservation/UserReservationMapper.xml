@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonestew.popmate.reservation.persistence.UserReservationDao">
+
+  <resultMap id="popupStoreMap" type="PopupStore">
+    <result column="popup_store_id" property="popupStoreId"/>
+    <result column="title" property="title"/>
+    <result column="organizer" property="organizer"/>
+    <result column="place_detail" property="placeDetail"/>
+    <result column="open_date" property="openDate"/>
+    <result column="close_date" property="closeDate"/>
+    <result column="description" property="description"/>
+    <result column="event_description" property="eventDescription"/>
+    <result column="entry_fee" property="entryFee"/>
+    <result column="banner_img_url" property="bannerImgUrl"/>
+    <result column="open_time" property="openTime"/>
+    <result column="close_time" property="closeTime"/>
+    <result column="max_capacity" property="maxCapacity"/>
+    <result column="reservation_enabled" property="reservationEnabled"/>
+    <result column="reservation_interval" property="reservationInterval"/>
+    <result column="interval_capacity" property="intervalCapacity"/>
+    <result column="team_size_limit" property="teamSizeLimit"/>
+    <result column="created_at" property="createdAt"/>
+  </resultMap>
+
+  <resultMap id="reservationMap" type="Reservation">
+    <result column="reservation_id" property="reservationId"/>
+    <result column="start_time" property="startTime"/>
+    <result column="end_time" property="endTime"/>
+    <result column="guest_limit" property="guestLimit"/>
+    <result column="team_size_limit" property="teamSizeLimit"/>
+    <result column="current_guest_count" property="currentGuestCount"/>
+    <result column="status" property="status"
+      typeHandler="com.bonestew.popmate.reservation.persistence.typehandler.ReservationStatusTypeHandler"/>
+    <result column="created_at" property="createdAt"/>
+    <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
+  </resultMap>
+
+  <resultMap id="userReservationMap" type="UserReservation">
+    <result column="user_reservation_id" property="userReservationId"/>
+    <result column="status" property="status"
+      typeHandler="com.bonestew.popmate.reservation.persistence.typehandler.UserReservationStatusTypeHandler"/>
+    <result column="guest_count" property="guestCount"/>
+    <result column="qr_img_url" property="qrImgUrl"/>
+    <result column="created_at" property="createdAt"/>
+    <collection column="reservation_id" property="reservation" resultMap="reservationMap"/>
+  </resultMap>
+
+  <select id="getByUserId" resultMap="userReservationMap">
+    SELECT *
+    FROM tb_user_reservation A
+           LEFT JOIN tb_reservation B ON A.reservation_id = B.reservation_id
+           LEFT JOIN tb_popup_store C ON B.popup_store_id = C.popup_store_id
+    where A.user_id = 1
+  </select>
+</mapper>
