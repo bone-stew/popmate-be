@@ -7,7 +7,7 @@
     <select id="findById" resultType="ChatRoom">
         SELECT *
         FROM TB_CHAT_ROOM
-        WHERE CHAT_ROOM_ID = #{id}
+        WHERE ROOM_ID = #{id}
     </select>
 
 </mapper>

@@ -4,7 +4,6 @@ import com.bonestew.popmate.chat.application.ChatService;
 import com.bonestew.popmate.chat.application.RedisPublisher;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.chat.domain.ChatMessage;
-import com.bonestew.popmate.chat.persistence.ChatRoomRepository;
 import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +18,8 @@ import java.util.List;
 @RequestMapping("/api/v1/chat")
 public class ChatController {
 
-    private final ChatService chatRoomService;
+    private final ChatService chatService;
     private final RedisPublisher redisPublisher;
-    private final ChatRoomRepository chatRoomRepository;
 
     /**
      * 메세지 전송 API
@@ -30,7 +28,7 @@ public class ChatController {
     @MessageMapping("/message")
     public void message(ChatMessage message) {
         log.debug("메세지 전송: {}", message);
-        redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
+        redisPublisher.publish(chatService.getTopic(message.getRoomId()), message);
     }
 
     /**
@@ -39,7 +37,7 @@ public class ChatController {
      */
     @GetMapping("/enter/{roomId}")
     public ApiResponse<String> enter(@PathVariable String roomId) {
-        chatRoomRepository.enterChatRoom(roomId);
+        chatService.enterChatRoom(roomId);
         return ApiResponse.success("입장 성공");
     }
 
@@ -52,7 +50,7 @@ public class ChatController {
     public ApiResponse<ChatRoom> room(@PathVariable String roomId) {
 //        return ApiResponse.success(chatRoomService.findById(roomId));
         log.debug("{}번 채팅방 조회 API", roomId);
-        return ApiResponse.success(chatRoomService.findRoomById(roomId));
+        return ApiResponse.success(chatService.findRoomById(roomId));
     }
 
     /**
@@ -63,18 +61,6 @@ public class ChatController {
     @GetMapping("/room/messages/{roomId}")
     public ApiResponse<List<ChatMessage>> messages(@PathVariable String roomId) {
         log.debug("{}번 채팅방 메세지 조회 API 호출", roomId);
-        return ApiResponse.success(chatRoomService.loadChatMessagesByRoomId(roomId));
+        return ApiResponse.success(chatService.loadChatMessagesByRoomId(roomId));
     }
-
-//    /**
-//     * 채팅방 생성 API
-//     * @param chatRoom: name, roomId
-//     * @return ApiResponse
-//     */
-//    @PostMapping("/room")
-//    public ApiResponse<ChatRoom> createRoom(@RequestBody ChatRoom chatRoom) {
-//        log.debug("채팅방 생성 API param: {}", chatRoom);
-//        return ApiResponse.success(chatRoomRepository.createChatRoom(chatRoom));
-//    }
-
 }

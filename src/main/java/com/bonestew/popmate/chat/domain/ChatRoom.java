@@ -22,11 +22,4 @@ public class ChatRoom extends BaseTime implements Serializable {
 
     private String roomId;
     private String name;
-
-    public static ChatRoom create(String roomId,String name) {
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.roomId = roomId;
-        chatRoom.name = name;
-        return chatRoom;
-    }
 }

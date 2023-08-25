@@ -1,8 +1,8 @@
 package com.bonestew.popmate.chat.domain;
 
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 @Document("chatMessages")
 public class ChatMessage {
 
@@ -19,10 +20,5 @@ public class ChatMessage {
     private String sender;
     private String message;
     private String roomId;
-    private LocalDateTime createdAt;
-
-    @PostConstruct
-    void setCreatedAt() {
-        this.createdAt = LocalDateTime.now();
-    }
+//    private LocalDateTime createdAt = LocalDateTime.now();;
 }
