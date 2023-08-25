@@ -22,7 +22,9 @@ public record PopupStoreDetailResponse(
         String departmentName,
         String departmentDescription,
         double latitude,
-        double longitude
+        double longitude,
+        List<PopupStoreSns> popupStoreImgResponses,
+        List<PopupStoreImg> popupStoreSnsResponses
 ) {
 
     public static PopupStoreDetailResponse from(PopupStoreDetailDto popupStoreDto,
@@ -44,7 +46,9 @@ public record PopupStoreDetailResponse(
                 popupStoreDto.getDepartment().getName(),
                 popupStoreDto.getDepartment().getPlaceDescription(),
                 popupStoreDto.getDepartment().getLatitude(),
-                popupStoreDto.getDepartment().getLongitude()
+                popupStoreDto.getDepartment().getLongitude(),
+                popupStoreSnsList,
+                popupStoreImgList
         );
     }
 }
