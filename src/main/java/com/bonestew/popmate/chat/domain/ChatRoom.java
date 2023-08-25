@@ -7,12 +7,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoom extends BaseTime {
+public class ChatRoom extends BaseTime implements Serializable {
 
-    private Long chatRoomId;
+    @Serial
+    private static final long serialVersionUID = 123456789L;
+
+    private String roomId;
+    private String name;
 }
