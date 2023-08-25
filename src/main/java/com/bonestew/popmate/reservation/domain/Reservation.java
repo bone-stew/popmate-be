@@ -22,7 +22,7 @@ public class Reservation extends BaseTime {
     private int guestLimit;
     private int teamSizeLimit;
     private int currentGuestCount;
-    private int status;
+    private ReservationStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 }
