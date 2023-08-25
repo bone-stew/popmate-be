@@ -13,7 +13,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         //enable simple memory-based message broker to carry the greeting messages back to the client on destinations prefixed with /topic
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/sub");
         // prefix for messages that are bound for methods annotated with @MessageMapping
         config.setApplicationDestinationPrefixes("/pub");
     }
@@ -21,6 +21,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         //registers the /gs-guide-websocket endpoint for websocket connections.
-        registry.addEndpoint("/ws/chat").setAllowedOriginPatterns("*");
+        registry.addEndpoint("/ws-chat").setAllowedOriginPatterns("*");
     }
 }

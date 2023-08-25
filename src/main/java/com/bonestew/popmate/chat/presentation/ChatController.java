@@ -1,20 +1,16 @@
 package com.bonestew.popmate.chat.presentation;
 
 import com.bonestew.popmate.chat.application.ChatService;
+import com.bonestew.popmate.chat.application.RedisPublisher;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.chat.domain.ChatMessage;
+import com.bonestew.popmate.chat.persistence.ChatRoomRepository;
 import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -24,24 +20,61 @@ import java.util.List;
 public class ChatController {
 
     private final ChatService chatRoomService;
+    private final RedisPublisher redisPublisher;
+    private final ChatRoomRepository chatRoomRepository;
 
-    @MessageMapping("/message/{roomId}")
-    @SendTo("/topic/{roomId}")
-    public ChatMessage greeting(@DestinationVariable Long roomId, ChatMessage message) {
-        log.debug("RoomID: {}, Sender: {}, message: {}", roomId, message.getSender(), message.getMessage());
-        message.setCreatedAt(LocalDateTime.now());
-        chatRoomService.saveMessage(message);
-        return message;
+    /**
+     * 메세지 전송 API
+     * @param message sender, roomId, message
+     */
+    @MessageMapping("/message")
+    public void message(ChatMessage message) {
+        log.debug("메세지 전송: {}", message);
+        redisPublisher.publish(chatRoomRepository.getTopic(message.getRoomId()), message);
     }
 
+    /**
+     * 채팅방 입장 API
+     * @param roomId 채팅방 ID
+     */
+    @GetMapping("/enter/{roomId}")
+    public ApiResponse<String> enter(@PathVariable String roomId) {
+        chatRoomRepository.enterChatRoom(roomId);
+        return ApiResponse.success("입장 성공");
+    }
+
+    /**
+     * 채팅방 조회 API
+     * @param roomId 채팅방 ID
+     * @return 조회된 채팅방
+     */
     @GetMapping("/room/{roomId}")
-    public ApiResponse<ChatRoom> roomInfo(@PathVariable Long roomId) {
-        return ApiResponse.success(chatRoomService.findById(roomId));
+    public ApiResponse<ChatRoom> room(@PathVariable String roomId) {
+//        return ApiResponse.success(chatRoomService.findById(roomId));
+        log.debug("{}번 채팅방 조회 API", roomId);
+        return ApiResponse.success(chatRoomService.findRoomById(roomId));
     }
 
+    /**
+     * 채팅방 메세지 목록 호출 api
+     * @param roomId 채팅방 메세지 목록 호출
+     * @return 채팅 메세지 리스트
+     */
     @GetMapping("/room/messages/{roomId}")
-    public ApiResponse<List<ChatMessage>> messages(@PathVariable Long roomId) {
+    public ApiResponse<List<ChatMessage>> messages(@PathVariable String roomId) {
+        log.debug("{}번 채팅방 메세지 조회 API 호출", roomId);
         return ApiResponse.success(chatRoomService.loadChatMessagesByRoomId(roomId));
     }
+
+//    /**
+//     * 채팅방 생성 API
+//     * @param chatRoom: name, roomId
+//     * @return ApiResponse
+//     */
+//    @PostMapping("/room")
+//    public ApiResponse<ChatRoom> createRoom(@RequestBody ChatRoom chatRoom) {
+//        log.debug("채팅방 생성 API param: {}", chatRoom);
+//        return ApiResponse.success(chatRoomRepository.createChatRoom(chatRoom));
+//    }
 
 }
