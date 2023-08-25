@@ -24,14 +24,14 @@ public class ApiControllerAdvice {
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public <T> ApiResponse<T> handleBadRequestException(BadRequestException e) {
-        log.info("handleBadRequestException: ", e);
+        log.info("handleBadRequestException: {}", e.getMessage());
         return ApiResponse.failure(ResultCode.BAD_REQUEST, e.getMessage());
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public <T> ApiResponse<T> handleNotFoundException(NotFoundException e) {
-        log.info("handleNotFoundException: ", e);
+        log.info("handleNotFoundException: {}", e.getMessage());
         return ApiResponse.failure(ResultCode.NOT_FOUND, e.getMessage());
     }
 
