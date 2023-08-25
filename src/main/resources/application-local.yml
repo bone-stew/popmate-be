@@ -27,3 +27,6 @@ logging:
   level:
     com.bonestew.popmate: debug
 
+token:
+  sign:
+    key: popmatedsdsdsdsdddddddsdwdwdwdwdwdwdwdwdwdwdwdwdwd
