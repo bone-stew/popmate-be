@@ -19,3 +19,14 @@ jasypt:
 logging:
   level:
     com.bonestew.popmate: debug
+
+cloud:
+  aws:
+    s3:
+      bucket:
+        name: ENC(RBF7s86JVYyMaMvmPQakUYtN/F2EXPuI)
+        stack.auto: false
+        region.static: ap-northeast-2
+        credentials:
+          access-key: ENC(ZSsHS0A7caWslx3FNOCIUSzaUjwcuZ/helCuIlU1sAU=)
+          secret-key: ENC(GVUP2NyBoFhSlGlEHYYgdQJK6/cM1F985TRWYXKPy089OpULD9OaUmRz33XY9BTuvn/cOeAl+7U=)
