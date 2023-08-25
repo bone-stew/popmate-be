@@ -1,0 +1,20 @@
+ifndef::snippets[]
+:snippets: build/generated-snippets
+endif::[]
+
+= PopMate API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[Index]]
+== Index
+
+- link:popup-store.html[팝업스토어 API, window=_blank]
+- link:order.html[상품 주문 API, window=_blank]
+- link:reservation.html[예약 API, window=_blank]
+- link:chat.html[채팅 API, window=_blank]
+- link:auth.html[인증/인가 API, window=_blank]

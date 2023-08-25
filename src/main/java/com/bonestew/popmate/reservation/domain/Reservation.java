@@ -20,7 +20,9 @@ public class Reservation extends BaseTime {
     private Long reservationId;
     private PopupStore popupStore;
     private int guestLimit;
+    private int teamSizeLimit;
     private int currentGuestCount;
+    private ReservationStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 }
