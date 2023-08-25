@@ -6,7 +6,6 @@ import com.bonestew.popmate.chat.persistence.ChatMessageRepository;
 import com.bonestew.popmate.chat.persistence.ChatRoomDao;
 import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.persistence.ChatRoomRepository;
-import com.bonestew.popmate.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.listener.ChannelTopic;
