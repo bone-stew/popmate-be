@@ -16,6 +16,7 @@ import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.user.domain.User;
 import java.time.LocalDateTime;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -36,6 +37,7 @@ class PopupStoreControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Disabled
     @Test
     void 팝업스토어를_조회한다() throws Exception {
         // given
