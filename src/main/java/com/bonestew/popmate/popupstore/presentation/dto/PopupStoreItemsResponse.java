@@ -9,7 +9,7 @@ public record PopupStoreItemsResponse(
         List<PopupStoreItemResponse> popupStoreItems
 ) {
 
-    public static PopupStoreItemsResponse from(
+    public static PopupStoreItemsResponse of(
             PopupStore popupStore,
             List<PopupStoreItem> popupStoreItemList
     ) {

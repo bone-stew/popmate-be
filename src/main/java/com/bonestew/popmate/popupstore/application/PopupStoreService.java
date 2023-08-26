@@ -10,7 +10,6 @@ import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
-import com.bonestew.popmate.user.domain.User;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,8 +32,8 @@ public class PopupStoreService {
         return popupStoreDao.selectBanners();
     }
 
-    public List<PopupStore> getPopupStoresVisitedBy(User user) {
-        return popupStoreDao.selectPopupStoresVisitedBy(user);
+    public List<PopupStore> getPopupStoresVisitedBy(long userId) {
+        return popupStoreDao.selectPopupStoresVisitedBy(userId);
     }
 
     public List<PopupStore> getPopupStoresRecommend() {
@@ -45,8 +44,8 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoresEndingInOneWeek();
     }
 
-    public PopupStoreDetailDto getPopupStoreDetail(Long popupStoreId, User user) {
-        return popupStoreDao.findPopupStoreDetailById(new PopupStoreQueryDto(popupStoreId, user.getUserId()))
+    public PopupStoreDetailDto getPopupStoreDetail(Long popupStoreId, Long userId) {
+        return popupStoreDao.findPopupStoreDetailById(new PopupStoreQueryDto(popupStoreId, userId))
                 .orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
     }
 

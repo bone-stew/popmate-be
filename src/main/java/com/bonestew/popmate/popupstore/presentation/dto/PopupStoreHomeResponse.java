@@ -11,7 +11,7 @@ public record PopupStoreHomeResponse(
         List<PopupStoreResponse> popupStoresEndingSoon
 ) {
 
-    public static PopupStoreHomeResponse from(List<Banner> bannerList,
+    public static PopupStoreHomeResponse of(List<Banner> bannerList,
                                               List<PopupStore> popupStoresVisitedByList,
                                               List<PopupStore> popupStoresRecommendList,
                                               List<PopupStore> popupStoresEndingSoonList) {

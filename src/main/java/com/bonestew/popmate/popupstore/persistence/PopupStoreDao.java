@@ -8,7 +8,6 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
-import com.bonestew.popmate.user.domain.User;
 import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,7 +23,7 @@ public interface PopupStoreDao {
 
     List<Banner> selectBanners();
 
-    List<PopupStore> selectPopupStoresVisitedBy(User user);
+    List<PopupStore> selectPopupStoresVisitedBy(Long userId);
 
     List<PopupStore> selectPopupStoresToRecommend();
 

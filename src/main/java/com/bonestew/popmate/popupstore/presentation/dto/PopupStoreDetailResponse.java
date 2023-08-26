@@ -23,11 +23,11 @@ public record PopupStoreDetailResponse(
         String departmentDescription,
         double latitude,
         double longitude,
-        List<PopupStoreSns> popupStoreImgResponses,
-        List<PopupStoreImg> popupStoreSnsResponses
+        List<PopupStoreSns> popupStoreSnsResponses,
+        List<PopupStoreImg> popupStoreImgResponses
 ) {
 
-    public static PopupStoreDetailResponse from(PopupStoreDetailDto popupStoreDto,
+    public static PopupStoreDetailResponse of(PopupStoreDetailDto popupStoreDto,
                                                 List<PopupStoreSns> popupStoreSnsList,
                                                 List<PopupStoreImg> popupStoreImgList) {
         return new PopupStoreDetailResponse(

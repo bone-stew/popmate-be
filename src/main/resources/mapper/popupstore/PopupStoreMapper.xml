@@ -63,20 +63,19 @@
     FROM tb_popup_store
     <where>
       <if test="keyword != null">
-        AND title LIKE '%' || #{keyword} || '%'
+        AND title LIKE CONCAT(CONCAT('%', #{keyword}), '%')
       </if>
       <if test="isOpeningSoon">
-        AND TO_DATE(SYSDATE, 'YY/MM/DD') &lt; open_date
+        AND SYSDATE &lt; open_date
       </if>
       <if test="!isOpeningSoon and (startDate != null and endDate != null)">
         AND ((open_date BETWEEN #{startDate, jdbcType=TIMESTAMP} AND #{endDate, jdbcType=TIMESTAMP})
         OR (close_date BETWEEN #{startDate, jdbcType=TIMESTAMP} AND #{endDate, jdbcType=TIMESTAMP}))
       </if>
-      <if test="searchLimit != null and searchLimit != 0">
-        FETCH FIRST #{searchLimit} ROWS ONLY
-      </if>
     </where>
-
+    <if test="offSetRows != null and rowsToGet != null and rowsToGet != 0">
+      OFFSET #{offSetRows} ROWS FETCH FIRST #{rowsToGet} ROWS ONLY
+    </if>
   </select>
 
 
@@ -109,8 +108,8 @@
     FROM
     tb_popup_store
     WHERE
-    TO_DATE(SYSDATE, 'YY/MM/DD') >= open_date
-    AND (close_date - TO_DATE(SYSDATE, 'YY/MM/DD')) BETWEEN 0 AND 7
+    SYSDATE >= open_date
+    AND (close_date - SYSDATE) BETWEEN 0 AND 7
 
   </select>
 
