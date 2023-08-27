@@ -1,5 +1,6 @@
 package com.bonestew.popmate.reservation.presentation;
 
+import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationEventService;
 import com.bonestew.popmate.reservation.application.dto.ReservationRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,9 @@ public class ReservationEventController {
      * @param reservationRequest 예약 요청 정보
      */
     @PostMapping("/{reservationId}")
-    public void reserve(@PathVariable("reservationId") final Long reservationId,
-                        @RequestBody final ReservationRequest reservationRequest) {
+    public ApiResponse<Void> reserve(@PathVariable("reservationId") final Long reservationId,
+                                     @RequestBody final ReservationRequest reservationRequest) {
         reservationEventService.reserve(reservationId, USER_ID, reservationRequest);
+        return ApiResponse.success();
     }
 }
