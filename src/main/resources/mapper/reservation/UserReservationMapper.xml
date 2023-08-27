@@ -55,4 +55,17 @@
            LEFT JOIN tb_popup_store C ON B.popup_store_id = C.popup_store_id
     where A.user_id = 1
   </select>
+
+  <insert id="save" parameterType="UserReservation">
+    INSERT INTO tb_user_reservation (user_id, reservation_id, status, guest_count, qr_img_url)
+    VALUES (#{user.userId}, #{reservation.reservationId}, #{status}, #{guestCount}, #{qrImgUrl})
+  </insert>
+
+  <select id="existsByUserIdAndReservationId" resultType="boolean">
+    SELECT COUNT(*)
+    FROM tb_user_reservation
+    WHERE user_id = #{userId}
+      AND reservation_id = #{reservationId}
+  </select>
+
 </mapper>

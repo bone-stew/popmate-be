@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 public enum ReservationStatus {
 
-    CANCELED(-1, "예약 취소"),
+    CANCELED(-1, "예약 중단"),
 
     PENDING(0, "예약 대기"),
 
-    IN_PROGRESS(1, "예약 진행"),
+    ACTIVE(1, "예약 진행"),
 
     CONFIRMED(2, "예약 완료");
 

@@ -8,4 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserReservationDao {
 
     List<UserReservation> getByUserId(Long userId);
+
+    void save(UserReservation userReservation);
+
+    boolean existsByUserIdAndReservationId(Long userId, Long reservationId);
 }

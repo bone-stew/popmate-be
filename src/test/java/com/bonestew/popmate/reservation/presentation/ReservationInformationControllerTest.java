@@ -42,7 +42,7 @@ class ReservationInformationControllerTest {
         // given
         Long popupStoreId = 1L;
         LocalDateTime dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
-        Reservation reservation = new Reservation(1L, new PopupStore(), 10, 5, 5, ReservationStatus.IN_PROGRESS,
+        Reservation reservation = new Reservation(1L, new PopupStore(), 10, 5, 5, ReservationStatus.ACTIVE,
             dateTime, dateTime.plusMinutes(15));
 
         // when
@@ -64,7 +64,7 @@ class ReservationInformationControllerTest {
                     fieldWithPath("data.reservationId").description("예약 id"),
                     fieldWithPath("data.startTime").description(dateTime),
                     fieldWithPath("data.endTime").description(dateTime.plusMinutes(15)),
-                    fieldWithPath("data.status").description(ReservationStatus.IN_PROGRESS.getDescription()),
+                    fieldWithPath("data.status").description(ReservationStatus.ACTIVE.getDescription()),
                     fieldWithPath("data.popupStoreTitle").description("팝업스토어 제목"),
                     fieldWithPath("data.popupStoreDescription").description("팝업스토어 설명"),
                     fieldWithPath("data.popupStoreOpenTime").description(dateTime),
@@ -80,7 +80,7 @@ class ReservationInformationControllerTest {
         LocalDate date = LocalDate.of(2023, 10, 1);
         LocalDateTime dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
         List<Reservation> reservations = List.of(
-            new Reservation(1L, new PopupStore(), 10, 5, 5, ReservationStatus.IN_PROGRESS,
+            new Reservation(1L, new PopupStore(), 10, 5, 5, ReservationStatus.ACTIVE,
                 LocalDateTime.of(2023, 8, 1, 10, 0), LocalDateTime.of(2023, 8, 1, 10, 15))
         );
 
@@ -106,7 +106,7 @@ class ReservationInformationControllerTest {
                     fieldWithPath("data[].endTime").description(dateTime),
                     fieldWithPath("data[].guestLimit").description(10),
                     fieldWithPath("data[].currentGuestCount").description(5),
-                    fieldWithPath("data[].status").description(ReservationStatus.IN_PROGRESS.getDescription())
+                    fieldWithPath("data[].status").description(ReservationStatus.ACTIVE.getDescription())
                 )
             ));
 
