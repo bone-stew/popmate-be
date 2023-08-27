@@ -1,4 +1,4 @@
-package com.bonestew.popmate.security.application;
+package com.bonestew.popmate.security.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,8 +2,8 @@ package com.bonestew.popmate.auth.presentation;
 
 import com.bonestew.popmate.auth.application.OauthService;
 import com.bonestew.popmate.auth.domain.OauthUser;
-import com.bonestew.popmate.security.application.JwtAuthenticationResponse;
-import com.bonestew.popmate.security.application.JwtService;
+import com.bonestew.popmate.security.SecurityUtil;
+import com.bonestew.popmate.security.domain.JwtAuthenticationResponse;
 import com.bonestew.popmate.security.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +46,10 @@ public class OauthController {
     public ResponseEntity<User> sayHello(@RequestHeader("Authorization") String accessToken) {
         // token 받아서 이렇게 User 정보 가져오면 됩니다
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(user.toString());
-        System.out.println(user.getUserId());
-        System.out.println(user.getName());
-        System.out.println(user.getProvider());
+
+        // 또는 밑의 방법으로 유저 정보 가져오면 됩니다.
+        System.out.println(SecurityUtil.getUserInfo());
+
         return ResponseEntity.ok(user);
     }
 }

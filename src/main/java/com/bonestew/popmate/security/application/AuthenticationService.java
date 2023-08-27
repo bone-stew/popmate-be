@@ -1,6 +1,7 @@
 package com.bonestew.popmate.security.application;
 
 import com.bonestew.popmate.auth.domain.OauthUser;
+import com.bonestew.popmate.security.domain.JwtAuthenticationResponse;
 
 public interface AuthenticationService {
 

@@ -3,7 +3,7 @@ package com.bonestew.popmate.auth.application;
 import com.bonestew.popmate.auth.domain.OauthUser;
 import com.bonestew.popmate.auth.persistence.OauthDao;
 import com.bonestew.popmate.security.application.AuthenticationService;
-import com.bonestew.popmate.security.application.JwtAuthenticationResponse;
+import com.bonestew.popmate.security.domain.JwtAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

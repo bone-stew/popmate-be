@@ -2,7 +2,7 @@ package com.bonestew.popmate.security.application.Impl;
 
 import com.bonestew.popmate.auth.domain.OauthUser;
 import com.bonestew.popmate.security.application.AuthenticationService;
-import com.bonestew.popmate.security.application.JwtAuthenticationResponse;
+import com.bonestew.popmate.security.domain.JwtAuthenticationResponse;
 import com.bonestew.popmate.security.application.JwtService;
 import com.bonestew.popmate.security.domain.User;
 import com.bonestew.popmate.security.persistence.UserDao;
