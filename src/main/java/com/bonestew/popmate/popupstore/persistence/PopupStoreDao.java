@@ -7,7 +7,9 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
+import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
+import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
@@ -36,4 +38,8 @@ public interface PopupStoreDao {
     List<PopupStoreImg> selectPopupStoreImgs(Long popupStoreId);
 
     List<PopupStoreItem> selectPopupStoreItems(Long popupStoreId);
+
+    Optional<UserReservationStatus> findUserReservationById(PopupStoreQueryDto popupStoreQueryDto);
+
+    boolean updatePopupStoreViews(PopupStoreUpdateDto popupStoreUpdateDto);
 }

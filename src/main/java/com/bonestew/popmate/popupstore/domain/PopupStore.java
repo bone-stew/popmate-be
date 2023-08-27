@@ -37,4 +37,5 @@ public class PopupStore extends BaseTime {
     private LocalDateTime closeDate;
     private LocalDateTime openTime;
     private LocalDateTime closeTime;
+    private Long views;
 }

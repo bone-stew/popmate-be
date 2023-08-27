@@ -23,6 +23,7 @@ public record PopupStoreDetailResponse(
         String departmentDescription,
         double latitude,
         double longitude,
+        Long views,
         List<PopupStoreSns> popupStoreSnsResponses,
         List<PopupStoreImg> popupStoreImgResponses
 ) {
@@ -42,11 +43,12 @@ public record PopupStoreDetailResponse(
                 popupStoreDto.getPopupStore().getCloseDate(),
                 popupStoreDto.getPopupStore().getOpenTime(),
                 popupStoreDto.getPopupStore().getCloseTime(),
-                popupStoreDto.getUserReservation().getStatus().getCode(),
+                popupStoreDto.getUserReservationStatus().getCode(),
                 popupStoreDto.getDepartment().getName(),
                 popupStoreDto.getDepartment().getPlaceDescription(),
                 popupStoreDto.getDepartment().getLatitude(),
                 popupStoreDto.getDepartment().getLongitude(),
+                popupStoreDto.getPopupStore().getViews(),
                 popupStoreSnsList,
                 popupStoreImgList
         );
