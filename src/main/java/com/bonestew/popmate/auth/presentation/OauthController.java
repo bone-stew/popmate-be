@@ -2,7 +2,6 @@ package com.bonestew.popmate.auth.presentation;
 
 import com.bonestew.popmate.auth.application.OauthService;
 import com.bonestew.popmate.auth.domain.OauthUser;
-import com.bonestew.popmate.security.application.AuthenticationService;
 import com.bonestew.popmate.security.application.JwtAuthenticationResponse;
 import com.bonestew.popmate.security.application.JwtService;
 import com.bonestew.popmate.security.domain.User;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class OauthController {
 
     private final OauthService oauthService;
-    private final JwtService jwtService;
     // 여기서는 카카오 쪽
     @PostMapping("/oauth/{code}")
     @ResponseBody
