@@ -4,10 +4,6 @@ spring:
     url: jdbc:oracle:thin:@localhost:1521:xe
     username:
     password:
-  data:
-    redis:
-      host: localhost
-      port: 6379
 
 jasypt:
   encryptor:
