@@ -57,11 +57,6 @@ class OauthControllerTest {
     }
 
     @Test
-    void 카카오_토큰으로_카카오_유저_정보를_가져온다() throws Exception{
-
-    }
-
-    @Test
     void 구글_로그인을_한다() throws Exception{
         OauthUser oauthUser = new OauthUser();
         oauthUser.setEmail("frogs6225@naver.com");
