@@ -1,7 +1,7 @@
-package com.bonestew.popmate.config;
+package com.bonestew.popmate.auth.config;
 
-import com.bonestew.popmate.security.application.JwtService;
-import com.bonestew.popmate.security.application.UserService;
+import com.bonestew.popmate.auth.application.JwtService;
+import com.bonestew.popmate.auth.application.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

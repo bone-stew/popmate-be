@@ -2,8 +2,7 @@ package com.bonestew.popmate.auth.application;
 
 import com.bonestew.popmate.auth.domain.OauthUser;
 import com.bonestew.popmate.auth.persistence.OauthDao;
-import com.bonestew.popmate.security.application.AuthenticationService;
-import com.bonestew.popmate.security.domain.JwtAuthenticationResponse;
+import com.bonestew.popmate.auth.domain.JwtAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,35 +35,6 @@ public class OauthService {
         }else{  // 첫 로그인
             return authenticationService.signup(oauthUser);
         }
-
     }
 
-//    public OauthUser loginKakaoOauthService(String code) {
-//        // 카카오 유저 정보 가져오는 곳
-//        OauthUser oauthUser = kaKaoClient.getUserInfo(code);
-//        // 유저가 있는지 없는지 확인 로직
-//        Optional<OauthUser> user = oauthDao.findCheck(oauthUser.getEmail());
-//        if(user.isPresent()){   // 유저가 있으면
-//            return oauthUser;
-//        }else{  // 첫 로그인
-//            oauthDao.insertUser(oauthUser);
-//        }
-//
-//        return oauthUser;
-//    }
-
-
-
-
-//    public OauthUser loginGoogleOauthService(OauthUser oauthUser) {
-//        // 유저가 있는지 없는지 확인 로직
-//        Optional<OauthUser> user = oauthDao.findCheck(oauthUser.getEmail());
-//        if(user.isPresent()){   // 유저가 있으면
-//            return oauthUser;
-//        }else{  // 첫 로그인
-//            oauthDao.insertUser(oauthUser);
-//        }
-//
-//        return oauthUser;
-//    }
 }

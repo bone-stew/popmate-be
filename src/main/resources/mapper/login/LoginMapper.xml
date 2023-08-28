@@ -10,9 +10,4 @@
     WHERE EMAIL = #{email}
   </select>
 
-  <insert id="insertUser" parameterType="OauthUser">
-    INSERT INTO TB_USER (EMAIL, NAME, PROVIDER)
-    VALUES (#{email}, #{name}, #{provider})
-  </insert>
-
 </mapper>

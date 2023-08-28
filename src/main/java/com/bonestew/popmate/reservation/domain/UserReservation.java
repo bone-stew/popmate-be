@@ -1,7 +1,7 @@
 package com.bonestew.popmate.reservation.domain;
 
 import com.bonestew.popmate.date.BaseTime;
-import com.bonestew.popmate.security.domain.User;
+import com.bonestew.popmate.auth.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

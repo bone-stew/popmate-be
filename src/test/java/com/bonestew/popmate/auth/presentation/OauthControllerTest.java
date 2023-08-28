@@ -7,14 +7,14 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bonestew.popmate.auth.application.OauthService;
 import com.bonestew.popmate.auth.domain.OauthUser;
-import com.bonestew.popmate.security.domain.JwtAuthenticationResponse;
+import com.bonestew.popmate.auth.domain.JwtAuthenticationResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -36,25 +36,31 @@ class OauthControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void 카카오_로그인을_한다() throws  Exception{
+    void 카카오_로그인을_한다() throws Exception {
         String code = "dsdsddw";
-        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse("jwttokenfdfewojdddwddwdwdwdwadwadfe");
-        given(oauthService.loginKakaoOauthService(code)).willReturn(jwtAuthenticationResponse);
+        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse("jwttokenfdfewojdddwddwdwdwadwadfe");
+        given(oauthService.loginKakaoOauthService(any())).willReturn(jwtAuthenticationResponse);
+
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("code", code);
 
         ResultActions result = mockMvc.perform(
-            post("/api/v1/popup-stores/oauth/{code}", code));
+            post("/api/v1/oauth/kakao")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(requestBody))
+        );
 
-        result
-            .andExpect(status().isOk())
+        result.andExpect(status().isOk())
             .andDo(customDocument(
-                pathParameters(
-                    parameterWithName("code").description("카카오 토큰")
+                requestFields(
+                    fieldWithPath("code").description("인가코드")
                 ),
                 responseFields(
                     fieldWithPath("token").description("JWT토큰")
                 )
             ));
     }
+
 
     @Test
     void 구글_로그인을_한다() throws Exception{
@@ -70,7 +76,7 @@ class OauthControllerTest {
         given(oauthService.loginGoogleOauthService(any())).willReturn(jwtAuthenticationResponse);
 
         ResultActions result = mockMvc.perform(
-            post("/api/v1/popup-stores/oauth/google")
+            post("/api/v1/oauth/google")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(oauthUserJson)
             );

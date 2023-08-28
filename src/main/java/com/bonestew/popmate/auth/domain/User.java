@@ -1,4 +1,4 @@
-package com.bonestew.popmate.security.domain;
+package com.bonestew.popmate.auth.domain;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

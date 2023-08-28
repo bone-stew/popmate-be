@@ -2,9 +2,9 @@ package com.bonestew.popmate.auth.presentation;
 
 import com.bonestew.popmate.auth.application.OauthService;
 import com.bonestew.popmate.auth.domain.OauthUser;
-import com.bonestew.popmate.security.SecurityUtil;
-import com.bonestew.popmate.security.domain.JwtAuthenticationResponse;
-import com.bonestew.popmate.security.domain.User;
+import com.bonestew.popmate.auth.config.SecurityUtil;
+import com.bonestew.popmate.auth.domain.JwtAuthenticationResponse;
+import com.bonestew.popmate.auth.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,22 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/popup-stores")
+@RequestMapping("/api/v1/oauth")
 
 public class OauthController {
 
     private final OauthService oauthService;
     // 여기서는 카카오 쪽
-    @PostMapping("/oauth/{code}")
-    @ResponseBody
-    public ResponseEntity<JwtAuthenticationResponse> kakaoOauth(@PathVariable String code) {
+    @PostMapping("/kakao")
+    public ResponseEntity<JwtAuthenticationResponse> kakaoOauth(@RequestBody String code) {
         // 여기서 코드는 카카오토큰
+        System.out.println(code);
         JwtAuthenticationResponse jwtToken = oauthService.loginKakaoOauthService(code);
         return ResponseEntity.ok(jwtToken);
     }
 
     // 여기서는 구글쪽
-    @PostMapping("/oauth/google")
+    @PostMapping("/google")
     @ResponseBody
     public ResponseEntity<JwtAuthenticationResponse> googleOauth(@RequestBody OauthUser oauthUser){
         JwtAuthenticationResponse jwtToken = oauthService.loginGoogleOauthService(oauthUser);

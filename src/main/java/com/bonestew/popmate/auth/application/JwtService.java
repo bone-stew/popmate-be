@@ -1,6 +1,5 @@
-package com.bonestew.popmate.security.application.Impl;
+package com.bonestew.popmate.auth.application;
 
-import com.bonestew.popmate.security.application.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,25 +15,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JwtServiceImpl implements JwtService {
+public class JwtService {
+
+    private static final long EXPIRATION_TIME_MS = 1000 * 60 * 60;
+    private Date jwtExpiration = new Date(System.currentTimeMillis() + EXPIRATION_TIME_MS);
+
 
     // JWT 서명 키를 가져오기 위한 설정
     @Value("${token.sign.key}")
     private String jwtSignKey;
 
     // 주어진 토큰에서 사용자 이름 추출
-    @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     // 사용자 정보를 이용하여 토큰 생성
-    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    @Override
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -57,7 +58,7 @@ public class JwtServiceImpl implements JwtService {
             .setClaims(extraClaims)
             .setSubject(userDetails.getUsername())
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+            .setExpiration(jwtExpiration)
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
     }

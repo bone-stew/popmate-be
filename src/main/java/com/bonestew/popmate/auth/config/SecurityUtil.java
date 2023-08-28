@@ -1,6 +1,6 @@
-package com.bonestew.popmate.security;
+package com.bonestew.popmate.auth.config;
 
-import com.bonestew.popmate.security.domain.User;
+import com.bonestew.popmate.auth.domain.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
