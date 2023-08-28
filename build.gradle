@@ -38,6 +38,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    testImplementation "org.testcontainers:testcontainers:1.19.0"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.2'
     asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
