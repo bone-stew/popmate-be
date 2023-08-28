@@ -5,8 +5,6 @@ import com.bonestew.popmate.auth.domain.JwtAuthenticationResponse;
 import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.auth.persistence.UserDao;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
