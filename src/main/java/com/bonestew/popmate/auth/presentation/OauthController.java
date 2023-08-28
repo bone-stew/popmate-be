@@ -42,6 +42,7 @@ public class OauthController {
         return ResponseEntity.ok(jwtToken);
     }
 
+    // 예시로 JWT토큰 받아서 반환하는 곳 (실제로 쓰는건 아니다.)
     @GetMapping("/resource")
     public ResponseEntity<User> sayHello(@RequestHeader("Authorization") String accessToken) {
         // token 받아서 이렇게 User 정보 가져오면 됩니다

@@ -28,7 +28,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/popup-stores/**")
+            .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/**")
                 .permitAll().anyRequest().authenticated())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
             .authenticationProvider(authenticationProvider()).addFilterBefore(

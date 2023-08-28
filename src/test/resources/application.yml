@@ -15,3 +15,7 @@ spring:
 jasypt:
   encryptor:
     password: jasyptEncryptorPassword
+
+token:
+  sign:
+    key: tokenSignKey
