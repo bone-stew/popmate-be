@@ -61,7 +61,7 @@
         AND title LIKE CONCAT(CONCAT('%', #{keyword}), '%')
       </if>
       <if test="isOpeningSoon">
-        AND SYSDATE &lt; open_date
+        AND trunc(SYSDATE) &lt; open_date
       </if>
       <if test="!isOpeningSoon and (startDate != null and endDate != null)">
         AND ((open_date BETWEEN #{startDate, jdbcType=TIMESTAMP} AND #{endDate, jdbcType=TIMESTAMP})
@@ -88,6 +88,7 @@
     WHERE
     ps.user_id = #{userId}
     AND ur.status = 1
+    AND ur.created_at = trunc(SYSDATE)
   </select>
 
   <select id="selectPopupStoresToRecommend" resultType="PopupStore">
@@ -105,8 +106,8 @@
     FROM
     tb_popup_store
     WHERE
-    SYSDATE >= open_date
-    AND (close_date - SYSDATE) BETWEEN 0 AND 7
+    trunc(SYSDATE) >= open_date
+    AND (close_date - trunc(SYSDATE)) BETWEEN 0 AND 7
 
   </select>
 
@@ -128,6 +129,7 @@
     join tb_reservation r
     on ur.reservation_id = r.reservation_id
     where ur.user_id = #{userId} and r.popup_store_id = #{popupStoreId}
+    and ur.created_at = trunc(sysdate)
   </select>
 
   <select id="selectPopupStoreSnss" parameterType="long" resultType="PopupStoreSns">
