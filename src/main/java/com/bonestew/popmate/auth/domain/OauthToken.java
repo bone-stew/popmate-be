@@ -1,6 +1,6 @@
 package com.bonestew.popmate.auth.domain;
 
-import com.bonestew.popmate.date.BaseTime;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +12,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class OauthToken extends BaseTime {
+public class OauthToken {
 
     // 이건 나중에
     private Long aaId;
+    private LocalDateTime createdAt;
 }

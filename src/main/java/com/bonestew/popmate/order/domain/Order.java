@@ -1,8 +1,8 @@
 package com.bonestew.popmate.order.domain;
 
-import com.bonestew.popmate.date.BaseTime;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
-import com.bonestew.popmate.user.domain.User;
+import com.bonestew.popmate.auth.domain.User;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +14,12 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Order extends BaseTime {
+public class Order {
 
     private Long orderId;
     private User user;
     private PopupStore popupStore;
     private int totalAmount;
     private int status;
+    private LocalDateTime createdAt;
 }

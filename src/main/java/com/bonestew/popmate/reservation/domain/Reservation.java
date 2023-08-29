@@ -1,7 +1,5 @@
 package com.bonestew.popmate.reservation.domain;
 
-
-import com.bonestew.popmate.date.BaseTime;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -15,7 +13,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation extends BaseTime {
+public class Reservation {
 
     private Long reservationId;
     private PopupStore popupStore;
@@ -25,4 +23,5 @@ public class Reservation extends BaseTime {
     private ReservationStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private LocalDateTime createdAt;
 }

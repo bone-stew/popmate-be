@@ -1,6 +1,6 @@
 package com.bonestew.popmate.chat.domain;
 
-import com.bonestew.popmate.date.BaseTime;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +15,12 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatRoom extends BaseTime implements Serializable {
+public class ChatRoom implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 123456789L;
 
     private String roomId;
     private String name;
+    private LocalDateTime createdAt;
 }
