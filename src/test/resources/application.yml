@@ -11,3 +11,15 @@ spring:
 jasypt:
   encryptor:
     password: jasyptEncryptorPassword
+
+
+cloud:
+  aws:
+    s3:
+      bucket:
+        name: cloudAwsS3BucketName
+        stack.auto: false
+        region.static: ap-northeast-2
+        credentials:
+          access-key: cloudAwsS3BucketCredentialsAccess-key
+          secret-key: cloudAwsS3BucketCredentialsSecret-key

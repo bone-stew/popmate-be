@@ -18,7 +18,7 @@ public class PopupStore {
 
     private Long popupStoreId;
     private User user;
-    private Department departmentId;
+    private Department department;
     private ChatRoom chatRoomId;
     private String title;
     private String organizer;
@@ -36,5 +36,6 @@ public class PopupStore {
     private LocalDateTime closeDate;
     private LocalDateTime openTime;
     private LocalDateTime closeTime;
+    private Long views;
     private LocalDateTime createdAt;
 }
