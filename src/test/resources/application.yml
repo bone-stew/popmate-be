@@ -13,6 +13,10 @@ jasypt:
     password: jasyptEncryptorPassword
 
 
+token:
+  sign:
+    key: tokenSignKey
+
 cloud:
   aws:
     s3:

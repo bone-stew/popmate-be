@@ -1,4 +1,4 @@
-package com.bonestew.popmate.user.domain;
+package com.bonestew.popmate.auth.domain;
 
 import com.bonestew.popmate.date.BaseTime;
 import lombok.AllArgsConstructor;
@@ -12,11 +12,13 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseTime {
+public class OauthUser extends BaseTime {
 
+    // 이건 나중에
     private Long userId;
     private String email;
     private String password;
+    private String name;
     private String provider;
     private String role;
 }

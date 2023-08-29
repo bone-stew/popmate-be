@@ -2,7 +2,7 @@ package com.bonestew.popmate.popupstore.domain;
 
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.date.BaseTime;
-import com.bonestew.popmate.user.domain.User;
+import com.bonestew.popmate.auth.domain.User;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

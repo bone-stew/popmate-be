@@ -7,3 +7,22 @@
 
 [[auth-api]]
 = AUTH API 문서
+
+== 카카오 로그인을 한다
+
+=== Request
+include::{snippets}/oauth-controller-test/카카오_로그인을_한다/http-request.adoc[]
+=== Response
+operation::oauth-controller-test/카카오_로그인을_한다[snippets='response-fields']
+
+== 구글 로그인을 한다
+
+=== Request
+include::{snippets}/oauth-controller-test/구글_로그인을_한다/http-request.adoc[]
+=== Response
+operation::oauth-controller-test/구글_로그인을_한다[snippets='response-fields']
+
+
+
+// 여러개의 스니펫을 사용하는 경우
+// operation::popup-store-controller-test/팝업스토어를_생성한다[snippets='path-parameters,response-fields']

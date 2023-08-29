@@ -14,7 +14,7 @@ import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
-import com.bonestew.popmate.user.domain.User;
+import com.bonestew.popmate.auth.domain.User;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

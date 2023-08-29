@@ -2,7 +2,7 @@ package com.bonestew.popmate.order.domain;
 
 import com.bonestew.popmate.date.BaseTime;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
-import com.bonestew.popmate.user.domain.User;
+import com.bonestew.popmate.auth.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
