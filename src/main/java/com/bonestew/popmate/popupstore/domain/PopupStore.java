@@ -19,7 +19,7 @@ public class PopupStore extends BaseTime {
 
     private Long popupStoreId;
     private User user;
-    private Department departmentId;
+    private Department department;
     private ChatRoom chatRoomId;
     private String title;
     private String organizer;
@@ -37,4 +37,5 @@ public class PopupStore extends BaseTime {
     private LocalDateTime closeDate;
     private LocalDateTime openTime;
     private LocalDateTime closeTime;
+    private Long views;
 }

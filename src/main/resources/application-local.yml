@@ -30,3 +30,14 @@ logging:
 token:
   sign:
     key: ENC(RaAq4BwFsN6pgF9oP1mJk/P1zJoFyK+Icp34YYp5NSmQjix9YJfm4MczHNltXX5IGJ873brZV5ACFzrmSjDBJg==)
+    
+cloud:
+  aws:
+    s3:
+      bucket:
+        name: ENC(RBF7s86JVYyMaMvmPQakUYtN/F2EXPuI)
+        stack.auto: false
+        region.static: ap-northeast-2
+        credentials:
+          access-key: ENC(ZSsHS0A7caWslx3FNOCIUSzaUjwcuZ/helCuIlU1sAU=)
+          secret-key: ENC(GVUP2NyBoFhSlGlEHYYgdQJK6/cM1F985TRWYXKPy089OpULD9OaUmRz33XY9BTuvn/cOeAl+7U=)
