@@ -54,4 +54,13 @@
     ORDER BY start_time
   </select>
 
+  <select id="findWifiById" parameterType="long" resultType="Wifi">
+    SELECT w.*
+    FROM tb_reservation r
+           LEFT JOIN tb_popup_store p ON r.popup_store_id = p.popup_store_id
+           LEFT JOIN tb_wifi w ON p.department_id = w.department_id
+           LEFT JOIN tb_department d ON w.department_id = d.department_id
+    WHERE r.reservation_id = #{reservationId}
+  </select>
+
 </mapper>
