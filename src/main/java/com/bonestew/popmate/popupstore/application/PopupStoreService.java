@@ -13,6 +13,7 @@ import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -94,7 +95,8 @@ public class PopupStoreService {
         }
     }
 
-    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+//    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    @Scheduled(fixedRate = 10 * 1000)
     @Transactional
     public void updateRedisPopupStoreViews(){
         Set<String> redisKeys = redisTemplate.keys("POST-*");
@@ -111,10 +113,7 @@ public class PopupStoreService {
             }
         }
         if (!updates.isEmpty()) {
-            int rows = popupStoreDao.batchUpdatePopupStoreViews(updates);
-            if (rows != updates.size()){
-                throw new PopupStoreUpdateFailedException();
-            }
+            int rtn = popupStoreDao.batchUpdatePopupStoreViews(updates);
         }
         Set<String> userFirstTimeViewingKeys = redisTemplate.keys("USER-*POST-*");
         if (userFirstTimeViewingKeys != null) {
