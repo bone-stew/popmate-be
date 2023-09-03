@@ -95,8 +95,7 @@ public class PopupStoreService {
         }
     }
 
-//    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
-    @Scheduled(fixedRate = 10 * 1000)
+    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
     @Transactional
     public void updateRedisPopupStoreViews(){
         Set<String> redisKeys = redisTemplate.keys("POST-*");
