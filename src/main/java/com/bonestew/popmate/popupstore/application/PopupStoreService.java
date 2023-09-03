@@ -13,6 +13,7 @@ import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -97,15 +98,27 @@ public class PopupStoreService {
     @Transactional
     public void updateRedisPopupStoreViews(){
         Set<String> redisKeys = redisTemplate.keys("POST-*");
+        List<PopupStoreUpdateDto> updates = new ArrayList<>();
         if (redisKeys != null) {
             for (String key : redisKeys) {
                 String[] parts = key.split("-");
                 Long popupStoreId = Long.parseLong(parts[1]);
                 Long views = Long.parseLong((String) redisTemplate.opsForValue().get(key));
-                boolean isUpdated = popupStoreDao.updatePopupStoreViews(new PopupStoreUpdateDto(popupStoreId, views));
-                if (!isUpdated) {
-                    throw new PopupStoreUpdateFailedException(popupStoreId);
-                }
+                PopupStoreUpdateDto updateDto = new PopupStoreUpdateDto(popupStoreId, views);
+                updates.add(updateDto);
+
+                redisTemplate.delete(key);
+            }
+        }
+        if (!updates.isEmpty()) {
+            int rows = popupStoreDao.batchUpdatePopupStoreViews(updates);
+            if (rows != updates.size()){
+                throw new PopupStoreUpdateFailedException();
+            }
+        }
+        Set<String> userFirstTimeViewingKeys = redisTemplate.keys("USER-*POST-*");
+        if (userFirstTimeViewingKeys != null) {
+            for (String key : userFirstTimeViewingKeys) {
                 redisTemplate.delete(key);
             }
         }

@@ -42,4 +42,6 @@ public interface PopupStoreDao {
     Optional<UserReservationStatus> findUserReservationById(PopupStoreQueryDto popupStoreQueryDto);
 
     boolean updatePopupStoreViews(PopupStoreUpdateDto popupStoreUpdateDto);
+
+    int batchUpdatePopupStoreViews(List<PopupStoreUpdateDto> updates);
 }

@@ -151,10 +151,12 @@
     WHERE popup_store_id = #{popupStoreId}
   </select>
 
-  <update id="updatePopupStoreViews" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto">
-    UPDATE tb_popup_store
-    SET views = #{views}
-    WHERE popup_store_id = #{popupStoreId}
+  <update id="batchUpdatePopupStoreViews" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto">
+    <foreach collection="list" index="index" item="updateDto" open="DECLARE BEGIN" separator=";" close="; END;">
+      UPDATE tb_popup_store
+      SET views = #{updateDto.views}
+      WHERE popup_store_id = #{updateDto.popupStoreId}
+    </foreach>
   </update>
 
 </mapper>
