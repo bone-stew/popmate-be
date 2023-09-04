@@ -1,5 +1,6 @@
 package com.bonestew.popmate.reservation.application;
 
+import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.reservation.application.dto.ReservationRequest;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.UserReservation;
@@ -7,7 +8,6 @@ import com.bonestew.popmate.reservation.exception.AlreadyReservedException;
 import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
 import com.bonestew.popmate.reservation.persistence.ReservationDao;
 import com.bonestew.popmate.reservation.persistence.UserReservationDao;
-import com.bonestew.popmate.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class ReservationEventService {
     public void reserve(final Long reservationId, final Long userId, final ReservationRequest reservationRequest) {
         Reservation reservation = reservationDao.findById(reservationId)
             .orElseThrow(() -> new ReservationNotFoundException(reservationId));
-        User user = new User(userId, null, null, null, null); // 임시 (userDao 필요)
+        User user = new User(userId, null, null, null, null, null, null); // 임시 (userDao 필요)
 
         // TODO: 사용자가 예약 가능한 위치인지 확인
 
