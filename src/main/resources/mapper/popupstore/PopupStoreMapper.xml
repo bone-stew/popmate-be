@@ -25,7 +25,7 @@
     <result column="created_at" property="createdAt"/>
     <result column="views" property="views"/>
     <association property="user" resultMap="userMap"/>
-    <association property="department" resultMap="departmentMap"/>
+    <association property="department" resultMap="Department"/>
   </resultMap>
 
   <resultMap id="userMap" type="User">
@@ -38,6 +38,8 @@
     <result column="place_description" property="placeDescription"/>
     <result column="latitude" property="latitude"/>
     <result column="longitude" property="longitude"/>
+    <result column="open_time" property="openTime"/>
+    <result column="close_time" property="closeTime"/>
   </resultMap>
 
   <resultMap id="popupStoreDetailMap" type="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto">
