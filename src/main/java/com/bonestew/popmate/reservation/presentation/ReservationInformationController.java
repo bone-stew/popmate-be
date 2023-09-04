@@ -25,7 +25,7 @@ public class ReservationInformationController {
     /**
      * 임시 유저 식별자
      */
-    private final Long USER_ID = 1L;
+    private static final Long USER_ID = 1L;
 
     private final ReservationInformationService reservationInformationService;
 
