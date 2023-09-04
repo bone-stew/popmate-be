@@ -25,7 +25,7 @@
     <result column="created_at" property="createdAt"/>
     <result column="views" property="views"/>
     <association property="user" resultMap="userMap"/>
-    <association property="department" resultMap="Department"/>
+    <association property="department" resultMap="departmentMap"/>
   </resultMap>
 
   <resultMap id="userMap" type="User">
