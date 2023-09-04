@@ -2,11 +2,13 @@ package com.bonestew.popmate.popupstore.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@AllArgsConstructor
 public class PopupStoreSearchRequest {
 
     Boolean isOpeningSoon;
