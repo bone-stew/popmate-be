@@ -1,14 +1,29 @@
 spring:
   datasource:
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@localhost:1521:xe
-    username:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+    username: sa
     password:
-  data:
-    redis:
-      host: localhost
-      port: 6379
+  h2:
+    console:
+      enabled: true
 
 jasypt:
   encryptor:
     password: jasyptEncryptorPassword
+
+
+token:
+  sign:
+    key: tokenSignKey
+
+cloud:
+  aws:
+    s3:
+      bucket:
+        name: cloudAwsS3BucketName
+        stack.auto: false
+        region.static: ap-northeast-2
+        credentials:
+          access-key: cloudAwsS3BucketCredentialsAccess-key
+          secret-key: cloudAwsS3BucketCredentialsSecret-key

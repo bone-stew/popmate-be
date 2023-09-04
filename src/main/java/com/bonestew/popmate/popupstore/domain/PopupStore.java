@@ -2,7 +2,7 @@ package com.bonestew.popmate.popupstore.domain;
 
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.date.BaseTime;
-import com.bonestew.popmate.user.domain.User;
+import com.bonestew.popmate.auth.domain.User;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class PopupStore extends BaseTime {
 
     private Long popupStoreId;
     private User user;
-    private Department departmentId;
+    private Department department;
     private ChatRoom chatRoomId;
     private String title;
     private String organizer;
@@ -37,4 +37,5 @@ public class PopupStore extends BaseTime {
     private LocalDateTime closeDate;
     private LocalDateTime openTime;
     private LocalDateTime closeTime;
+    private Long views;
 }

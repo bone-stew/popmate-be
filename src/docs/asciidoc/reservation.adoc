@@ -24,3 +24,12 @@ include::{snippets}/reservation-information-controller-test/일일_예약_목록
 
 === Response
 include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/response-fields.adoc[]
+
+
+== wifi 목록을 통해 예약 가능한 위치인지 확인한다
+
+=== Request
+include::{snippets}/reservation-wifi-controller-test/wifi_목록을_통해_예약_가능한_위치인지_확인한다/request-fields.adoc[]
+
+=== Response
+include::{snippets}/reservation-wifi-controller-test/wifi_목록을_통해_예약_가능한_위치인지_확인한다/response-fields.adoc[]

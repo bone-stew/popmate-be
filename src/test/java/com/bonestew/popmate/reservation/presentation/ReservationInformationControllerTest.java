@@ -59,16 +59,16 @@ class ReservationInformationControllerTest {
                     parameterWithName("popupStoreId").description("조회할 팝업스토어 id")
                 ),
                 responseFields(
-                    fieldWithPath("code").description(ResultCode.SUCCESS.name()),
-                    fieldWithPath("message").description(ResultCode.SUCCESS.getMessage()),
+                    fieldWithPath("code").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data.reservationId").description("예약 id"),
-                    fieldWithPath("data.startTime").description(dateTime),
-                    fieldWithPath("data.endTime").description(dateTime.plusMinutes(15)),
-                    fieldWithPath("data.status").description(ReservationStatus.ACTIVE.getDescription()),
+                    fieldWithPath("data.startTime").description("예약 시작 시간"),
+                    fieldWithPath("data.endTime").description("예약 종료 시간"),
+                    fieldWithPath("data.status").description("예약 상태"),
                     fieldWithPath("data.popupStoreTitle").description("팝업스토어 제목"),
                     fieldWithPath("data.popupStoreDescription").description("팝업스토어 설명"),
-                    fieldWithPath("data.popupStoreOpenTime").description(dateTime),
-                    fieldWithPath("data.popupStoreCloseTime").description(dateTime)
+                    fieldWithPath("data.popupStoreOpenTime").description("팝업스토어 오픈 시간"),
+                    fieldWithPath("data.popupStoreCloseTime").description("팝업스토어 종료 시간")
                 )
             ));
     }
