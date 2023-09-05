@@ -30,7 +30,7 @@ public interface PopupStoreDao {
 
     List<PopupStore> selectPopupStoresToRecommend();
 
-    List<PopupStore> selectPopupStoresEndingInOneWeek();
+    List<PopupStore> selectPopupStoresEndingSoon();
 
     Optional<PopupStoreDetailDto> findPopupStoreDetailById(PopupStoreQueryDto popupStoreQueryDto);
 

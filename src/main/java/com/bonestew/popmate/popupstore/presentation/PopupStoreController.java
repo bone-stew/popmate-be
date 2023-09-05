@@ -50,7 +50,7 @@ public class PopupStoreController {
     }
 
     @GetMapping("/home")
-    public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@RequestParam Long userId) { //Oauth 적용후 유저 정보 가져오기
+    public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@RequestParam("userId") Long userId) { //Oauth 적용후 유저 정보 가져오기
         List<Banner> bannerList = popupStoreService.getBanners();
         List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(userId);
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();

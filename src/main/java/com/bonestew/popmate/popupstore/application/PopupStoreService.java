@@ -55,7 +55,7 @@ public class PopupStoreService {
     }
 
     public List<PopupStore> getPopupStoresEndingSoon() {
-        return popupStoreDao.selectPopupStoresEndingInOneWeek();
+        return popupStoreDao.selectPopupStoresEndingSoon();
     }
 
     public PopupStoreDetailDto getPopupStoreDetail(Long popupStoreId, Long userId) {

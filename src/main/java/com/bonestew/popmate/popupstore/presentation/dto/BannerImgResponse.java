@@ -4,12 +4,14 @@ import com.bonestew.popmate.popupstore.domain.Banner;
 
 public record BannerImgResponse(
         Long bannerId,
-        String imgUrl
+        String imgUrl,
+        Long popupStoreId
 ) {
 
     public static BannerImgResponse from(Banner banner) {
         return new BannerImgResponse(
                 banner.getBannerId(),
-                banner.getImgUrl());
+                banner.getImgUrl(),
+                banner.getPopupStore().getPopupStoreId());
     }
 }

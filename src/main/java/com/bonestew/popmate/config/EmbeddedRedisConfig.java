@@ -18,8 +18,13 @@ public class EmbeddedRedisConfig {
 
     @PostConstruct
     public void init() {
-        redisServer = new RedisServer(redisPort);
+        redisServer = RedisServer.builder()
+                .port(redisPort)
+                .setting("maxmemory 128M")
+                .build();
         redisServer.start();
+//        redisServer = new RedisServer(redisPort);
+//        redisServer.start();
     }
 
     @PreDestroy

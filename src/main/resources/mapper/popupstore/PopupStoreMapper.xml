@@ -47,6 +47,12 @@
     <association property="department" resultMap="departmentMap"/>
   </resultMap>
 
+  <resultMap id="bannerMap" type="Banner">
+    <result column="banner_id" property="bannerId"/>
+    <result column="img_url" property="imgUrl"/>
+    <association property="popupStore" resultMap="popupStoreMap"/>
+  </resultMap>
+
   <select id="findById" parameterType="long" resultType="PopupStore">
     SELECT *
     FROM tb_popup_store
@@ -76,21 +82,21 @@
   </select>
 
 
-  <select id="selectBanners" resultType="Banner">
+<!--  <select id="selectBanners" resultType="Banner">-->
+  <select id="selectBanners" resultMap="bannerMap">
     SELECT * FROM tb_banner
   </select>
 
   <select id="selectPopupStoresVisitedBy" parameterType="User" resultType="PopupStore">
-    SELECT
-    ps.popup_store_id, ps.title, ps.banner_img_url
-    FROM
-    tb_popup_store ps
-    JOIN
-    tb_user_reservation ur ON ps.user_id = ur.user_id
-    WHERE
-    ps.user_id = #{userId}
-    AND ur.status = 1
-    AND ur.created_at = trunc(SYSDATE)
+    select popup_store_id, title, banner_img_url
+    from tb_popup_store
+    where popup_store_id in (
+    select distinct tr.popup_store_id
+    from tb_reservation tr
+    join tb_user_reservation tur
+    on tr.reservation_id = tur.reservation_id
+    where tur.user_id = #{userId}
+    and tur.status = 1)
   </select>
 
   <select id="selectPopupStoresToRecommend" resultType="PopupStore">
@@ -102,15 +108,14 @@
     FETCH FIRST 5 ROWS ONLY
   </select>
 
-  <select id="selectPopupStoresEndingInOneWeek" resultType="PopupStore">
+  <select id="selectPopupStoresEndingSoon" resultType="PopupStore">
     SELECT
     popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
     FROM
     tb_popup_store
-    WHERE
-    trunc(SYSDATE) >= open_date
-    AND (close_date - trunc(SYSDATE)) BETWEEN 0 AND 7
-
+    where sysdate &lt;= close_date
+    order by close_date
+    fetch FIRST 5 ROWS ONLY
   </select>
 
   <select id="findPopupStoreDetailById" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto"
