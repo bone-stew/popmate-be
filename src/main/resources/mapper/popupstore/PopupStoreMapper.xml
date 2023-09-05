@@ -131,12 +131,14 @@
   </select>
 
   <select id="findUserReservationById" parameterType="long" resultType="UserReservationStatus">
-    select  ur.status
+    select ur.status
     from tb_user_reservation ur
     join tb_reservation r
     on ur.reservation_id = r.reservation_id
     where ur.user_id = #{userId} and r.popup_store_id = #{popupStoreId}
     and ur.created_at = trunc(sysdate)
+    order by ur.created_at desc
+    fetch first row only
   </select>
 
   <select id="selectPopupStoreSnss" parameterType="long" resultType="PopupStoreSns">

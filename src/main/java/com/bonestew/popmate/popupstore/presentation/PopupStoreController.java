@@ -61,7 +61,7 @@ public class PopupStoreController {
 
     @GetMapping("/{popupStoreId}")
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
-            @RequestBody Long userId) { //Oauth 적용후 유저 정보 가져오기
+            @RequestParam("userId") Long userId) { //Oauth 적용후 유저 정보 가져오기
         PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
         List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
