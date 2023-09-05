@@ -6,6 +6,7 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
+import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreNearybyQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
@@ -44,4 +45,6 @@ public interface PopupStoreDao {
     boolean updatePopupStoreViews(PopupStoreUpdateDto popupStoreUpdateDto);
 
     int batchUpdatePopupStoreViews(List<PopupStoreUpdateDto> updates);
+
+    List<PopupStore> selectPopupStoresNearBy(PopupStoreNearybyQueryDto popupStoreNearybyQueryDto);
 }

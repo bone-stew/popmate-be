@@ -44,13 +44,13 @@ public class PopupStoreController {
 
     @GetMapping
     public ApiResponse<PopupStoresResponse> getPopupStoreList(
-            @RequestBody(required = false) PopupStoreSearchRequest popupStoreSearchRequest) {
+            @RequestParam(required = false) PopupStoreSearchRequest popupStoreSearchRequest) {
         List<PopupStore> popupStoreList = popupStoreService.getPopupStores(popupStoreSearchRequest);
         return ApiResponse.success(PopupStoresResponse.from(popupStoreList));
     }
 
     @GetMapping("/home")
-    public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@RequestBody Long userId) { //Oauth 적용후 유저 정보 가져오기
+    public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@RequestParam Long userId) { //Oauth 적용후 유저 정보 가져오기
         List<Banner> bannerList = popupStoreService.getBanners();
         List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(userId);
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();
@@ -73,6 +73,13 @@ public class PopupStoreController {
         PopupStore popupStore = popupStoreService.getPopupStore(popupStoreId);
         List<PopupStoreItem> popupStoreItemList = popupStoreService.getPopupStoreGoods(popupStoreId);
         return ApiResponse.success(PopupStoreItemsResponse.of(popupStore, popupStoreItemList));
+    }
+
+    @GetMapping("/{popupStoreId}/nearby")
+    public ApiResponse<PopupStoresResponse> getPopupStoresInSameDepartment(@PathVariable("popupStoreId") Long popupStoreId,
+                                                                           @RequestParam("departmentId") Long departmentId) {
+        List<PopupStore> popupStoreList = popupStoreService.getPopupStoresInDepartment(popupStoreId, departmentId);
+        return ApiResponse.success(PopupStoresResponse.from(popupStoreList));
     }
 
     @PostMapping("/banner")

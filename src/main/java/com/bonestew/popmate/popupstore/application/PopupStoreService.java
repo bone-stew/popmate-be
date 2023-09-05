@@ -9,6 +9,7 @@ import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
 import com.bonestew.popmate.popupstore.exception.PopupStoreUpdateFailedException;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
+import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreNearybyQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
@@ -133,5 +134,10 @@ public class PopupStoreService {
 
     public List<PopupStoreItem> getPopupStoreGoods(Long popupStoreId) {
         return popupStoreDao.selectPopupStoreItems(popupStoreId);
+    }
+
+    public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId, Long departmentId) {
+        return popupStoreDao.selectPopupStoresNearBy(new PopupStoreNearybyQueryDto(popupStoreId, departmentId));
+
     }
 }
