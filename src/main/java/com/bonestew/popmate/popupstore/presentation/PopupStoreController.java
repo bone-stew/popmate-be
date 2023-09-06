@@ -7,8 +7,12 @@ import com.bonestew.popmate.popupstore.config.service.AwsFileService;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreResponse;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/popup-stores")
+@Slf4j
 public class PopupStoreController {
 
     private final PopupStoreService popupStoreService;
@@ -44,8 +49,20 @@ public class PopupStoreController {
 
     @GetMapping
     public ApiResponse<PopupStoresResponse> getPopupStoreList(
-            @RequestParam(required = false) PopupStoreSearchRequest popupStoreSearchRequest) {
-        List<PopupStore> popupStoreList = popupStoreService.getPopupStores(popupStoreSearchRequest);
+
+            @RequestParam(value = "isOpeningSoon", required = false) Boolean isOpeningSoon,
+            @RequestParam(value = "startDate", required = false) String startDateText,
+            @RequestParam(value = "endDate", required = false) String endDateText,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "offSetRows", required = false) Integer offSetRows,
+            @RequestParam(value = "rowsToGet", required = false) Integer rowsToGet
+    ) {
+        List<PopupStore> popupStoreList = popupStoreService.getPopupStores(isOpeningSoon,
+                startDateText,
+                endDateText,
+                keyword,
+                offSetRows,
+                rowsToGet);
         return ApiResponse.success(PopupStoresResponse.from(popupStoreList));
     }
 
@@ -56,12 +73,12 @@ public class PopupStoreController {
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();
         List<PopupStore> popupStoresEndingSoonList = popupStoreService.getPopupStoresEndingSoon();
         return ApiResponse.success(PopupStoreHomeResponse.of(bannerList, popupStoresVisitedByList, popupStoresRecommendList,
-                                                             popupStoresEndingSoonList));
+                popupStoresEndingSoonList));
     }
 
     @GetMapping("/{popupStoreId}")
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
-            @RequestParam("userId") Long userId) { //Oauth 적용후 유저 정보 가져오기
+                                                                   @RequestParam("userId") Long userId) { //Oauth 적용후 유저 정보 가져오기
         PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
         List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);

@@ -6,7 +6,6 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
-import com.bonestew.popmate.popupstore.exception.PopupStoreUpdateFailedException;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreNearybyQueryDto;
@@ -14,9 +13,11 @@ import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
-import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +26,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +40,37 @@ public class PopupStoreService {
         return popupStoreDao.findById(popupStoreId).orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
     }
 
-    public List<PopupStore> getPopupStores(PopupStoreSearchRequest popupStoreSearchRequest) {
+    public List<PopupStore> getPopupStores(
+            Boolean isOpeningSoon,
+            String startDateText,
+            String endDateText,
+            String keyword,
+            Integer offSetRows,
+            Integer rowsToGet
+    ) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now().plusYears(1);
+        if (startDateText != null) {
+            startDate = LocalDate.parse(startDateText, formatter);
+        }
+        if (endDateText != null) {
+            endDate = LocalDate.parse(endDateText, formatter);
+        }
+        isOpeningSoon = Objects.requireNonNullElse(isOpeningSoon, false);
+        keyword = Objects.requireNonNullElse(keyword, "");
+        offSetRows = Objects.requireNonNullElse(offSetRows, 0);
+        rowsToGet = Objects.requireNonNullElse(rowsToGet, 0);
+
+        PopupStoreSearchRequest popupStoreSearchRequest = new PopupStoreSearchRequest(
+                isOpeningSoon,
+                startDate,
+                endDate,
+                keyword,
+                offSetRows,
+                rowsToGet
+        );
         return popupStoreDao.selectPopupStores(popupStoreSearchRequest);
     }
 
@@ -63,13 +95,13 @@ public class PopupStoreService {
         PopupStoreDetailDto popupStoreDetailDto = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto)
                 .orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
         Optional<UserReservationStatus> userReservationStatus = popupStoreDao.findUserReservationById(popupStoreQueryDto);
-        if(userReservationStatus.isPresent()){
+        if (userReservationStatus.isPresent()) {
             popupStoreDetailDto.setUserReservationStatus(userReservationStatus.get());
-        }else {
+        } else {
             popupStoreDetailDto.setUserReservationStatus(UserReservationStatus.CANCELED);
         }
         if (userFirstTimeViewingPost(popupStoreId, userId)) {
-            String userViewKey = "USER-"+ userId + "POST-" + popupStoreId ;
+            String userViewKey = "USER-" + userId + "POST-" + popupStoreId;
             redisTemplate.opsForValue().set(userViewKey, true);
             redisTemplate.expire(userViewKey, 1, TimeUnit.DAYS);
             incrementPostView(popupStoreId, popupStoreDetailDto.getPopupStore().getViews());
@@ -78,7 +110,7 @@ public class PopupStoreService {
     }
 
     private boolean userFirstTimeViewingPost(Long popupStoreId, Long userId) {
-        String userKey = "USER-" + userId + "POST-" + popupStoreId ;
+        String userKey = "USER-" + userId + "POST-" + popupStoreId;
         Boolean keyExists = redisTemplate.hasKey(userKey);
         if (keyExists && keyExists != null) {
             return false;
@@ -92,13 +124,13 @@ public class PopupStoreService {
         if (keyExists && keyExists != null) {
             redisTemplate.opsForValue().increment(postKey);
         } else {
-            redisTemplate.opsForValue().set(postKey, views+1L);
+            redisTemplate.opsForValue().set(postKey, views + 1L);
         }
     }
 
     @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
     @Transactional
-    public void updateRedisPopupStoreViews(){
+    public void updateRedisPopupStoreViews() {
         Set<String> redisKeys = redisTemplate.keys("POST-*");
         List<PopupStoreUpdateDto> updates = new ArrayList<>();
         if (redisKeys != null) {

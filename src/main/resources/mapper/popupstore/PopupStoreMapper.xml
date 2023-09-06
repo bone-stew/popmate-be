@@ -65,7 +65,7 @@
     SELECT popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
     FROM tb_popup_store
     <where>
-      <if test="keyword != null">
+      <if test="keyword != null and keyword != ''">
         AND title LIKE CONCAT(CONCAT('%', #{keyword}), '%')
       </if>
       <if test="isOpeningSoon">
@@ -76,7 +76,7 @@
         OR (close_date BETWEEN #{startDate, jdbcType=TIMESTAMP} AND #{endDate, jdbcType=TIMESTAMP}))
       </if>
     </where>
-    <if test="offSetRows != null and rowsToGet != null and rowsToGet != 0">
+    <if test="offSetRows != 0 and rowsToGet != 0">
       OFFSET #{offSetRows} ROWS FETCH FIRST #{rowsToGet} ROWS ONLY
     </if>
   </select>
