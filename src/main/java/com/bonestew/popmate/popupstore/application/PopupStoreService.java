@@ -8,7 +8,6 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
-import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreNearybyQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
@@ -26,7 +25,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @RequiredArgsConstructor
@@ -168,8 +166,8 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoreItems(popupStoreId);
     }
 
-    public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId, Long departmentId) {
-        return popupStoreDao.selectPopupStoresNearBy(new PopupStoreNearybyQueryDto(popupStoreId, departmentId));
+    public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
+        return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
 
     }
 }

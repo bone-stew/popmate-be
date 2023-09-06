@@ -171,8 +171,7 @@
   <select id="selectPopupStoresNearBy" parameterType="long" resultType="PopupStore">
     select *
     FROM tb_popup_store
-    where department_id = #{departmentId}
+    where department_id = (select department_id from tb_popup_store where popup_store_id = #{popupStoreId})
     and popup_store_id != #{popupStoreId}
-    and sysdate between open_date and close_date
   </select>
 </mapper>

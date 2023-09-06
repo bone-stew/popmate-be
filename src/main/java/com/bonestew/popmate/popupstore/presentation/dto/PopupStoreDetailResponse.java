@@ -1,6 +1,7 @@
 package com.bonestew.popmate.popupstore.presentation.dto;
 
 import com.bonestew.popmate.popupstore.domain.Department;
+import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
@@ -24,12 +25,14 @@ public record PopupStoreDetailResponse(
         Long views,
         Department department,
         List<PopupStoreSns> popupStoreSnsResponses,
-        List<PopupStoreImg> popupStoreImgResponses
+        List<PopupStoreImg> popupStoreImgResponses,
+        List<PopupStore> popupStoresNearBy
 ) {
 
     public static PopupStoreDetailResponse of(PopupStoreDetailDto popupStoreDto,
-                                                List<PopupStoreSns> popupStoreSnsList,
-                                                List<PopupStoreImg> popupStoreImgList) {
+            List<PopupStoreSns> popupStoreSnsList,
+            List<PopupStoreImg> popupStoreImgList,
+            List<PopupStore> popupStoresNearBy) {
         return new PopupStoreDetailResponse(
                 popupStoreDto.getPopupStore().getPopupStoreId(),
                 popupStoreDto.getPopupStore().getTitle(),
@@ -47,7 +50,8 @@ public record PopupStoreDetailResponse(
                 popupStoreDto.getPopupStore().getViews(),
                 popupStoreDto.getDepartment(),
                 popupStoreSnsList,
-                popupStoreImgList
+                popupStoreImgList,
+                popupStoresNearBy
         );
     }
 }
