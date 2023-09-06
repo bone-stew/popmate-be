@@ -43,7 +43,7 @@ class ReservationInformationControllerTest {
         Long popupStoreId = 1L;
         LocalDateTime dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
         Reservation reservation = new Reservation(1L, new PopupStore(), 10, 5, 5, ReservationStatus.ACTIVE,
-            dateTime, dateTime.plusMinutes(15));
+            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45));
 
         // when
         given(reservationInformationService.getActiveReservation(popupStoreId)).willReturn(reservation);
@@ -81,7 +81,7 @@ class ReservationInformationControllerTest {
         LocalDateTime dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
         List<Reservation> reservations = List.of(
             new Reservation(1L, new PopupStore(), 10, 5, 5, ReservationStatus.ACTIVE,
-                LocalDateTime.of(2023, 8, 1, 10, 0), LocalDateTime.of(2023, 8, 1, 10, 15))
+                dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45))
         );
 
         // when
