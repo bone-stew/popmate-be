@@ -1,6 +1,5 @@
 package com.bonestew.popmate.reservation.application;
 
-import com.bonestew.popmate.reservation.application.dto.MyReservationResponse;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
@@ -32,9 +31,8 @@ public class ReservationInformationService {
         return userReservationDao.getByUserId(userId);
     }
 
-    public MyReservationResponse getMyReservation(Long reservationId, Long userId) {
-        UserReservation userReservation = userReservationDao.findByReservationIdAndUserId(reservationId, userId)
+    public UserReservation getMyReservation(Long reservationId, Long userId) {
+        return userReservationDao.findByReservationIdAndUserId(reservationId, userId)
             .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
-        return MyReservationResponse.from(userReservation);
     }
 }

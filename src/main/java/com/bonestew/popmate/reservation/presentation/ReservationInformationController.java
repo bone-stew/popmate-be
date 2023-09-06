@@ -2,7 +2,7 @@ package com.bonestew.popmate.reservation.presentation;
 
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
-import com.bonestew.popmate.reservation.application.dto.MyReservationResponse;
+import com.bonestew.popmate.reservation.presentation.dto.MyReservationResponse;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.presentation.dto.ActiveReservationResponse;
 import com.bonestew.popmate.reservation.presentation.dto.DailyReservationResponse;
@@ -81,8 +81,8 @@ public class ReservationInformationController {
      */
     @GetMapping("/reservations/{reservationId}")
     public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId) {
-        return ApiResponse.success(
+        return ApiResponse.success(MyReservationResponse.from(
             reservationInformationService.getMyReservation(reservationId, USER_ID)
-        );
+        ));
     }
 }
