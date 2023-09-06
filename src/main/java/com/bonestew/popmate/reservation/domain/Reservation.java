@@ -29,6 +29,8 @@ public class Reservation extends BaseTime {
     private ReservationStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private LocalDateTime visitStartTime;
+    private LocalDateTime visitEndTime;
 
     public void validate(final int guestCount) {
         if (this.status != ReservationStatus.ACTIVE) {
