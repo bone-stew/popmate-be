@@ -24,7 +24,7 @@ public record MyReservationResponse(
             userReservation.getGuestCount(),
             userReservation.getReservation().getVisitStartTime(),
             userReservation.getReservation().getVisitEndTime(),
-            userReservation.getReservation().getStatus().name()
+            userReservation.getStatus().name()
         );
     }
 }

@@ -9,14 +9,20 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.exception.enums.ResultCode;
+import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.ReservationStatus;
+import com.bonestew.popmate.reservation.domain.UserReservation;
+import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -37,12 +43,26 @@ class ReservationInformationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private Long popupStoreId;
+    private PopupStore popupStore;
+    private LocalDateTime dateTime;
+    private LocalDate date;
+
+    @BeforeEach
+    void setUp() {
+        popupStoreId = 1L;
+        dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
+        date = LocalDate.of(2023, 10, 1);
+        popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), "Your Title", "Your Organizer",
+            "Your Place Detail", "Your Description", "Your Event Description", "Your Banner Image URL", 100, 200, true,
+            15, 5, 10, dateTime, dateTime.plusDays(14), dateTime, dateTime.plusHours(8), 0L);
+
+    }
+
     @Test
     void 진행_중인_예약을_조회한다() throws Exception {
         // given
-        Long popupStoreId = 1L;
-        LocalDateTime dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
-        Reservation reservation = new Reservation(1L, new PopupStore(), 10, 5, 5, ReservationStatus.ACTIVE,
+        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.ACTIVE,
             dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45));
 
         // when
@@ -76,11 +96,8 @@ class ReservationInformationControllerTest {
     @Test
     void 일일_예약_목록_조회한다() throws Exception {
         // given
-        Long popupStoreId = 1L;
-        LocalDate date = LocalDate.of(2023, 10, 1);
-        LocalDateTime dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
         List<Reservation> reservations = List.of(
-            new Reservation(1L, new PopupStore(), 10, 5, 5, ReservationStatus.ACTIVE,
+            new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.ACTIVE,
                 dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45))
         );
 
@@ -102,13 +119,51 @@ class ReservationInformationControllerTest {
                     fieldWithPath("code").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
                     fieldWithPath("data[].reservationId").description(10),
-                    fieldWithPath("data[].startTime").description(dateTime),
-                    fieldWithPath("data[].endTime").description(dateTime),
+                    fieldWithPath("data[].startTime").description("입장 시작 시간"),
+                    fieldWithPath("data[].endTime").description("입장 종료 시간"),
                     fieldWithPath("data[].guestLimit").description(10),
                     fieldWithPath("data[].currentGuestCount").description(5),
                     fieldWithPath("data[].status").description(ReservationStatus.ACTIVE.getDescription())
                 )
             ));
 
+    }
+
+    @Test
+    void 나의_예약_정보을_조회한다() throws Exception {
+        // given
+        Long reservationId = 1L;
+        Long userId = 1L;
+        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.ACTIVE,
+            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45));
+        UserReservation userReservation = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
+            UserReservationStatus.RESERVED);
+
+        // when
+        given(reservationInformationService.getMyReservation(reservationId, userId)).willReturn(userReservation);
+
+        ResultActions result = mockMvc.perform(
+            get("/api/v1/reservations/{reservationId}", reservationId));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(customDocument(
+                pathParameters(
+                    parameterWithName("reservationId").description("조회할 예약 id")
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.popupStoreTitle").description("팝업 스토어 제목"),
+                    fieldWithPath("data.popupStoreImageUrl").description("팝업 스토어 이미지 URL"),
+                    fieldWithPath("data.popupStorePlaceDetail").description("팝업 스토어 장소 상세 정보"),
+                    fieldWithPath("data.reservationQrImageUrl").description("예약 QR 코드 이미지 URL"),
+                    fieldWithPath("data.guestCount").description("예약 인원 수"),
+                    fieldWithPath("data.visitStartTime").description("입장 시작 시간"),
+                    fieldWithPath("data.visitEndTime").description("입장 종료 시간"),
+                    fieldWithPath("data.reservationStatus").description("예약 상태 (예: PENDING)")
+                )
+            ));
     }
 }
