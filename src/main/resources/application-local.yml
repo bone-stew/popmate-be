@@ -11,6 +11,7 @@ spring:
     redis:
       host: localhost
       port: 6379
+      maxHeap: 128M
 
 mybatis:
   type-aliases-package: com.bonestew.popmate.*.domain

@@ -4,6 +4,7 @@ import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.exception.BadRequestException;
 import com.bonestew.popmate.exception.NotFoundException;
 import com.bonestew.popmate.exception.PopMateException;
+import com.bonestew.popmate.exception.ReservationException;
 import com.bonestew.popmate.exception.enums.ResultCode;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,6 +34,13 @@ public class ApiControllerAdvice {
     public <T> ApiResponse<T> handleNotFoundException(NotFoundException e) {
         log.info("handleNotFoundException: {}", e.getMessage());
         return ApiResponse.failure(ResultCode.NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler(ReservationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public <T> ApiResponse<T> handleReservationException(ReservationException e) {
+        log.info("handleReservationException: {}", e.getMessage());
+        return ApiResponse.failure(ResultCode.CONFLICT, e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

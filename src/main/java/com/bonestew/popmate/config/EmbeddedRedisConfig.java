@@ -14,17 +14,19 @@ public class EmbeddedRedisConfig {
     @Value("${spring.data.redis.port}")
     private int redisPort;
 
+    @Value("${spring.data.redis.maxHeap}")
+    private String maxHeap;
+
     private RedisServer redisServer;
 
     @PostConstruct
     public void init() {
+
+        final String configLine = "maxmemory " + maxHeap;
         redisServer = RedisServer.builder()
-                .port(redisPort)
-                .setting("maxmemory 128M")
-                .build();
-        redisServer.start();
-//        redisServer = new RedisServer(redisPort);
-//        redisServer.start();
+            .port(redisPort)
+            .setting(configLine)
+            .build();
     }
 
     @PreDestroy

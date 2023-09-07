@@ -11,9 +11,13 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ReservationDao {
 
+    Optional<Reservation> findById(Long reservationId);
+
     Optional<Reservation> findActiveByPopupStoreId(@Param("popupStoreId") Long popupStoreId);
 
     List<Reservation> findByPopupStoreIdAndStartDate(Long popupStoreId, LocalDate date);
 
     List<Wifi> findWifiById(Long reservationId);
+
+    void updateCurrentGuestCount(Reservation reservation);
 }

@@ -4,7 +4,6 @@ import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.config.FolderType;
 import com.bonestew.popmate.popupstore.config.service.AwsFileService;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreResponse;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -17,21 +16,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.bonestew.popmate.popupstore.domain.Banner;
-import com.bonestew.popmate.popupstore.domain.PopupStore;
-import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
-import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreHomeResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreDetailResponse;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreItemsResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoresResponse;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,10 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/popup-stores")
 @Slf4j
 public class PopupStoreController {
+
+    private static final Long USER_ID = 1L;
 
     private final PopupStoreService popupStoreService;
     private final AwsFileService awsFileService;
@@ -77,6 +72,7 @@ public class PopupStoreController {
     }
 
     @GetMapping("/{popupStoreId}")
+
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
                                                                    @RequestParam("userId") Long userId) { //Oauth 적용후 유저 정보 가져오기
         PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
@@ -84,14 +80,15 @@ public class PopupStoreController {
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
         List<PopupStore> popupStoreNearByList = popupStoreService.getPopupStoresInDepartment(popupStoreId);
         return ApiResponse.success(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList, popupStoreNearByList));
+
     }
 
-    @GetMapping("/{popupStoreId}/items")
-    public ApiResponse<PopupStoreItemsResponse> getPopupStoreItems(@PathVariable("popupStoreId") Long popupStoreId) {
-        PopupStore popupStore = popupStoreService.getPopupStore(popupStoreId);
-        List<PopupStoreItem> popupStoreItemList = popupStoreService.getPopupStoreGoods(popupStoreId);
-        return ApiResponse.success(PopupStoreItemsResponse.of(popupStore, popupStoreItemList));
-    }
+//    @GetMapping("/{popupStoreId}/items")
+//    public ApiResponse<PopupStoreItemsResponse> getPopupStoreItems(@PathVariable("popupStoreId") Long popupStoreId) {
+//        PopupStore popupStore = popupStoreService.getPopupStore(popupStoreId);
+//        List<PopupStoreItem> popupStoreItemList = popupStoreService.getPopupStoreGoods(popupStoreId);
+//        return ApiResponse.success(PopupStoreItemsResponse.of(popupStore, popupStoreItemList));
+//    }
 
 
     @PostMapping("/banner")
@@ -102,5 +99,6 @@ public class PopupStoreController {
         }
         return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
     }
+
 }
 

@@ -2,6 +2,7 @@ package com.bonestew.popmate.reservation.presentation;
 
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
+import com.bonestew.popmate.reservation.presentation.dto.MyReservationResponse;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.presentation.dto.ActiveReservationResponse;
 import com.bonestew.popmate.reservation.presentation.dto.DailyReservationResponse;
@@ -25,7 +26,7 @@ public class ReservationInformationController {
     /**
      * 임시 유저 식별자
      */
-    private final Long USER_ID = 1L;
+    private static final Long USER_ID = 1L;
 
     private final ReservationInformationService reservationInformationService;
 
@@ -70,5 +71,18 @@ public class ReservationInformationController {
         return ApiResponse.success(
             MyReservationsResponse.from(reservations)
         );
+    }
+
+    /**
+     * 나의 예약 상세 조회
+     *
+     * @param reservationId 예약 식별자
+     * @return 예약 정보
+     */
+    @GetMapping("/reservations/{reservationId}")
+    public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId) {
+        return ApiResponse.success(MyReservationResponse.from(
+            reservationInformationService.getMyReservation(reservationId, USER_ID)
+        ));
     }
 }
