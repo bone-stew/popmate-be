@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonestew.popmate.order.persistence.OrderDao">
+
+  <resultMap id="popupStoreMap" type="PopupStore">
+    <result column="popup_store_id" property="popupStoreId"/>
+  </resultMap>
+
+  <resultMap id="popupStoreItemMap" type="PopupStoreItem">
+    <result column="popup_store_item_id" property="popupStoreItemId"/>
+    <result column="name" property="name"/>
+    <result column="img_url" property="imgUrl"/>
+    <result column="amount" property="amount"/>
+    <result column="stock" property="stock"/>
+    <result column="order_limit" property="orderLimit"/>
+    <result column="created_at" property="createdAt"/>
+    <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
+  </resultMap>
+
+
+  <select id="getItems" parameterType="long" resultMap="popupStoreItemMap">
+    SELECT *
+    FROM TB_POPUP_STORE_ITEM
+    WHERE popup_store_id = #{popupStoreId}
+  </select>
+
+</mapper>

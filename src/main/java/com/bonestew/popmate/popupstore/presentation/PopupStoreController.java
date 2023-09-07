@@ -4,7 +4,6 @@ import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.config.FolderType;
 import com.bonestew.popmate.popupstore.config.service.AwsFileService;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreResponse;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import java.util.Optional;
@@ -14,21 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.bonestew.popmate.popupstore.domain.Banner;
-import com.bonestew.popmate.popupstore.domain.PopupStore;
-import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
-import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreHomeResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreDetailResponse;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreItemsResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoresResponse;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -72,12 +64,12 @@ public class PopupStoreController {
         return ApiResponse.success(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList));
     }
 
-    @GetMapping("/{popupStoreId}/items")
-    public ApiResponse<PopupStoreItemsResponse> getPopupStoreItems(@PathVariable("popupStoreId") Long popupStoreId) {
-        PopupStore popupStore = popupStoreService.getPopupStore(popupStoreId);
-        List<PopupStoreItem> popupStoreItemList = popupStoreService.getPopupStoreGoods(popupStoreId);
-        return ApiResponse.success(PopupStoreItemsResponse.of(popupStore, popupStoreItemList));
-    }
+//    @GetMapping("/{popupStoreId}/items")
+//    public ApiResponse<PopupStoreItemsResponse> getPopupStoreItems(@PathVariable("popupStoreId") Long popupStoreId) {
+//        PopupStore popupStore = popupStoreService.getPopupStore(popupStoreId);
+//        List<PopupStoreItem> popupStoreItemList = popupStoreService.getPopupStoreGoods(popupStoreId);
+//        return ApiResponse.success(PopupStoreItemsResponse.of(popupStore, popupStoreItemList));
+//    }
 
     @PostMapping("/banner")
     public ApiResponse<String> addBanner(@RequestParam MultipartFile multipartFile) {
