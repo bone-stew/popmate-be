@@ -43,7 +43,7 @@ public class ChatService {
         return new ChannelTopic(roomId);
     };
 
-    public List<ChatMessage> loadChatMessagesByRoomId(String roomId) {
-        return chatMessageRepository.findChatMessageByRoomId(roomId);
+    public List<ChatMessage> loadChatMessagesByRoomId(Long roomId) {
+        return chatMessageRepository.findChatMessageByRoomIdOrderByCreatedAtAsc(roomId);
     }
 }

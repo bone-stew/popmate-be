@@ -8,6 +8,7 @@ import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/popup-stores")
 public class PopupStoreController {
+
+    private static final Long USER_ID = 1L;
 
     private final PopupStoreService popupStoreService;
     private final AwsFileService awsFileService;
@@ -52,11 +56,11 @@ public class PopupStoreController {
     }
 
     @GetMapping("/{popupStoreId}")
-    public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
-            @RequestBody Long userId) { //Oauth 적용후 유저 정보 가져오기
-        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
+    public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId) { //Oauth 적용후 유저 정보 가져오기
+        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, USER_ID);
         List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
+        log.debug(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList).toString());
         return ApiResponse.success(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList));
     }
 
@@ -75,5 +79,6 @@ public class PopupStoreController {
         }
         return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
     }
+
 }
 

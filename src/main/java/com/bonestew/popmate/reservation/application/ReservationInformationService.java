@@ -3,6 +3,7 @@ package com.bonestew.popmate.reservation.application;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
+import com.bonestew.popmate.reservation.exception.UserReservationNotFoundException;
 import com.bonestew.popmate.reservation.persistence.ReservationDao;
 import com.bonestew.popmate.reservation.persistence.UserReservationDao;
 import java.time.LocalDate;
@@ -28,5 +29,10 @@ public class ReservationInformationService {
 
     public List<UserReservation> getMyReservations(Long userId) {
         return userReservationDao.getByUserId(userId);
+    }
+
+    public UserReservation getMyReservation(Long reservationId, Long userId) {
+        return userReservationDao.findByReservationIdAndUserId(reservationId, userId)
+            .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
     }
 }

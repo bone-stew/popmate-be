@@ -20,10 +20,10 @@ public class ChatMessage {
 
     @Id
     private String id;
-
-    private String sender;
+    private String name;
+    private Long sender;
     private String message;
-    private String roomId;
+    private Long roomId;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

@@ -33,3 +33,12 @@ include::{snippets}/reservation-wifi-controller-test/wifi_목록을_통해_예�
 
 === Response
 include::{snippets}/reservation-wifi-controller-test/wifi_목록을_통해_예약_가능한_위치인지_확인한다/response-fields.adoc[]
+
+
+== 나의 예약 정보를 조회한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/나의_예약_정보을_조회한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/나의_예약_정보을_조회한다/response-fields.adoc[]
