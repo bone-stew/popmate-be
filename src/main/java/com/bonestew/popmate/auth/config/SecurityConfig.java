@@ -26,11 +26,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/**")
-                .permitAll().anyRequest().authenticated())
-            .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-            .authenticationProvider(authenticationProvider()).addFilterBefore(
-                jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/**")
+                        .permitAll().anyRequest().permitAll())
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(authenticationProvider()).addFilterBefore(
+                        jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
