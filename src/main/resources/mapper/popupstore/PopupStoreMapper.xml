@@ -72,8 +72,8 @@
         AND trunc(SYSDATE) &lt; open_date
       </if>
       <if test="!isOpeningSoon and (startDate != null and endDate != null)">
-        AND ((open_date BETWEEN #{startDate, jdbcType=TIMESTAMP} AND #{endDate, jdbcType=TIMESTAMP})
-        OR (close_date BETWEEN #{startDate, jdbcType=TIMESTAMP} AND #{endDate, jdbcType=TIMESTAMP}))
+        AND ((#{startDate, jdbcType=TIMESTAMP} BETWEEN open_date AND close_date)
+        OR (#{startDate, jdbcType=TIMESTAMP} BETWEEN open_date AND close_date))
       </if>
     </where>
     <if test="offSetRows != 0 and rowsToGet != 0">
