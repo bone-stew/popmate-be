@@ -34,7 +34,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/popup-stores")
-@Slf4j
 public class PopupStoreController {
 
     private static final Long USER_ID = 1L;
