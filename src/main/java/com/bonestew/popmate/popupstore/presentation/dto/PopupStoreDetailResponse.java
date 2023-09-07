@@ -1,5 +1,7 @@
 package com.bonestew.popmate.popupstore.presentation.dto;
 
+import com.bonestew.popmate.popupstore.domain.Department;
+import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
@@ -7,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record PopupStoreDetailResponse(
+        Long popupStoreId,
         String title,
         String organizer,
         String placeDetail,
@@ -19,19 +22,19 @@ public record PopupStoreDetailResponse(
         LocalDateTime openTime,
         LocalDateTime closeTime,
         int status,
-        String departmentName,
-        String departmentDescription,
-        double latitude,
-        double longitude,
         Long views,
+        Department department,
         List<PopupStoreSns> popupStoreSnsResponses,
-        List<PopupStoreImg> popupStoreImgResponses
+        List<PopupStoreImg> popupStoreImgResponses,
+        List<PopupStore> popupStoresNearBy
 ) {
 
     public static PopupStoreDetailResponse of(PopupStoreDetailDto popupStoreDto,
-                                                List<PopupStoreSns> popupStoreSnsList,
-                                                List<PopupStoreImg> popupStoreImgList) {
+            List<PopupStoreSns> popupStoreSnsList,
+            List<PopupStoreImg> popupStoreImgList,
+            List<PopupStore> popupStoresNearBy) {
         return new PopupStoreDetailResponse(
+                popupStoreDto.getPopupStore().getPopupStoreId(),
                 popupStoreDto.getPopupStore().getTitle(),
                 popupStoreDto.getPopupStore().getOrganizer(),
                 popupStoreDto.getPopupStore().getPlaceDetail(),
@@ -44,13 +47,11 @@ public record PopupStoreDetailResponse(
                 popupStoreDto.getPopupStore().getOpenTime(),
                 popupStoreDto.getPopupStore().getCloseTime(),
                 popupStoreDto.getUserReservationStatus().getCode(),
-                popupStoreDto.getDepartment().getName(),
-                popupStoreDto.getDepartment().getPlaceDescription(),
-                popupStoreDto.getDepartment().getLatitude(),
-                popupStoreDto.getDepartment().getLongitude(),
                 popupStoreDto.getPopupStore().getViews(),
+                popupStoreDto.getDepartment(),
                 popupStoreSnsList,
-                popupStoreImgList
+                popupStoreImgList,
+                popupStoresNearBy
         );
     }
 }

@@ -6,6 +6,9 @@ import com.bonestew.popmate.popupstore.config.FolderType;
 import com.bonestew.popmate.popupstore.config.service.AwsFileService;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,28 +43,43 @@ public class PopupStoreController {
 
     @GetMapping
     public ApiResponse<PopupStoresResponse> getPopupStoreList(
-            @RequestBody(required = false) PopupStoreSearchRequest popupStoreSearchRequest) {
-        List<PopupStore> popupStoreList = popupStoreService.getPopupStores(popupStoreSearchRequest);
+
+            @RequestParam(value = "isOpeningSoon", required = false) Boolean isOpeningSoon,
+            @RequestParam(value = "startDate", required = false) String startDateText,
+            @RequestParam(value = "endDate", required = false) String endDateText,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "offSetRows", required = false) Integer offSetRows,
+            @RequestParam(value = "rowsToGet", required = false) Integer rowsToGet
+    ) {
+        List<PopupStore> popupStoreList = popupStoreService.getPopupStores(isOpeningSoon,
+                startDateText,
+                endDateText,
+                keyword,
+                offSetRows,
+                rowsToGet);
         return ApiResponse.success(PopupStoresResponse.from(popupStoreList));
     }
 
     @GetMapping("/home")
-    public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@RequestBody Long userId) { //Oauth 적용후 유저 정보 가져오기
+    public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@RequestParam("userId") Long userId) { //Oauth 적용후 유저 정보 가져오기
         List<Banner> bannerList = popupStoreService.getBanners();
         List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(userId);
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();
         List<PopupStore> popupStoresEndingSoonList = popupStoreService.getPopupStoresEndingSoon();
         return ApiResponse.success(PopupStoreHomeResponse.of(bannerList, popupStoresVisitedByList, popupStoresRecommendList,
-                                                             popupStoresEndingSoonList));
+                popupStoresEndingSoonList));
     }
 
     @GetMapping("/{popupStoreId}")
-    public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId) { //Oauth 적용후 유저 정보 가져오기
-        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, USER_ID);
+
+    public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
+                                                                   @RequestParam("userId") Long userId) { //Oauth 적용후 유저 정보 가져오기
+        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
         List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
-        log.debug(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList).toString());
-        return ApiResponse.success(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList));
+        List<PopupStore> popupStoreNearByList = popupStoreService.getPopupStoresInDepartment(popupStoreId);
+        return ApiResponse.success(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList, popupStoreNearByList));
+
     }
 
 //    @GetMapping("/{popupStoreId}/items")
@@ -70,6 +88,7 @@ public class PopupStoreController {
 //        List<PopupStoreItem> popupStoreItemList = popupStoreService.getPopupStoreGoods(popupStoreId);
 //        return ApiResponse.success(PopupStoreItemsResponse.of(popupStore, popupStoreItemList));
 //    }
+
 
     @PostMapping("/banner")
     public ApiResponse<String> addBanner(@RequestParam MultipartFile multipartFile) {

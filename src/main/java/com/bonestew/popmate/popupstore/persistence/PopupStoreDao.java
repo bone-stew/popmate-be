@@ -29,7 +29,7 @@ public interface PopupStoreDao {
 
     List<PopupStore> selectPopupStoresToRecommend();
 
-    List<PopupStore> selectPopupStoresEndingInOneWeek();
+    List<PopupStore> selectPopupStoresEndingSoon();
 
     Optional<PopupStoreDetailDto> findPopupStoreDetailById(PopupStoreQueryDto popupStoreQueryDto);
 
@@ -41,5 +41,7 @@ public interface PopupStoreDao {
 
     Optional<UserReservationStatus> findUserReservationById(PopupStoreQueryDto popupStoreQueryDto);
 
-    boolean updatePopupStoreViews(PopupStoreUpdateDto popupStoreUpdateDto);
+    int batchUpdatePopupStoreViews(List<PopupStoreUpdateDto> updates);
+
+    List<PopupStore> selectPopupStoresNearBy(Long popupStoreId);
 }

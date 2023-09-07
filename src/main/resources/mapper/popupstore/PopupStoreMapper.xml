@@ -38,11 +38,19 @@
     <result column="place_description" property="placeDescription"/>
     <result column="latitude" property="latitude"/>
     <result column="longitude" property="longitude"/>
+    <result column="open_time" property="openTime"/>
+    <result column="close_time" property="closeTime"/>
   </resultMap>
 
   <resultMap id="popupStoreDetailMap" type="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto">
     <association property="popupStore" resultMap="popupStoreMap"/>
     <association property="department" resultMap="departmentMap"/>
+  </resultMap>
+
+  <resultMap id="bannerMap" type="Banner">
+    <result column="banner_id" property="bannerId"/>
+    <result column="img_url" property="imgUrl"/>
+    <association property="popupStore" resultMap="popupStoreMap"/>
   </resultMap>
 
   <select id="findById" parameterType="long" resultType="PopupStore">
@@ -57,38 +65,39 @@
     SELECT popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
     FROM tb_popup_store
     <where>
-      <if test="keyword != null">
+      <if test="keyword != null and keyword != ''">
         AND title LIKE CONCAT(CONCAT('%', #{keyword}), '%')
       </if>
       <if test="isOpeningSoon">
         AND trunc(SYSDATE) &lt; open_date
       </if>
       <if test="!isOpeningSoon and (startDate != null and endDate != null)">
-        AND ((open_date BETWEEN #{startDate, jdbcType=TIMESTAMP} AND #{endDate, jdbcType=TIMESTAMP})
-        OR (close_date BETWEEN #{startDate, jdbcType=TIMESTAMP} AND #{endDate, jdbcType=TIMESTAMP}))
+        AND ((#{startDate, jdbcType=TIMESTAMP} BETWEEN open_date AND close_date)
+        OR (#{startDate, jdbcType=TIMESTAMP} BETWEEN open_date AND close_date))
       </if>
     </where>
-    <if test="offSetRows != null and rowsToGet != null and rowsToGet != 0">
+    <if test="offSetRows != 0 and rowsToGet != 0">
       OFFSET #{offSetRows} ROWS FETCH FIRST #{rowsToGet} ROWS ONLY
     </if>
   </select>
 
 
-  <select id="selectBanners" resultType="Banner">
+<!--  <select id="selectBanners" resultType="Banner">-->
+  <select id="selectBanners" resultMap="bannerMap">
     SELECT * FROM tb_banner
   </select>
 
   <select id="selectPopupStoresVisitedBy" parameterType="User" resultType="PopupStore">
-    SELECT
-    ps.popup_store_id, ps.title, ps.banner_img_url
-    FROM
-    tb_popup_store ps
-    JOIN
-    tb_user_reservation ur ON ps.user_id = ur.user_id
-    WHERE
-    ps.user_id = #{userId}
-    AND ur.status = 1
-    AND ur.created_at = trunc(SYSDATE)
+    select popup_store_id, title, banner_img_url
+    from tb_popup_store
+    where popup_store_id in (
+    select distinct tr.popup_store_id
+    from tb_reservation tr
+    join tb_user_reservation tur
+    on tr.reservation_id = tur.reservation_id
+    where tur.user_id = #{userId}
+    and tur.status = 1
+    and tur.created_at = trunc(sysdate))
   </select>
 
   <select id="selectPopupStoresToRecommend" resultType="PopupStore">
@@ -100,15 +109,14 @@
     FETCH FIRST 5 ROWS ONLY
   </select>
 
-  <select id="selectPopupStoresEndingInOneWeek" resultType="PopupStore">
+  <select id="selectPopupStoresEndingSoon" resultType="PopupStore">
     SELECT
     popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
     FROM
     tb_popup_store
-    WHERE
-    trunc(SYSDATE) >= open_date
-    AND (close_date - trunc(SYSDATE)) BETWEEN 0 AND 7
-
+    where sysdate &lt;= close_date
+    order by close_date
+    fetch FIRST 5 ROWS ONLY
   </select>
 
   <select id="findPopupStoreDetailById" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto"
@@ -124,12 +132,14 @@
   </select>
 
   <select id="findUserReservationById" parameterType="long" resultType="UserReservationStatus">
-    select  ur.status
+    select ur.status
     from tb_user_reservation ur
     join tb_reservation r
     on ur.reservation_id = r.reservation_id
     where ur.user_id = #{userId} and r.popup_store_id = #{popupStoreId}
     and ur.created_at = trunc(sysdate)
+    order by ur.created_at desc
+    fetch first row only
   </select>
 
   <select id="selectPopupStoreSnss" parameterType="long" resultType="PopupStoreSns">
@@ -151,10 +161,18 @@
     WHERE popup_store_id = #{popupStoreId}
   </select>
 
-  <update id="updatePopupStoreViews" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto">
-    UPDATE tb_popup_store
-    SET views = #{views}
-    WHERE popup_store_id = #{popupStoreId}
+  <update id="batchUpdatePopupStoreViews" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto">
+    <foreach collection="list" index="index" item="updateDto" open="DECLARE BEGIN" separator=";" close="; END;">
+      UPDATE tb_popup_store
+      SET views = #{updateDto.views}
+      WHERE popup_store_id = #{updateDto.popupStoreId}
+    </foreach>
   </update>
 
+  <select id="selectPopupStoresNearBy" parameterType="long" resultType="PopupStore">
+    select *
+    FROM tb_popup_store
+    where department_id = (select department_id from tb_popup_store where popup_store_id = #{popupStoreId})
+    and popup_store_id != #{popupStoreId}
+  </select>
 </mapper>
