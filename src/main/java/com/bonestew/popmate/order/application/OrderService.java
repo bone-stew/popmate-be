@@ -2,7 +2,6 @@ package com.bonestew.popmate.order.application;
 
 import com.bonestew.popmate.order.persistence.OrderDao;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
-import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

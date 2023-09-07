@@ -34,7 +34,7 @@ public class OrderController {
     @PostMapping("/orders/new")
     public ApiResponse<PopupStoreItemsResponse> orderPopupStoreItems(@RequestBody OrderItemRequest popupStore){
 
-        System.out.println(popupStore.getPopupStore().get(0).);
+        System.out.println(popupStore.getPopupStore().get(0));
         return null;
     }
 
