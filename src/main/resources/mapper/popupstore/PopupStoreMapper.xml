@@ -96,7 +96,8 @@
     join tb_user_reservation tur
     on tr.reservation_id = tur.reservation_id
     where tur.user_id = #{userId}
-    and tur.status = 1)
+    and tur.status = 1
+    and tur.created_at = trunc(sysdate))
   </select>
 
   <select id="selectPopupStoresToRecommend" resultType="PopupStore">
