@@ -68,12 +68,12 @@ public class PopupStoreController {
         return ApiResponse.success(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList));
     }
 
-    @GetMapping("/{popupStoreId}/items")
-    public ApiResponse<PopupStoreItemsResponse> getPopupStoreItems(@PathVariable("popupStoreId") Long popupStoreId) {
-        PopupStore popupStore = popupStoreService.getPopupStore(popupStoreId);
-        List<PopupStoreItem> popupStoreItemList = popupStoreService.getPopupStoreGoods(popupStoreId);
-        return ApiResponse.success(PopupStoreItemsResponse.of(popupStore, popupStoreItemList));
-    }
+//    @GetMapping("/{popupStoreId}/items")
+//    public ApiResponse<PopupStoreItemsResponse> getPopupStoreItems(@PathVariable("popupStoreId") Long popupStoreId) {
+//        PopupStore popupStore = popupStoreService.getPopupStore(popupStoreId);
+//        List<PopupStoreItem> popupStoreItemList = popupStoreService.getPopupStoreGoods(popupStoreId);
+//        return ApiResponse.success(PopupStoreItemsResponse.of(popupStore, popupStoreItemList));
+//    }
 
     @PostMapping("/banner")
     public ApiResponse<String> addBanner(@RequestParam MultipartFile multipartFile) {
