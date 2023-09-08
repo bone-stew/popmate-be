@@ -1,7 +1,5 @@
 package com.bonestew.popmate.auth.application;
 
-import com.bonestew.popmate.auth.domain.OauthUser;
-import com.bonestew.popmate.auth.domain.JwtAuthenticationResponse;
 import com.bonestew.popmate.auth.domain.SocialProvider;
 import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.auth.persistence.UserDao;

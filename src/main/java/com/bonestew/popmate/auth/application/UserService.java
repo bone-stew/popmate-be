@@ -3,8 +3,6 @@ package com.bonestew.popmate.auth.application;
 import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.auth.persistence.UserDao;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 

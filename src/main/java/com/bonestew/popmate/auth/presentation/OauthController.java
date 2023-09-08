@@ -1,18 +1,12 @@
 package com.bonestew.popmate.auth.presentation;
 
 import com.bonestew.popmate.auth.application.OauthService;
-import com.bonestew.popmate.auth.config.SecurityUtil;
 import com.bonestew.popmate.auth.domain.JwtAuthenticationResponse;
-import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.auth.presentation.dto.GoogleLoginRequest;
 import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

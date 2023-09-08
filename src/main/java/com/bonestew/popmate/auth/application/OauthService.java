@@ -5,7 +5,6 @@ import com.bonestew.popmate.auth.domain.SocialProvider;
 import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.auth.persistence.OauthDao;
 import com.bonestew.popmate.auth.presentation.dto.GoogleLoginRequest;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
