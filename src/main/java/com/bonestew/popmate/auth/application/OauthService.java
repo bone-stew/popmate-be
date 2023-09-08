@@ -21,7 +21,7 @@ public class OauthService {
         // 유저가 있는지 없는지 확인 로직
         OauthUser user = oauthDao.findCheck(oauthUser.getEmail());
         if(user != null){   // 유저가 있으면
-            return authenticationService.signin(user);
+            return authenticationService.signin(user.getEmail());
         }else{  // 첫 로그인
             return authenticationService.signup(oauthUser);
         }
@@ -31,7 +31,7 @@ public class OauthService {
         // 유저가 있는지 없는지 확인 로직
         OauthUser user = oauthDao.findCheck(oauthUser.getEmail());
         if(user != null){   // 유저가 있으면
-            return authenticationService.signin(user);
+            return authenticationService.signin(user.getEmail());
         }else{  // 첫 로그인
             return authenticationService.signup(oauthUser);
         }

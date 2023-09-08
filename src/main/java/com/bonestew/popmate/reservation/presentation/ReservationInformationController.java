@@ -1,5 +1,6 @@
 package com.bonestew.popmate.reservation.presentation;
 
+import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
 import com.bonestew.popmate.reservation.presentation.dto.MyReservationResponse;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,7 +82,9 @@ public class ReservationInformationController {
      * @return 예약 정보
      */
     @GetMapping("/reservations/{reservationId}")
-    public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId) {
+    public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId,
+                                                             @AuthenticationPrincipal PopmateUser popmateUser) {
+        System.out.println("popmateUser = " + popmateUser);
         return ApiResponse.success(MyReservationResponse.from(
             reservationInformationService.getMyReservation(reservationId, USER_ID)
         ));

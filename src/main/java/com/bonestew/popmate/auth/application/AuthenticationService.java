@@ -18,16 +18,16 @@ public class AuthenticationService  {
         User user = User.builder().email(oauthUser.getEmail()).provider(oauthUser.getProvider())
             .name(oauthUser.getName()).build();
         userDao.register(user);
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user.getUserId(), user.getEmail());
         return JwtAuthenticationResponse.builder().token(jwtToken).build();
     }
 
-    public JwtAuthenticationResponse signin(OauthUser oauthUser) {
+    public JwtAuthenticationResponse signin(String email) {
 //        authenticationManager.authenticate(
 //            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        User user = userDao.findByEmail(oauthUser.getEmail())
+        User user = userDao.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
-        String jwt = jwtService.generateToken(user);
+        String jwt = jwtService.generateToken(user.getUserId(), user.getEmail());
         return JwtAuthenticationResponse.builder().token(jwt).build();
     }
 
