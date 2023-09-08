@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.bonestew.popmate.auth.application.OauthService;
 import com.bonestew.popmate.auth.domain.OauthUser;
 import com.bonestew.popmate.auth.domain.JwtAuthenticationResponse;
+import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.exception.enums.ResultCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +57,9 @@ class OauthControllerTest {
                     fieldWithPath("code").description("인가코드")
                 ),
                 responseFields(
-                    fieldWithPath("token").description("JWT토큰")
+                    fieldWithPath("code").description(ResultCode.SUCCESS.name()),
+                    fieldWithPath("message").description(ResultCode.SUCCESS.getMessage()),
+                    fieldWithPath("data.token").description("JWT토큰")
                 )
             ));
     }
@@ -63,16 +67,15 @@ class OauthControllerTest {
 
     @Test
     void 구글_로그인을_한다() throws Exception{
-        OauthUser oauthUser = new OauthUser();
-        oauthUser.setEmail("frogs6225@naver.com");
-        oauthUser.setName("조재룡");
-//        oauthUser.setProvider();
+        User user = new User();
+        user.setEmail("frogs6225@naver.com");
+        user.setName("조재룡");
+
         // ObjectMapper를 이용하여 객체를 JSON 문자열로 변환
         ObjectMapper objectMapper = new ObjectMapper();
-        String oauthUserJson = objectMapper.writeValueAsString(oauthUser);
+        String oauthUserJson = objectMapper.writeValueAsString(user);
 
-        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse("jwttokenfdfewojdddwddwdwdwdwadwadfe");
-//        given(oauthService.loginGoogle(any())).willReturn(jwtAuthenticationResponse);
+        given(oauthService.loginGoogle(any())).willReturn("jwtAuthenticationResponse");
 
         ResultActions result = mockMvc.perform(
             post("/api/v1/oauth/google")
@@ -92,7 +95,9 @@ class OauthControllerTest {
                     fieldWithPath("role").description("역할").optional() // optional 필드로 처리
                 ),
                 responseFields(
-                    fieldWithPath("token").description("JWT토큰")
+                    fieldWithPath("code").description(ResultCode.SUCCESS.name()),
+                    fieldWithPath("message").description(ResultCode.SUCCESS.getMessage()),
+                    fieldWithPath("data.token").description("JWT토큰")
                 )
             ));
     }
