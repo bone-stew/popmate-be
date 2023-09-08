@@ -1,8 +1,11 @@
 package com.bonestew.popmate.auth.application;
 
-import com.bonestew.popmate.auth.domain.OauthUser;
+import com.bonestew.popmate.auth.application.dto.UserInformationDto;
+import com.bonestew.popmate.auth.domain.SocialProvider;
+import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.auth.persistence.OauthDao;
-import com.bonestew.popmate.auth.domain.JwtAuthenticationResponse;
+import com.bonestew.popmate.auth.presentation.dto.GoogleLoginRequest;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,27 +17,21 @@ public class OauthService {
     private final KaKaoClient kaKaoClient;
     private final AuthenticationService authenticationService;
 
-
-    public JwtAuthenticationResponse loginKakaoOauthService(String code) {
-        // 카카오 유저 정보 가져오는 곳
-        OauthUser oauthUser = kaKaoClient.getUserInfo(code);
-        // 유저가 있는지 없는지 확인 로직
-        OauthUser user = oauthDao.findCheck(oauthUser.getEmail());
-        if(user != null){   // 유저가 있으면
+    public String loginKakao(String code) {
+        UserInformationDto userInformation = kaKaoClient.getUserInformation(code);
+        User user = oauthDao.selectByEmail(userInformation.email());
+        if (user != null) {
             return authenticationService.signin(user.getEmail());
-        }else{  // 첫 로그인
-            return authenticationService.signup(oauthUser);
         }
-
+        return authenticationService.signup(userInformation.name(), userInformation.email(), SocialProvider.KAKAO);
     }
-    public JwtAuthenticationResponse loginGoogleOauthService(OauthUser oauthUser) {
-        // 유저가 있는지 없는지 확인 로직
-        OauthUser user = oauthDao.findCheck(oauthUser.getEmail());
-        if(user != null){   // 유저가 있으면
+
+    public String loginGoogle(GoogleLoginRequest request) {
+        User user = oauthDao.selectByEmail(request.email());
+        if (user != null) {
             return authenticationService.signin(user.getEmail());
-        }else{  // 첫 로그인
-            return authenticationService.signup(oauthUser);
         }
+        return authenticationService.signup(request.name(), request.email(), SocialProvider.GOOGLE);
     }
 
 }

@@ -22,7 +22,7 @@ public class User {
     private Long userId;
     private String email;
     private String password;
-    private String provider;
+    private SocialProvider provider;
     private Role role;
     private String name;
     private LocalDateTime createdAt;

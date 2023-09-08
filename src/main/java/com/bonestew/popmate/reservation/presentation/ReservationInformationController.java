@@ -68,7 +68,8 @@ public class ReservationInformationController {
      * @return 예약 목록
      */
     @GetMapping("members/me/reservations")
-    public ApiResponse<MyReservationsResponse> getMyReservations() {
+    public ApiResponse<MyReservationsResponse> getMyReservations(@AuthenticationPrincipal PopmateUser popmateUser) {
+        System.out.println("popmateUser = " + popmateUser.getUserId());
         List<UserReservation> reservations = reservationInformationService.getMyReservations(USER_ID);
         return ApiResponse.success(
             MyReservationsResponse.from(reservations)
@@ -82,9 +83,7 @@ public class ReservationInformationController {
      * @return 예약 정보
      */
     @GetMapping("/reservations/{reservationId}")
-    public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId,
-                                                             @AuthenticationPrincipal PopmateUser popmateUser) {
-        System.out.println("popmateUser = " + popmateUser);
+    public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId) {
         return ApiResponse.success(MyReservationResponse.from(
             reservationInformationService.getMyReservation(reservationId, USER_ID)
         ));

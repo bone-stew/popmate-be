@@ -38,8 +38,7 @@ class OauthControllerTest {
     @Test
     void 카카오_로그인을_한다() throws Exception {
         String code = "dsdsddw";
-        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse("jwttokenfdfewojdddwddwdwdwadwadfe");
-        given(oauthService.loginKakaoOauthService(any())).willReturn(jwtAuthenticationResponse);
+        given(oauthService.loginKakao(any())).willReturn("jwtAuthenticationResponse");
 
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("code", code);
@@ -67,13 +66,13 @@ class OauthControllerTest {
         OauthUser oauthUser = new OauthUser();
         oauthUser.setEmail("frogs6225@naver.com");
         oauthUser.setName("조재룡");
-        oauthUser.setProvider("Google");
+//        oauthUser.setProvider();
         // ObjectMapper를 이용하여 객체를 JSON 문자열로 변환
         ObjectMapper objectMapper = new ObjectMapper();
         String oauthUserJson = objectMapper.writeValueAsString(oauthUser);
 
         JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse("jwttokenfdfewojdddwddwdwdwdwadwadfe");
-        given(oauthService.loginGoogleOauthService(any())).willReturn(jwtAuthenticationResponse);
+//        given(oauthService.loginGoogle(any())).willReturn(jwtAuthenticationResponse);
 
         ResultActions result = mockMvc.perform(
             post("/api/v1/oauth/google")

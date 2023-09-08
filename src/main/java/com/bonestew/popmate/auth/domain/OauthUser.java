@@ -14,11 +14,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class OauthUser extends BaseTime {
 
-    // 이건 나중에
-    private Long userId;
     private String email;
-    private String password;
     private String name;
-    private String provider;
-    private String role;
 }
