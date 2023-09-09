@@ -38,3 +38,6 @@ out/
 
 ### Rest Docs ###
 src/main/resources/static/docs/**
+
+## OpenAPI Specification ###
+src/main/resources/static/openapi/**

@@ -101,10 +101,10 @@ openapi3 {
 tasks.register('copyOasToSwagger', Copy) {
     dependsOn('openapi3')
     doFirst {
-        delete file('src/main/resources/static/swagger-ui/.')
+        delete file('src/main/resources/static/openapi/.')
     }
     from file("$buildDir/api-spec/openapi3.yaml")
-    into file('src/main/resources/static/swagger-ui/.')
+    into file('src/main/resources/static/openapi/.')
 }
 
 bootJar {
