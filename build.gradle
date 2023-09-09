@@ -30,7 +30,7 @@ dependencies {
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
     implementation 'com.oracle.database.jdbc:ojdbc10:19.20.0.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation ('it.ozimov:embedded-redis:0.7.3') {
+    implementation('it.ozimov:embedded-redis:0.7.3') {
         exclude group: 'org.slf4j', module: 'slf4j-simple'
     }
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -99,9 +99,9 @@ openapi3 {
 }
 
 tasks.register('copyOasToSwagger', Copy) {
-    dependsOn('openapi3')
+    dependsOn 'openapi3'
     doFirst {
-        delete file('src/main/resources/static/openapi/.')
+        delete file('src/main/resources/static/openapi/openapi3.yaml')
     }
     from file("$buildDir/api-spec/openapi3.yaml")
     into file('src/main/resources/static/openapi/.')

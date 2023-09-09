@@ -40,4 +40,4 @@ out/
 src/main/resources/static/docs/**
 
 ## OpenAPI Specification ###
-src/main/resources/static/openapi/**
+src/main/resources/static/openapi/openapi3.yaml
