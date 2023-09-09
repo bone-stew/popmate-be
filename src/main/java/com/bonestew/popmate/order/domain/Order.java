@@ -21,4 +21,10 @@ public class Order extends BaseTime {
     private PopupStore popupStore;
     private int totalAmount;
     private int status;
+    // 이건 토스페이먼츠 주문번호
+    private String orderTossId;
+    private String url;
+    private String cardType;
+    private String easyPay;
+    private String method;
 }

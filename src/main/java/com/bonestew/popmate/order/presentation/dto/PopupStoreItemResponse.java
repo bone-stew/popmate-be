@@ -1,7 +1,7 @@
 package com.bonestew.popmate.order.presentation.dto;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 
-public record PopupStoreItemResponse(
+public record   PopupStoreItemResponse(
     Long itemId,
     String name,
     Long popupStoreId,

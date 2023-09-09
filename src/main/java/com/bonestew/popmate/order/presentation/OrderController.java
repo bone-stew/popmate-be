@@ -4,6 +4,7 @@ import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.order.application.OrderService;
 import com.bonestew.popmate.order.domain.AndroidOrderItem;
+import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.presentation.dto.OrderItemRequest;
 import com.bonestew.popmate.order.presentation.dto.OrderResponse;
 import com.bonestew.popmate.order.presentation.dto.PopupStoreItemsResponse;
@@ -40,10 +41,17 @@ public class OrderController {
     @PostMapping("/orders/new")
     public ApiResponse<OrderResponse> orderPopupStoreItems(@RequestBody OrderItemRequest popupStore, @AuthenticationPrincipal PopmateUser popmateUser){
         List<AndroidOrderItem> orderItems = popupStore.getPopupStore();
-        String insertCheck = orderService.insertItems(orderItems, USER_ID);
+        String insertCheck = orderService.insertItems(orderItems, USER_ID, popupStore.getOrderId(), popupStore.getCardType(),popupStore.getUrl(),popupStore.getEasyPay(),popupStore.getMethod());
         return ApiResponse.success(
             OrderResponse.from(insertCheck)
         );
+    }
+
+    @GetMapping("/orders/me")
+    public ApiResponse<OrderResponse> orderLists(@AuthenticationPrincipal PopmateUser popmateUser){
+        List<Order> orderItem = orderService.getOrders(USER_ID);
+
+        return null;
     }
 
 }

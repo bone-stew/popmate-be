@@ -6,6 +6,12 @@
 
   <resultMap id="popupStoreMap" type="PopupStore">
     <result column="popup_store_id" property="popupStoreId"/>
+    <result column="title" property="title"/>
+    <result column="place_detail" property="placeDetail"/>
+  </resultMap>
+
+  <resultMap id="userMap" type="User">
+    <result column="user_id" property="userId"/>
   </resultMap>
 
   <resultMap id="popupStoreItemMap" type="PopupStoreItem">
@@ -17,6 +23,20 @@
     <result column="order_limit" property="orderLimit"/>
     <result column="created_at" property="createdAt"/>
     <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
+  </resultMap>
+
+  <resultMap id="orderMap" type="Order">
+    <result column="order_id" property="orderId"/>
+    <result column="amount" property="totalAmount"/>
+    <result column="status" property="status"/>
+    <result column="created_at" property="createdAt"/>
+    <result column="order_toss_id" property="orderTossId"/>
+    <result column="url" property="url"/>
+    <result column="order_card_type" property="cardType"/>
+    <result column="easy_pay" property="easyPay"/>
+    <result column="method" property="method"/>
+    <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
+    <collection column="user_id" property="user" resultMap="userMap"/>
   </resultMap>
 
 
@@ -31,8 +51,8 @@
   </select>
 
   <insert id="insertOrderTable" parameterType="java.util.Map">
-    INSERT INTO tb_order (order_id, user_id, popup_store_id, amount)
-    VALUES (#{orderId}, #{userId}, #{storeId}, #{totalAmount})
+    INSERT INTO tb_order (order_id, user_id, popup_store_id, amount, order_toss_id, order_card_type, url, easy_pay, method)
+    VALUES (#{orderId}, #{userId}, #{storeId}, #{totalAmount}, #{orderTossId}, #{cardType}, #{url}, #{easyPay}, #{method})
   </insert>
 
   <select id="findStock" parameterType="java.util.Map" resultType="int">
@@ -51,6 +71,12 @@
     SET stock = #{updateStock}
     WHERE popup_store_item_id = #{itemId} and popup_store_id = #{storeId}
   </update>
+
+  <select id="getOrders" parameterType="long" resultMap="orderMap">
+    SELECT *
+    FROM tb_order
+    WHERE user_id = #{userId}
+  </select>
 
 
   <!--

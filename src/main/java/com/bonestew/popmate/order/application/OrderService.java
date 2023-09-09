@@ -1,6 +1,7 @@
 package com.bonestew.popmate.order.application;
 
 import com.bonestew.popmate.order.domain.AndroidOrderItem;
+import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.exception.StockNotFoundException;
 import com.bonestew.popmate.order.persistence.OrderDao;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
@@ -26,7 +27,8 @@ public class OrderService {
 
 
     @Transactional
-    public String insertItems(List<AndroidOrderItem> orderItems, Long userId) {
+    public String insertItems(List<AndroidOrderItem> orderItems, Long userId, String orderTossId, String cardType, String url, String easyPay,
+                              String method) {
         Long storeId = orderItems.get(0).getPopupStoreId();
         int totalAmount = 0;
         try {
@@ -35,7 +37,7 @@ public class OrderService {
             }
             Long orderId = orderDao.selectSequence();
             // 주문 테이블에 insert하는 곳
-            orderDao.insertOrderTable(orderId, userId, storeId, totalAmount);
+            orderDao.insertOrderTable(orderId, userId, storeId, totalAmount, orderTossId, cardType, url,easyPay, method);
             //재고 가져와서 스토어 아이템 업데이트
             //주문 아이템 테이블에 insert
             for (AndroidOrderItem androidOrderItem : orderItems) {
@@ -57,4 +59,19 @@ public class OrderService {
         }
         return "주문 성공하였습니다.";
     }
+
+    public List<Order> getOrders(Long userId) {
+        // 처음에 유저가 주문한 적이 있는지 알아야 하기 때문에 가져오는 로직
+        List<Order> orderList = orderDao.getOrders(userId);
+        if(orderList == null) return null;
+        System.out.println(orderList.toString());
+        //
+        List<Order> orderResponse = null;
+        for(Order order : orderList){
+            orderResponse.add(orderDao.getRequestOrders(order.getUser().getUserId(),order.getPopupStore().getPopupStoreId()));
+        }
+        return orderList;
+    }
+
+
 }

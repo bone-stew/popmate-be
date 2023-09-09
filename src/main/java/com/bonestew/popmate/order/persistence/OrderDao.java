@@ -1,10 +1,10 @@
 package com.bonestew.popmate.order.persistence;
 
+import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
@@ -14,8 +14,12 @@ public interface OrderDao {
     void insertOrderTable(@Param("orderId") Long orderId,
                           @Param("userId") Long userId,
                           @Param("storeId") Long storeId,
-                          @Param("totalAmount") int totalAmount);
-
+                          @Param("totalAmount") int totalAmount,
+                          @Param("orderTossId") String orderTossId,
+                          @Param("cardType") String orderCardType,
+                          @Param("url") String url,
+                          @Param("easyPay") String easyPay,
+                          @Param("method") String method);
 
     Optional<Integer> findStock(@Param("storeId") Long storeId,
                                 @Param("itemId") Long itemId);
@@ -30,4 +34,9 @@ public interface OrderDao {
     void updateStoreItemTable(@Param("itemId") Long itemId,
                               @Param("storeId") Long storeId,
                               @Param("updateStock") int updateStock);
+
+    List<Order> getOrders(Long userId);
+
+    Order getRequestOrders(Long userId, Long popupStoreId);
+
 }
