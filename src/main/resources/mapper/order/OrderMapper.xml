@@ -26,4 +26,40 @@
     WHERE popup_store_id = #{popupStoreId}
   </select>
 
+  <select id="selectSequence" resultType="long">
+    SELECT tb_order_seq.NEXTVAL as orderId FROM DUAL
+  </select>
+
+  <insert id="insertOrderTable" parameterType="java.util.Map">
+    INSERT INTO tb_order (order_id, user_id, popup_store_id, amount)
+    VALUES (#{orderId}, #{userId}, #{storeId}, #{totalAmount})
+  </insert>
+
+  <select id="findStock" parameterType="java.util.Map" resultType="int">
+    SELECT stock
+    FROM TB_POPUP_STORE_ITEM
+    WHERE popup_store_id = #{storeId} and popup_store_item_id = #{itemId}
+  </select>
+
+  <insert id="insertOrderItemTable" parameterType="java.util.Map">
+    INSERT INTO tb_order_item (order_id, popup_store_item_id, total_amount, total_quantity)
+    VALUES (#{orderId}, #{itemId}, #{totalItemAmount}, #{totalQuantity})
+  </insert>
+
+  <update id="updateStoreItemTable" parameterType="java.util.Map">
+    UPDATE tb_popup_store_item
+    SET stock = #{updateStock}
+    WHERE popup_store_item_id = #{itemId} and popup_store_id = #{storeId}
+  </update>
+
+
+  <!--
+  <insert id="insertOrderTable" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="orderId">
+    <selectKey keyProperty="orderId" resultType="long" order="BEFORE">
+      SELECT tb_order_seq.NEXTVAL as orderId FROM DUAL
+    </selectKey>
+    INSERT INTO tb_order (user_id, popup_store_id, amount)
+    VALUES (#{userId}, #{storeId}, #{totalAmount})
+  </insert>
+  -->
 </mapper>
