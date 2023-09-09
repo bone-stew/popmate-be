@@ -149,15 +149,11 @@ class ReservationInformationControllerTest {
         // then
         result
             .andExpect(status().isOk())
-            .andDo(MockMvcRestDocumentationWrapper.document(
-                "sample",
-                ResourceSnippetParameters.builder()
-                    .tag("Sample")
-                    .description("Get a sample by id")
-                    .pathParameters(
+            .andDo(customDocument(
+                    pathParameters(
                         parameterWithName("reservationId").description("조회할 예약 id")
-                    )
-                    .responseFields(
+                    ),
+                    responseFields(
                         fieldWithPath("code").description("응답 코드"),
                         fieldWithPath("message").description("응답 메시지"),
                         fieldWithPath("data.popupStoreTitle").description("팝업 스토어 제목"),
