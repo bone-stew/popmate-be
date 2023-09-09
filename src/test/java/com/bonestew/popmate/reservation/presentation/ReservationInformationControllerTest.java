@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
-import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
@@ -19,8 +18,6 @@ import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
-import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
-import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -150,21 +147,21 @@ class ReservationInformationControllerTest {
         result
             .andExpect(status().isOk())
             .andDo(customDocument(
-                    pathParameters(
-                        parameterWithName("reservationId").description("조회할 예약 id")
-                    ),
-                    responseFields(
-                        fieldWithPath("code").description("응답 코드"),
-                        fieldWithPath("message").description("응답 메시지"),
-                        fieldWithPath("data.popupStoreTitle").description("팝업 스토어 제목"),
-                        fieldWithPath("data.popupStoreImageUrl").description("팝업 스토어 이미지 URL"),
-                        fieldWithPath("data.popupStorePlaceDetail").description("팝업 스토어 장소 상세 정보"),
-                        fieldWithPath("data.reservationQrImageUrl").description("예약 QR 코드 이미지 URL"),
-                        fieldWithPath("data.guestCount").description("예약 인원 수"),
-                        fieldWithPath("data.visitStartTime").description("입장 시작 시간"),
-                        fieldWithPath("data.visitEndTime").description("입장 종료 시간"),
-                        fieldWithPath("data.reservationStatus").description("예약 상태 (예: PENDING)")
-                    )
+                pathParameters(
+                    parameterWithName("reservationId").description("조회할 예약 id")
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.popupStoreTitle").description("팝업 스토어 제목"),
+                    fieldWithPath("data.popupStoreImageUrl").description("팝업 스토어 이미지 URL"),
+                    fieldWithPath("data.popupStorePlaceDetail").description("팝업 스토어 장소 상세 정보"),
+                    fieldWithPath("data.reservationQrImageUrl").description("예약 QR 코드 이미지 URL"),
+                    fieldWithPath("data.guestCount").description("예약 인원 수"),
+                    fieldWithPath("data.visitStartTime").description("입장 시작 시간"),
+                    fieldWithPath("data.visitEndTime").description("입장 종료 시간"),
+                    fieldWithPath("data.reservationStatus").description("예약 상태 (예: PENDING)")
+                )
             ));
     }
 }
