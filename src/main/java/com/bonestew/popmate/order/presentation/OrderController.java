@@ -5,7 +5,10 @@ import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.order.application.OrderService;
 import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
+import com.bonestew.popmate.order.domain.OrderItem;
 import com.bonestew.popmate.order.presentation.dto.OrderItemRequest;
+import com.bonestew.popmate.order.presentation.dto.OrderListItemResponse;
+import com.bonestew.popmate.order.presentation.dto.OrderListItemsResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderResponse;
 import com.bonestew.popmate.order.presentation.dto.PopupStoreItemsResponse;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
@@ -48,10 +51,12 @@ public class OrderController {
     }
 
     @GetMapping("/orders/me")
-    public ApiResponse<OrderResponse> orderLists(@AuthenticationPrincipal PopmateUser popmateUser){
-        List<Order> orderItem = orderService.getOrders(USER_ID);
+    public ApiResponse<OrderListItemsResponse> orderLists(@AuthenticationPrincipal PopmateUser popmateUser){
+        List<Order> orders = orderService.getOrders(USER_ID);
 
-        return null;
+        return ApiResponse.success(
+            OrderListItemsResponse.from(orders)
+        );
     }
 
 }

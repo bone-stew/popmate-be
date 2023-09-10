@@ -2,6 +2,7 @@ package com.bonestew.popmate.order.application;
 
 import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
+import com.bonestew.popmate.order.domain.OrderItem;
 import com.bonestew.popmate.order.exception.StockNotFoundException;
 import com.bonestew.popmate.order.persistence.OrderDao;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
@@ -64,12 +65,15 @@ public class OrderService {
         // 처음에 유저가 주문한 적이 있는지 알아야 하기 때문에 가져오는 로직
         List<Order> orderList = orderDao.getOrders(userId);
         if(orderList == null) return null;
-        System.out.println(orderList.toString());
-        //
-        List<Order> orderResponse = null;
+
+        // 여기는 백화점 상세정보 가져와서 세팅해주는 곳
         for(Order order : orderList){
-            orderResponse.add(orderDao.getRequestOrders(order.getUser().getUserId(),order.getPopupStore().getPopupStoreId()));
+            Order requestOrder = orderDao.getRequestOrders(order.getUser().getUserId(),order.getPopupStore().getPopupStoreId());
+            order.setPopupStore(requestOrder.getPopupStore().getTitle(), requestOrder.getPopupStore().getPlaceDetail());
+            List<OrderItem> orderItems = orderDao.getOrderItems(order.getOrderId());
+            order.setOrderItemList(orderItems);
         }
+
         return orderList;
     }
 

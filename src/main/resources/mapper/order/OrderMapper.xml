@@ -36,6 +36,8 @@
     <result column="easy_pay" property="easyPay"/>
     <result column="method" property="method"/>
     <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
+    <collection column="title" property="popupStore" resultMap="popupStoreMap"/>
+    <collection column="place_detail" property="popupStore" resultMap="popupStoreMap"/>
     <collection column="user_id" property="user" resultMap="userMap"/>
   </resultMap>
 
@@ -78,14 +80,16 @@
     WHERE user_id = #{userId}
   </select>
 
+  <select id="getRequestOrders" parameterType="java.util.Map" resultMap="orderMap">
+    SELECT title, place_detail
+    FROM tb_popup_store
+    WHERE user_id = #{userId} AND popup_store_id = #{popupStoreId}
+  </select>
 
-  <!--
-  <insert id="insertOrderTable" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="orderId">
-    <selectKey keyProperty="orderId" resultType="long" order="BEFORE">
-      SELECT tb_order_seq.NEXTVAL as orderId FROM DUAL
-    </selectKey>
-    INSERT INTO tb_order (user_id, popup_store_id, amount)
-    VALUES (#{userId}, #{storeId}, #{totalAmount})
-  </insert>
-  -->
+  <select id="getOrderItems" parameterType="java.util.Map" resultType="OrderItem">
+    SELECT order_id as orderItemId, total_amount as totalAmount, total_quantity as totalQuantity, created_at as createdAt
+    FROM tb_order_item
+    WHERE order_id = #{orderId}
+  </select>
+
 </mapper>
