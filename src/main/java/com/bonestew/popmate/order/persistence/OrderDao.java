@@ -41,4 +41,7 @@ public interface OrderDao {
     Order getRequestOrders(@Param("userId") Long userId, @Param("popupStoreId") Long popupStoreId);
 
     List<OrderItem> getOrderItems(@Param("orderId") Long orderId);
+
+    PopupStoreItem getItemInfo(@Param("storeItemId") Long storeItemId,
+                               @Param("popupStoreId") Long popupStoreId);
 }

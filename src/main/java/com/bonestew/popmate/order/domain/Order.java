@@ -29,11 +29,12 @@ public class Order extends BaseTime {
     private String easyPay;
     private String method;
     private List<OrderItem> orderItemList;
-    public void setPopupStore(String title, String placeDetail) {
+    public void setPopupStore(String title, String placeDetail, String bannerImgUrl) {
         if (this.popupStore == null) {
             this.popupStore = new PopupStore();
         }
         this.popupStore.setTitle(title);
         this.popupStore.setPlaceDetail(placeDetail);
+        this.popupStore.setBannerImgUrl(bannerImgUrl);
     }
 }

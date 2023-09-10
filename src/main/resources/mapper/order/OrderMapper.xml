@@ -8,6 +8,7 @@
     <result column="popup_store_id" property="popupStoreId"/>
     <result column="title" property="title"/>
     <result column="place_detail" property="placeDetail"/>
+    <result column="banner_img_url" property="bannerImgUrl"/>
   </resultMap>
 
   <resultMap id="userMap" type="User">
@@ -38,6 +39,7 @@
     <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
     <collection column="title" property="popupStore" resultMap="popupStoreMap"/>
     <collection column="place_detail" property="popupStore" resultMap="popupStoreMap"/>
+    <collection column="banner_img_url" property="popupStore" resultMap="popupStoreMap"/>
     <collection column="user_id" property="user" resultMap="userMap"/>
   </resultMap>
 
@@ -81,15 +83,21 @@
   </select>
 
   <select id="getRequestOrders" parameterType="java.util.Map" resultMap="orderMap">
-    SELECT title, place_detail
+    SELECT title, place_detail, banner_img_url
     FROM tb_popup_store
     WHERE user_id = #{userId} AND popup_store_id = #{popupStoreId}
   </select>
 
   <select id="getOrderItems" parameterType="java.util.Map" resultType="OrderItem">
-    SELECT order_id as orderItemId, total_amount as totalAmount, total_quantity as totalQuantity, created_at as createdAt
+    SELECT order_id as orderItemId, popup_store_item_id as storeItemId , total_amount as totalAmount, total_quantity as totalQuantity, created_at as createdAt
     FROM tb_order_item
     WHERE order_id = #{orderId}
+  </select>
+
+  <select id="getItemInfo" parameterType="java.util.Map" resultType="PopupStoreItem">
+    select *
+    from tb_popup_store_item
+    where popup_store_item_id= #{storeItemId} and popup_store_id= #{popupStoreId}
   </select>
 
 </mapper>
