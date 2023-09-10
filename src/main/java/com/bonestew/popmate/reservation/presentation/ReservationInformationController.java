@@ -25,11 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class ReservationInformationController {
 
-    /**
-     * 임시 유저 식별자
-     */
-    private static final Long USER_ID = 1L;
-
     private final ReservationInformationService reservationInformationService;
 
     /**
@@ -69,8 +64,7 @@ public class ReservationInformationController {
      */
     @GetMapping("members/me/reservations")
     public ApiResponse<MyReservationsResponse> getMyReservations(@AuthenticationPrincipal PopmateUser popmateUser) {
-        System.out.println("popmateUser = " + popmateUser.getUserId());
-        List<UserReservation> reservations = reservationInformationService.getMyReservations(USER_ID);
+        List<UserReservation> reservations = reservationInformationService.getMyReservations(popmateUser.getUserId());
         return ApiResponse.success(
             MyReservationsResponse.from(reservations)
         );
@@ -83,9 +77,10 @@ public class ReservationInformationController {
      * @return 예약 정보
      */
     @GetMapping("/reservations/{reservationId}")
-    public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId) {
+    public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId,
+                                                             @AuthenticationPrincipal PopmateUser popmateUser) {
         return ApiResponse.success(MyReservationResponse.from(
-            reservationInformationService.getMyReservation(reservationId, USER_ID)
+            reservationInformationService.getMyReservation(reservationId, popmateUser.getUserId())
         ));
     }
 }

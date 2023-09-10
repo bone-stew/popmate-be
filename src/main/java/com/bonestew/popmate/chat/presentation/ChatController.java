@@ -1,5 +1,6 @@
 package com.bonestew.popmate.chat.presentation;
 
+import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.chat.application.ChatService;
 import com.bonestew.popmate.chat.application.RedisPublisher;
 import com.bonestew.popmate.chat.domain.ChatRoom;
@@ -9,6 +10,7 @@ import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,16 +23,16 @@ public class ChatController {
 
     private final ChatService chatService;
     private final RedisPublisher redisPublisher;
-    private Long userId = 2L;
     private String userName ="김우원";
     /**
      * 메세지 전송 API
      * @param message sender, roomId, message
      */
     @MessageMapping("/message")
-    public void message(ChatMessage message) {
+    public void message(ChatMessage message,
+                        @AuthenticationPrincipal PopmateUser popmateUser) {
         log.debug("메세지 전송: {}", message);
-        message.setSender(userId);
+        message.setSender(popmateUser.getUserId());
         message.setName(userName);
         redisPublisher.publish(chatService.getTopic(String.valueOf(message.getRoomId())), message);
     }
@@ -62,10 +64,11 @@ public class ChatController {
      * @return 채팅 메세지 리스트
      */
     @GetMapping("/room/messages/{roomId}")
-    public ApiResponse<MessagesResponse> messages(@PathVariable Long roomId) {
+    public ApiResponse<MessagesResponse> messages(@PathVariable Long roomId,
+                                                  @AuthenticationPrincipal PopmateUser popmateUser) {
         log.debug("{}번 채팅방 메세지 조회 API 호출", roomId);
         List<ChatMessage> res = chatService.loadChatMessagesByRoomId(roomId);
         log.debug("채팅방 메세지 조회 API 호출 결과 {}", res);
-        return ApiResponse.success(MessagesResponse.of(res, userId));
+        return ApiResponse.success(MessagesResponse.of(res, popmateUser.getUserId()));
     }
 }
