@@ -1,5 +1,6 @@
 package com.bonestew.popmate.chat.presentation;
 
+import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.chat.application.ChatService;
 import com.bonestew.popmate.chat.application.RedisPublisher;
 import com.bonestew.popmate.chat.domain.ChatRoom;
@@ -9,6 +10,7 @@ import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,10 +64,10 @@ public class ChatController {
      * @return 채팅 메세지 리스트
      */
     @GetMapping("/room/messages/{roomId}")
-    public ApiResponse<MessagesResponse> messages(@PathVariable Long roomId) {
+    public ApiResponse<MessagesResponse> messages(@AuthenticationPrincipal PopmateUser user, @PathVariable Long roomId) {
         log.debug("{}번 채팅방 메세지 조회 API 호출", roomId);
         List<ChatMessage> res = chatService.loadChatMessagesByRoomId(roomId);
         log.debug("채팅방 메세지 조회 API 호출 결과 {}", res);
-        return ApiResponse.success(MessagesResponse.of(res, userId));
+        return ApiResponse.success(MessagesResponse.of(res, user.getUserId(), user.getName()));
     }
 }
