@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
-import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
@@ -56,7 +55,6 @@ class ReservationInformationControllerTest {
         popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), "Your Title", "Your Organizer",
             "Your Place Detail", "Your Description", "Your Event Description", "Your Banner Image URL", 100, 200, true,
             15, 5, 10, dateTime, dateTime.plusDays(14), dateTime, dateTime.plusHours(8), 0L);
-
     }
 
     @Test
