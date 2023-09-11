@@ -32,6 +32,7 @@ public class ApiResponse<T> {
         this(code, code.getMessage(), data);
     }
 
+
     public static <T> ApiResponse<T> success() {
         return new ApiResponse<>(ResultCode.SUCCESS);
     }

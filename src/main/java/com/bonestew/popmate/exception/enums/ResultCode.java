@@ -14,6 +14,7 @@ public enum ResultCode {
     METHOD_NOT_ALLOWED("지원하지 않는 요청입니다."),
     INTERNAL_SERVER_ERROR("서버 오류가 발생했습니다."),
     CONFLICT("요청이 충돌되었습니다."),
+    TOKEN_EXPIRATION("토큰이 만료되었습니다.")
     ;
 
     private final String message;
