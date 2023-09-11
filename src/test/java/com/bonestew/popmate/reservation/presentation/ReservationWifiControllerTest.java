@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.bonestew.popmate.reservation.application.ReservationWifiService;
 import com.bonestew.popmate.reservation.application.dto.WifiInfoRequest;
 import com.bonestew.popmate.reservation.application.dto.WifiRequest;
+import com.bonestew.popmate.utils.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 @SpringBootTest
+@WithMockCustomUser
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 class ReservationWifiControllerTest {
