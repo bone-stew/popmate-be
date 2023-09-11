@@ -1,6 +1,5 @@
-package com.bonestew.popmate.auth.domain;
+package com.bonestew.popmate.auth.persistence.dto;
 
-import com.bonestew.popmate.date.BaseTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +11,6 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class OauthUser extends BaseTime {
-
-    private String email;
-    private String name;
+public class JwtAuthenticationResponse {
+    private String token;
 }

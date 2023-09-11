@@ -79,8 +79,9 @@ public class ReservationInformationController {
     @GetMapping("/reservations/{reservationId}")
     public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId,
                                                              @AuthenticationPrincipal PopmateUser popmateUser) {
-        return ApiResponse.success(MyReservationResponse.from(
-            reservationInformationService.getMyReservation(reservationId, popmateUser.getUserId())
-        ));
+        return ApiResponse.success(
+            MyReservationResponse.from(
+                reservationInformationService.getMyReservation(reservationId, popmateUser.getUserId())
+            ));
     }
 }
