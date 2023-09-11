@@ -11,13 +11,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AndroidOrderItem {
-    private Long itemId;
-    private String name;
-    private Long popupStoreId;
-    private String imgUrl;
-    private int amount;
-    private int stock;
-    private int orderLimit;
-    private int totalQuantity;
+public class StockCheckItem {
+    Long itemId;
+    boolean check;
 }
