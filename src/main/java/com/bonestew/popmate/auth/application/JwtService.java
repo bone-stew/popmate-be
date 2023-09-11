@@ -1,6 +1,5 @@
 package com.bonestew.popmate.auth.application;
 
-import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.auth.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -20,22 +19,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-    private static final long EXPIRATION_TIME_MS = 1000L * 60 * 60 * 24 * 30;
     private static final String USER_ID = "userId";
-    private static final String NAME = "userName";
-    private final Date jwtExpiration = new Date(System.currentTimeMillis() + EXPIRATION_TIME_MS);
+    private static final String USER_NAME = "userName";
 
-    // JWT 서명 키를 가져오기 위한 설정
     @Value("${token.sign.key}")
     private String jwtSignKey;
+
+    @Value("${token.access-token-validity-in-seconds}")
+    private Long accessTokenValidityInSeconds;
 
     public String generateToken(User user) {
         return Jwts.builder()
             .setSubject(user.getEmail())
             .claim(USER_ID, user.getUserId())
-            .claim(NAME, user.getName())
+            .claim(USER_NAME, user.getName())
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(jwtExpiration)
+            .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidityInSeconds * 1000))
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
     }
@@ -57,11 +56,6 @@ public class JwtService {
         return false;
     }
 
-    private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSignKey);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
     public User getUserInfo(String jwtToken) {
         Claims claims = Jwts
             .parserBuilder()
@@ -71,7 +65,12 @@ public class JwtService {
             .getBody();
         User user = new User();
         user.setUserId(claims.get(USER_ID, Long.class));
-        user.setName(claims.get(NAME, String.class));
+        user.setName(claims.get(USER_NAME, String.class));
         return user;
+    }
+
+    private Key getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSignKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
