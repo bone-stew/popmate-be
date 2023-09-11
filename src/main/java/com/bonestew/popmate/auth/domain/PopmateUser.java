@@ -9,10 +9,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class PopmateUser implements UserDetails {
 
     private final Long userId;
+    private final String name;
     private final List<GrantedAuthority> authorities;
 
-    public PopmateUser(Long userId, List<GrantedAuthority> authorities) {
+    public PopmateUser(Long userId, String name, List<GrantedAuthority> authorities) {
         this.userId = userId;
+        this.name = name;
         this.authorities = authorities;
     }
 
@@ -54,4 +56,6 @@ public class PopmateUser implements UserDetails {
     public Long getUserId() {
         return this.userId;
     }
+
+    public String getName() {return this.name; }
 }
