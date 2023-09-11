@@ -77,7 +77,10 @@ public class PopupStoreService {
         return popupStoreDao.selectBanners();
     }
 
-    public List<PopupStore> getPopupStoresVisitedBy(long userId) {
+    public List<PopupStore> getPopupStoresVisitedBy(Long userId) {
+        if (userId == null) {
+            return new ArrayList<PopupStore>();
+        }
         return popupStoreDao.selectPopupStoresVisitedBy(userId);
     }
 
@@ -93,11 +96,15 @@ public class PopupStoreService {
         PopupStoreQueryDto popupStoreQueryDto = new PopupStoreQueryDto(popupStoreId, userId);
         PopupStoreDetailDto popupStoreDetailDto = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto)
                 .orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
-        Optional<UserReservationStatus> userReservationStatus = popupStoreDao.findUserReservationById(popupStoreQueryDto);
-        if (userReservationStatus.isPresent()) {
-            popupStoreDetailDto.setUserReservationStatus(userReservationStatus.get());
-        } else {
+        if (userId == null) {
             popupStoreDetailDto.setUserReservationStatus(UserReservationStatus.CANCELED);
+        } else {
+            Optional<UserReservationStatus> userReservationStatus = popupStoreDao.findUserReservationById(popupStoreQueryDto);
+            if (userReservationStatus.isPresent()) {
+                popupStoreDetailDto.setUserReservationStatus(userReservationStatus.get());
+            } else {
+                popupStoreDetailDto.setUserReservationStatus(UserReservationStatus.CANCELED);
+            }
         }
         if (userFirstTimeViewingPost(popupStoreId, userId)) {
             popupStoreRepository.createUserViewedKey(popupStoreId, userId);

@@ -4,7 +4,7 @@ import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.config.FolderType;
-import com.bonestew.popmate.popupstore.config.service.AwsFileService;
+import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import java.util.Optional;
@@ -38,11 +38,10 @@ public class PopupStoreController {
     private static final Long USER_ID = 1L;
 
     private final PopupStoreService popupStoreService;
-    private final AwsFileService awsFileService;
+    private final FileService awsFileService;
 
     @GetMapping
     public ApiResponse<PopupStoresResponse> getPopupStoreList(
-
             @RequestParam(value = "isOpeningSoon", required = false) Boolean isOpeningSoon,
             @RequestParam(value = "startDate", required = false) String startDateText,
             @RequestParam(value = "endDate", required = false) String endDateText,
@@ -61,9 +60,14 @@ public class PopupStoreController {
 
     @GetMapping("/home")
     public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@AuthenticationPrincipal PopmateUser popmateUser) {
-        System.out.println("popmateUser.getUserId() = " + popmateUser.getUserId());
+        Long userId;
+        if (popmateUser == null){
+            userId = null;
+        } else {
+            userId = popmateUser.getUserId();
+        }
         List<Banner> bannerList = popupStoreService.getBanners();
-        List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(popmateUser.getUserId());
+        List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(userId);
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();
         List<PopupStore> popupStoresEndingSoonList = popupStoreService.getPopupStoresEndingSoon();
         return ApiResponse.success(PopupStoreHomeResponse.of(bannerList, popupStoresVisitedByList, popupStoresRecommendList,
@@ -73,8 +77,13 @@ public class PopupStoreController {
     @GetMapping("/{popupStoreId}")
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
                                                                    @AuthenticationPrincipal PopmateUser popmateUser) {
-        System.out.println("popmateUser.getUserId() = " + popmateUser.getUserId());
-        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId,popmateUser.getUserId());
+        Long userId;
+        if (popmateUser == null){
+            userId = null;
+        } else {
+            userId = popmateUser.getUserId();
+        }
+        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
         List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
         List<PopupStore> popupStoreNearByList = popupStoreService.getPopupStoresInDepartment(popupStoreId);
