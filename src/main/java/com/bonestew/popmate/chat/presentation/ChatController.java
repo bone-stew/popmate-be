@@ -23,7 +23,7 @@ public class ChatController {
 
     private final ChatService chatService;
     private final RedisPublisher redisPublisher;
-    private String userName ="김우원";
+  
     /**
      * 메세지 전송 API
      * @param message sender, roomId, message
@@ -32,8 +32,6 @@ public class ChatController {
     public void message(ChatMessage message,
                         @AuthenticationPrincipal PopmateUser popmateUser) {
         log.debug("메세지 전송: {}", message);
-        message.setSender(popmateUser.getUserId());
-        message.setName(userName);
         redisPublisher.publish(chatService.getTopic(String.valueOf(message.getRoomId())), message);
     }
 
@@ -64,11 +62,9 @@ public class ChatController {
      * @return 채팅 메세지 리스트
      */
     @GetMapping("/room/messages/{roomId}")
-    public ApiResponse<MessagesResponse> messages(@PathVariable Long roomId,
-                                                  @AuthenticationPrincipal PopmateUser popmateUser) {
+    public ApiResponse<MessagesResponse> messages(@AuthenticationPrincipal PopmateUser user, @PathVariable Long roomId) {
         log.debug("{}번 채팅방 메세지 조회 API 호출", roomId);
         List<ChatMessage> res = chatService.loadChatMessagesByRoomId(roomId);
-        log.debug("채팅방 메세지 조회 API 호출 결과 {}", res);
-        return ApiResponse.success(MessagesResponse.of(res, popmateUser.getUserId()));
+        return ApiResponse.success(MessagesResponse.of(res, user.getUserId(), user.getName()));
     }
 }

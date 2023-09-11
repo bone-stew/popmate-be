@@ -20,7 +20,7 @@ public class AuthenticationService  {
             .name(name)
             .build();
         userDao.register(user);
-        return jwtService.generateToken(user.getUserId(), user.getEmail());
+        return jwtService.generateToken(user);
     }
 
     public String signin(String email) {
@@ -28,7 +28,7 @@ public class AuthenticationService  {
 //            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         User user = userDao.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
-        return jwtService.generateToken(user.getUserId(), user.getEmail());
+        return jwtService.generateToken(user);
     }
 
 }
