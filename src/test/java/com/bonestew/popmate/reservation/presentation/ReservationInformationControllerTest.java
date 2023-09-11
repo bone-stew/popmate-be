@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
+import com.bonestew.popmate.utils.WithMockCustomUser;
 import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
@@ -32,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 @SpringBootTest
+@WithMockCustomUser
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 class ReservationInformationControllerTest {

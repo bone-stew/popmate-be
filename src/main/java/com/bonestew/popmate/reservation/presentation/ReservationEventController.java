@@ -1,9 +1,11 @@
 package com.bonestew.popmate.reservation.presentation;
 
+import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationEventService;
 import com.bonestew.popmate.reservation.application.dto.ReservationRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/reservations")
 public class ReservationEventController {
 
-    private static final Long USER_ID = 1L;
-
     private final ReservationEventService reservationEventService;
 
     /**
@@ -27,8 +27,9 @@ public class ReservationEventController {
      */
     @PostMapping("/{reservationId}")
     public ApiResponse<Void> reserve(@PathVariable("reservationId") final Long reservationId,
-                                     @RequestBody final ReservationRequest reservationRequest) {
-        reservationEventService.reserve(reservationId, USER_ID, reservationRequest);
+                                     @RequestBody final ReservationRequest reservationRequest,
+                                     @AuthenticationPrincipal PopmateUser popmateUser) {
+        reservationEventService.reserve(reservationId, popmateUser.getUserId(), reservationRequest);
         return ApiResponse.success();
     }
 }

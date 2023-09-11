@@ -18,6 +18,7 @@ import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
+import com.bonestew.popmate.utils.WithMockCustomUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 
 @SpringBootTest
+@WithMockCustomUser
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 class PopupStoreControllerTest {
