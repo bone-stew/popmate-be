@@ -1,17 +1,16 @@
 package com.bonestew.popmate.popupstore.presentation;
 
+import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.config.FolderType;
 import com.bonestew.popmate.popupstore.config.service.AwsFileService;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,9 +60,10 @@ public class PopupStoreController {
     }
 
     @GetMapping("/home")
-    public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@RequestParam("userId") Long userId) { //Oauth 적용후 유저 정보 가져오기
+    public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@AuthenticationPrincipal PopmateUser popmateUser) {
+        System.out.println("popmateUser.getUserId() = " + popmateUser.getUserId());
         List<Banner> bannerList = popupStoreService.getBanners();
-        List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(userId);
+        List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(popmateUser.getUserId());
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();
         List<PopupStore> popupStoresEndingSoonList = popupStoreService.getPopupStoresEndingSoon();
         return ApiResponse.success(PopupStoreHomeResponse.of(bannerList, popupStoresVisitedByList, popupStoresRecommendList,
@@ -71,23 +71,16 @@ public class PopupStoreController {
     }
 
     @GetMapping("/{popupStoreId}")
-
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
-                                                                   @RequestParam("userId") Long userId) { //Oauth 적용후 유저 정보 가져오기
-        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
+                                                                   @AuthenticationPrincipal PopmateUser popmateUser) {
+        System.out.println("popmateUser.getUserId() = " + popmateUser.getUserId());
+        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId,popmateUser.getUserId());
         List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
         List<PopupStore> popupStoreNearByList = popupStoreService.getPopupStoresInDepartment(popupStoreId);
         return ApiResponse.success(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList, popupStoreNearByList));
 
     }
-
-//    @GetMapping("/{popupStoreId}/items")
-//    public ApiResponse<PopupStoreItemsResponse> getPopupStoreItems(@PathVariable("popupStoreId") Long popupStoreId) {
-//        PopupStore popupStore = popupStoreService.getPopupStore(popupStoreId);
-//        List<PopupStoreItem> popupStoreItemList = popupStoreService.getPopupStoreGoods(popupStoreId);
-//        return ApiResponse.success(PopupStoreItemsResponse.of(popupStore, popupStoreItemList));
-//    }
 
 
     @PostMapping("/banner")
