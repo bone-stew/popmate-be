@@ -143,9 +143,6 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoreImgs(popupStoreId);
     }
 
-    public List<PopupStoreItem> getPopupStoreGoods(Long popupStoreId) {
-        return popupStoreDao.selectPopupStoreItems(popupStoreId);
-    }
 
     public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);

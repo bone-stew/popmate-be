@@ -155,11 +155,6 @@
 
   </select>
 
-  <select id="selectPopupStoreItems" parameterType="long" resultType="PopupStoreItem">
-    SELECT *
-    FROM tb_popup_store_item
-    WHERE popup_store_id = #{popupStoreId}
-  </select>
 
   <update id="batchUpdatePopupStoreViews" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto">
     <foreach collection="list" index="index" item="updateDto" open="DECLARE BEGIN" separator=";" close="; END;">
