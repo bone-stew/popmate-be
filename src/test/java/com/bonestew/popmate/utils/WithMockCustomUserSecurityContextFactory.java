@@ -12,7 +12,7 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
     @Override
     public SecurityContext createSecurityContext(WithMockCustomUser customUser) {
         final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        final PopmateUser principal = new PopmateUser(Long.parseLong(customUser.userId()), null);
+        final PopmateUser principal = new PopmateUser(Long.parseLong(customUser.userId()), null ,null);
 
         Authentication auth = new UsernamePasswordAuthenticationToken(principal, null, null);
 
