@@ -44,4 +44,5 @@ public interface OrderDao {
 
     PopupStoreItem getItemInfo(@Param("storeItemId") Long storeItemId,
                                @Param("popupStoreId") Long popupStoreId);
+
 }
