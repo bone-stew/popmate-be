@@ -1,6 +1,6 @@
 package com.bonestew.popmate.popupstore.domain;
 
-import com.bonestew.popmate.date.BaseTime;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +12,10 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PopupStoreSns extends BaseTime {
+public class PopupStoreSns {
 
     private Long snsId;
     private String platform;
     private String url;
+    private LocalDateTime createdAt;
 }

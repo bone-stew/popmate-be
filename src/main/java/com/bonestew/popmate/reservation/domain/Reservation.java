@@ -1,7 +1,5 @@
 package com.bonestew.popmate.reservation.domain;
 
-
-import com.bonestew.popmate.date.BaseTime;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.reservation.exception.ReservationCapacityExceededException;
 import com.bonestew.popmate.reservation.exception.ReservationFullException;
@@ -19,7 +17,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation extends BaseTime {
+public class Reservation {
 
     private Long reservationId;
     private PopupStore popupStore;
@@ -31,6 +29,7 @@ public class Reservation extends BaseTime {
     private LocalDateTime endTime;
     private LocalDateTime visitStartTime;
     private LocalDateTime visitEndTime;
+    private LocalDateTime createdAt;
 
     public void validate(final int guestCount) {
         if (this.status != ReservationStatus.ACTIVE) {

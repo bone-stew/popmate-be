@@ -35,4 +35,10 @@ public class OauthController {
             new JwtAuthenticationResponse(accessToken)
         );
     }
+
+//    @GetMapping("/resource")
+//    public ApiResponse<JwtAuthenticationResponse> fdf(){
+//
+//        return null;
+//    }
 }
