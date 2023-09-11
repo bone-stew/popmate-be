@@ -4,7 +4,7 @@ import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.config.FolderType;
-import com.bonestew.popmate.popupstore.config.service.AwsFileService;
+import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import java.util.Optional;
@@ -32,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class PopupStoreController {
 
     private final PopupStoreService popupStoreService;
-    private final AwsFileService awsFileService;
+    private final FileService awsFileService;
 
     @GetMapping
     public ApiResponse<PopupStoresResponse> getPopupStoreList(
@@ -54,6 +54,12 @@ public class PopupStoreController {
 
     @GetMapping("/home")
     public ApiResponse<PopupStoreHomeResponse> getHomePageContent(@AuthenticationPrincipal PopmateUser popmateUser) {
+        Long userId;
+        if (popmateUser == null){
+            userId = null;
+        } else {
+            userId = popmateUser.getUserId();
+        }
         List<Banner> bannerList = popupStoreService.getBanners();
         List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(popmateUser.getUserId());
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();
@@ -65,7 +71,15 @@ public class PopupStoreController {
     @GetMapping("/{popupStoreId}")
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
                                                                    @AuthenticationPrincipal PopmateUser popmateUser) {
-        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, popmateUser.getUserId());
+
+        Long userId;
+        if (popmateUser == null){
+            userId = null;
+        } else {
+            userId = popmateUser.getUserId();
+        }
+        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
+
         List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
         List<PopupStore> popupStoreNearByList = popupStoreService.getPopupStoresInDepartment(popupStoreId);
@@ -73,6 +87,7 @@ public class PopupStoreController {
             PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList, popupStoreNearByList)
         );
     }
+
 
     @PostMapping("/banner")
     public ApiResponse<String> addBanner(@RequestParam MultipartFile multipartFile) {

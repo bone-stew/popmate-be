@@ -37,8 +37,6 @@ public interface PopupStoreDao {
 
     List<PopupStoreImg> selectPopupStoreImgs(Long popupStoreId);
 
-    List<PopupStoreItem> selectPopupStoreItems(Long popupStoreId);
-
     Optional<UserReservationStatus> findUserReservationById(PopupStoreQueryDto popupStoreQueryDto);
 
     int batchUpdatePopupStoreViews(List<PopupStoreUpdateDto> updates);

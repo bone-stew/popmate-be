@@ -7,6 +7,7 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
+import com.bonestew.popmate.popupstore.persistence.PopupStoreRepository;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
@@ -32,7 +33,7 @@ public class PopupStoreService {
 
     private final PopupStoreDao popupStoreDao;
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final PopupStoreRepository popupStoreRepository;
 
     public PopupStore getPopupStore(Long popupStoreId) {
         return popupStoreDao.findById(popupStoreId).orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
@@ -76,7 +77,10 @@ public class PopupStoreService {
         return popupStoreDao.selectBanners();
     }
 
-    public List<PopupStore> getPopupStoresVisitedBy(long userId) {
+    public List<PopupStore> getPopupStoresVisitedBy(Long userId) {
+        if (userId == null) {
+            return new ArrayList<PopupStore>();
+        }
         return popupStoreDao.selectPopupStoresVisitedBy(userId);
     }
 
@@ -92,64 +96,48 @@ public class PopupStoreService {
         PopupStoreQueryDto popupStoreQueryDto = new PopupStoreQueryDto(popupStoreId, userId);
         PopupStoreDetailDto popupStoreDetailDto = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto)
                 .orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
-        Optional<UserReservationStatus> userReservationStatus = popupStoreDao.findUserReservationById(popupStoreQueryDto);
-        if (userReservationStatus.isPresent()) {
-            popupStoreDetailDto.setUserReservationStatus(userReservationStatus.get());
-        } else {
+        if (userId == null) {
             popupStoreDetailDto.setUserReservationStatus(UserReservationStatus.CANCELED);
+        } else {
+            Optional<UserReservationStatus> userReservationStatus = popupStoreDao.findUserReservationById(popupStoreQueryDto);
+            if (userReservationStatus.isPresent()) {
+                popupStoreDetailDto.setUserReservationStatus(userReservationStatus.get());
+            } else {
+                popupStoreDetailDto.setUserReservationStatus(UserReservationStatus.CANCELED);
+            }
         }
         if (userFirstTimeViewingPost(popupStoreId, userId)) {
-            String userViewKey = "USER-" + userId + "POST-" + popupStoreId;
-            redisTemplate.opsForValue().set(userViewKey, true);
-            redisTemplate.expire(userViewKey, 1, TimeUnit.DAYS);
-            incrementPostView(popupStoreId, popupStoreDetailDto.getPopupStore().getViews());
+            popupStoreRepository.createUserViewedKey(popupStoreId, userId);
+            popupStoreRepository.incrementPostView(popupStoreId, popupStoreDetailDto.getPopupStore().getViews());
         }
         return popupStoreDetailDto;
     }
 
     private boolean userFirstTimeViewingPost(Long popupStoreId, Long userId) {
-        String userKey = "USER-" + userId + "POST-" + popupStoreId;
-        Boolean keyExists = redisTemplate.hasKey(userKey);
+        Boolean keyExists = popupStoreRepository.hasKey(popupStoreId, userId);
         if (keyExists && keyExists != null) {
             return false;
         }
         return true;
     }
 
-    private void incrementPostView(Long popupStoreId, Long views) {
-        String postKey = "POST-" + popupStoreId;
-        Boolean keyExists = redisTemplate.hasKey(postKey);
-        if (keyExists && keyExists != null) {
-            redisTemplate.opsForValue().increment(postKey);
-        } else {
-            redisTemplate.opsForValue().set(postKey, views + 1L);
-        }
-    }
-
     @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
     @Transactional
     public void updateRedisPopupStoreViews() {
-        Set<String> redisKeys = redisTemplate.keys("POST-*");
+        Set<String> redisKeys = popupStoreRepository.getKeys("POST:*");
         List<PopupStoreUpdateDto> updates = new ArrayList<>();
         if (redisKeys != null) {
             for (String key : redisKeys) {
-                String[] parts = key.split("-");
+                String[] parts = key.split(":");
                 Long popupStoreId = Long.parseLong(parts[1]);
-                Long views = Long.parseLong((String) redisTemplate.opsForValue().get(key));
+                Long views = popupStoreRepository.getViews(key);
                 PopupStoreUpdateDto updateDto = new PopupStoreUpdateDto(popupStoreId, views);
                 updates.add(updateDto);
-
-                redisTemplate.delete(key);
+                popupStoreRepository.removeKey(key);
             }
         }
         if (!updates.isEmpty()) {
-            int rtn = popupStoreDao.batchUpdatePopupStoreViews(updates);
-        }
-        Set<String> userFirstTimeViewingKeys = redisTemplate.keys("USER-*POST-*");
-        if (userFirstTimeViewingKeys != null) {
-            for (String key : userFirstTimeViewingKeys) {
-                redisTemplate.delete(key);
-            }
+            popupStoreDao.batchUpdatePopupStoreViews(updates);
         }
     }
 
@@ -162,9 +150,6 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoreImgs(popupStoreId);
     }
 
-    public List<PopupStoreItem> getPopupStoreGoods(Long popupStoreId) {
-        return popupStoreDao.selectPopupStoreItems(popupStoreId);
-    }
 
     public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
