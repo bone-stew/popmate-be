@@ -22,6 +22,7 @@ public class StompHandler implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         StompCommand command = accessor.getCommand();
         String token =  accessor.getFirstNativeHeader("Authorization");
+        log.debug(token);
         if (command == StompCommand.CONNECT) {
             if (!jwtService.validateToken(accessor.getFirstNativeHeader("Authorization")))
                 throw new BadRequestException("TokenNotValid");
