@@ -7,6 +7,10 @@ import com.bonestew.popmate.popupstore.config.FolderType;
 import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
+import com.bonestew.popmate.popupstore.domain.PopupStoreInfo;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +25,8 @@ import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreHomeResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreDetailResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoresResponse;
 import java.util.List;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,7 +77,6 @@ public class PopupStoreController {
     @GetMapping("/{popupStoreId}")
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
                                                                    @AuthenticationPrincipal PopmateUser popmateUser) {
-
         Long userId;
         if (popmateUser == null){
             userId = null;
@@ -97,4 +102,24 @@ public class PopupStoreController {
         }
         return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
     }
+
+    // TODO: AuthenticationPrincipal user role admin?
+    @PostMapping("/new")
+    public ApiResponse<PopupStore> createPopupStore(@RequestBody PopupStoreInfo popupStoreInfo) {
+        PopupStore popupstoreResult = popupStoreService.postNewPopupStore(popupStoreInfo);
+        return ApiResponse.success(popupstoreResult);
+    }
+//
+//    @GetMapping("/{popupStoreId}/edit")
+//    public ApiResponse<PopupStoreInfo> getPopupStoreInfoForAdmin(@PathVariable("popupStoreId") Long popupStoreId){
+//        PopupStoreInfo popupStoreInfo = popupStoreService.getPopupStoreDetailForAdmin(popupStoreId);
+//        return ApiResponse.success(popupStoreInfo);
+//    }
+//
+//    @PutMapping("/{popupStoreId}")
+//    public ApiResponse<PopupStore> updatePopupStore(@RequestBody PopupStoreInfo popupStoreInfo) {
+//        PopupStore popupstoreResult = popupStoreService.updatePopupStore(popupStoreInfo);
+//        return ApiResponse.success(popupstoreResult);
+//    }
+
 }

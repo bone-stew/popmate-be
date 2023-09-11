@@ -3,6 +3,7 @@ package com.bonestew.popmate.popupstore.application;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
+import com.bonestew.popmate.popupstore.domain.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
@@ -153,6 +154,10 @@ public class PopupStoreService {
 
     public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
+    }
 
+
+    public PopupStore postNewPopupStore(PopupStoreInfo popupStoreInfo) {
+        return popupStoreDao.insertPopupStore(popupStoreInfo);
     }
 }
