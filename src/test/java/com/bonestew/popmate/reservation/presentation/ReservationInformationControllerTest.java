@@ -143,7 +143,7 @@ class ReservationInformationControllerTest {
         given(reservationInformationService.getMyReservation(reservationId, userId)).willReturn(userReservation);
 
         ResultActions result = mockMvc.perform(
-            get("/api/v1/reservations/{reservationId}", reservationId));
+            get("/api/v1/members/me/reservations/{reservationId}", reservationId));
 
         // then
         result

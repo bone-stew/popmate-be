@@ -67,7 +67,7 @@ public class PopupStoreController {
             userId = popmateUser.getUserId();
         }
         List<Banner> bannerList = popupStoreService.getBanners();
-        List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(popmateUser.getUserId());
+        List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(userId);
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();
         List<PopupStore> popupStoresEndingSoonList = popupStoreService.getPopupStoresEndingSoon();
         return ApiResponse.success(PopupStoreHomeResponse.of(bannerList, popupStoresVisitedByList, popupStoresRecommendList,
