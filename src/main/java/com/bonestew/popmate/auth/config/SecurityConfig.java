@@ -15,13 +15,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/**")
-                .permitAll().anyRequest().permitAll())
+            .authorizeHttpRequests(request -> request.requestMatchers(
+                "/docs/**",
+                "/openapi/**",
+                "/api/v1/oauth/**",
+                "/api/v1/popup-stores",
+                "/api/v1/popup-stores/home",
+                "/api/v1/popup-stores/{popupStoreId}",
+                "/api/v1/popup-stores/banner",
+                "/api/v1/popup-stores/{popupStoreId}/reservations", // TODO:: STAFF, MANAGER 만 접근할 수 있도록 추후 변경
+                "/ws-chat/**"
+                ).permitAll()
+                .anyRequest().authenticated())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
