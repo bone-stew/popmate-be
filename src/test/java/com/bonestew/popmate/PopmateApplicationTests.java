@@ -1,5 +1,6 @@
 package com.bonestew.popmate;
 
+import com.bonestew.popmate.config.TestContainerConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
