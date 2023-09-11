@@ -2,8 +2,8 @@ package com.bonestew.popmate.order.domain;
 
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.auth.domain.User;
-import java.util.List;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +30,7 @@ public class Order {
     private String cardType;
     private String easyPay;
     private String method;
+
     private List<OrderItem> orderItemList;
     public void setPopupStore(String title, String placeDetail, String bannerImgUrl) {
         if (this.popupStore == null) {

@@ -20,8 +20,8 @@ public class OrderItem {
     private int totalQuantity;
     private int totalAmount;
     private LocalDateTime createdAt;
+
     // 추가한 것
     private Long storeItemId;
     private PopupStoreItem popupStoreItem;
-
 }
