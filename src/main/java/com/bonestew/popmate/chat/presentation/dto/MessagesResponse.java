@@ -6,9 +6,9 @@ import java.util.List;
 
 public record MessagesResponse(
         List<ChatMessage> messages,
-        Long userId
+        CurrUser currUser
 ) {
-    public static MessagesResponse of(List<ChatMessage> messages, Long userId) {
-        return new MessagesResponse(messages, userId);
+    public static MessagesResponse of(List<ChatMessage> messages, Long userId, String name) {
+        return new MessagesResponse(messages, new CurrUser(userId, name));
     }
 }

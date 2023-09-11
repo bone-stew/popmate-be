@@ -23,8 +23,6 @@ public class ChatController {
 
     private final ChatService chatService;
     private final RedisPublisher redisPublisher;
-    private Long userId = 2L;
-    private String userName ="김우원";
     /**
      * 메세지 전송 API
      * @param message sender, roomId, message
@@ -32,8 +30,6 @@ public class ChatController {
     @MessageMapping("/message")
     public void message(ChatMessage message) {
         log.debug("메세지 전송: {}", message);
-        message.setSender(userId);
-        message.setName(userName);
         redisPublisher.publish(chatService.getTopic(String.valueOf(message.getRoomId())), message);
     }
 
@@ -67,7 +63,6 @@ public class ChatController {
     public ApiResponse<MessagesResponse> messages(@AuthenticationPrincipal PopmateUser user, @PathVariable Long roomId) {
         log.debug("{}번 채팅방 메세지 조회 API 호출", roomId);
         List<ChatMessage> res = chatService.loadChatMessagesByRoomId(roomId);
-        log.debug("채팅방 메세지 조회 API 호출 결과 {}", res);
         return ApiResponse.success(MessagesResponse.of(res, user.getUserId(), user.getName()));
     }
 }
