@@ -19,6 +19,7 @@ public class OrderItem extends BaseTime {
     private Order order;
     private int totalQuantity;
     private int totalAmount;
+
     // 추가한 것
     private Long storeItemId;
     private PopupStoreItem popupStoreItem;
