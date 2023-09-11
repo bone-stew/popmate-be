@@ -23,12 +23,14 @@ public class ChatController {
 
     private final ChatService chatService;
     private final RedisPublisher redisPublisher;
+  
     /**
      * 메세지 전송 API
      * @param message sender, roomId, message
      */
     @MessageMapping("/message")
-    public void message(ChatMessage message) {
+    public void message(ChatMessage message,
+                        @AuthenticationPrincipal PopmateUser popmateUser) {
         log.debug("메세지 전송: {}", message);
         redisPublisher.publish(chatService.getTopic(String.valueOf(message.getRoomId())), message);
     }

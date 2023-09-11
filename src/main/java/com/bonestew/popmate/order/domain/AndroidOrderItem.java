@@ -12,9 +12,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AndroidOrderItem {
-    private int itemId;
+    private Long itemId;
     private String name;
-    private int popupStoreId;
+    private Long popupStoreId;
     private String imgUrl;
     private int amount;
     private int stock;

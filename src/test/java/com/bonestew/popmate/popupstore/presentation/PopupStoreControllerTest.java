@@ -18,6 +18,7 @@ import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
+import com.bonestew.popmate.utils.WithMockCustomUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 
 @SpringBootTest
+@WithMockCustomUser
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 class PopupStoreControllerTest {
@@ -85,7 +87,8 @@ class PopupStoreControllerTest {
                         LocalDateTime.of(2023, 8, 30, 9, 0),
                         LocalDateTime.of(2023, 8, 30, 9, 0),
                         LocalDateTime.of(2023, 8, 30, 17, 0),
-                        0L
+                        0L,
+                        LocalDateTime.now()
                 )
         );
 
@@ -139,7 +142,7 @@ class PopupStoreControllerTest {
 
         PopupStore popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), "테스트 팝업 스토어", "주최자 이름",
             "장소 상세 정보", "설명", "이벤트 설명", "이미지 URL", 1000, 50, true, 30, 5, 10, LocalDateTime.of(2023, 8, 23, 10, 0),
-            dateTime, dateTime, dateTime, 0L);
+            dateTime, dateTime, dateTime, 0L, dateTime);
 
         // when
         given(popupStoreService.getPopupStore(popupStoreId)).willReturn(popupStore);

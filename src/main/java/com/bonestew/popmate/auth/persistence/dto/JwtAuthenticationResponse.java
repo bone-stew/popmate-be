@@ -1,4 +1,4 @@
-package com.bonestew.popmate.auth.domain;
+package com.bonestew.popmate.auth.persistence.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
