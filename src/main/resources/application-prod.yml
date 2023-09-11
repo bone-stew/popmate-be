@@ -1,15 +1,45 @@
 spring:
   datasource:
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    url: ENC(OV0B51cIHNM4LG1E1tj/OR/9p7qp4JtiaWU53oBll9g2igOKv7oTY/8c+PXcALbKdTZOY1nsQ9zy9TQN+ewAFtmCymmFuBdrEKVhJlZbWjnUFx7KIw/08x8XOz84fl+OKu/jeyN9+wM=)
-    username: ENC(wBHUWwDVvq08Jpj1rnOW+w==)
-    password: ENC(55txUH4/nlUxflvU8lto/42P7YyRQrf3)
+    url: ENC(TZ/Ul2RllhxbSkUXDlJC0az7saWyjQ/wx+keMmlA8M27c5NyzIBffFVgbIWTuEuax/coaNFsTrRZ44GYyRi+pXGU+gZThZ1pDwILub4Y2oDxCTREWoe6JJfwk9wXoy+ur88xjbWokrg=)
+    username: ENC(9Vz24Kh30r2ewkjndLUcVg==)
+    password: ENC(rwzDnI//EAcW26so5i+AIaWWk3MHGFXg)
+  data:
+    mongodb:
+      uri: ENC(xPfHpLtise1s5m+7JsauaVfitlI09826ejdXHZzkWk8HVi53JMO8J90ub18P8CjOUVVbVWLM3Qa2WGLkChDNB4EdpJA3bT/1N3frIJjOyPksbj5uOXgLgXWwHD5lS2SZqojj2LWfhcgJSDCBeDuxs/7DbfgDD4Px)
+      database: popmate
+    redis:
+      host: localhost
+      port: 6379
+      maxHeap: 128M
 
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.bonestew.popmate.*.domain
+  type-handlers-package: com.bonestew.popmate.*.persistence.typehandler
+  mapper-locations: classpath:mapper/*/*.xml
   configuration:
     map-underscore-to-camel-case: true
 
 jasypt:
   encryptor:
     password: ${encrypt_key}
+
+logging:
+  level:
+    com.bonestew.popmate: info
+
+token:
+  sign:
+    key: ENC(JZaWarjhEuFXmV9DQxGkoWRjOOBuCohAwm8x42OSTMldNq1/xlq+M1fugB+ItIJVG7k8n5gMZziEsgm4LIZlvQ==)
+  access-token-validity-in-seconds: 5238144
+
+cloud:
+  aws:
+    s3:
+      bucket:
+        name: ENC(hh6GEeLrLruZJzIqgdQBoNhelfwK4E1b)
+        stack.auto: false
+        region.static: ap-northeast-2
+        credentials:
+          access-key: ENC(z29mp1YqyLoProY3gipn1bWJmfhyvDKPOKFGXo0dxGY=)
+          secret-key: ENC(Yg/UjvSe5obfnvqA6AUKm1USG1VzB9svV0pWynVY2v9MyMzeJ2Y+BXrSxGKuHNHt9sjRJ/wkZvg=)

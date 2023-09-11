@@ -16,6 +16,8 @@ jasypt:
 token:
   sign:
     key: tokenSignKey
+  access-token-validity-in-seconds: 5238144
+
 
 cloud:
   aws:
