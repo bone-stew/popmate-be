@@ -23,4 +23,20 @@ public class Order {
     private int totalAmount;
     private int status;
     private LocalDateTime createdAt;
+
+    // 이건 토스페이먼츠 주문번호
+    private String orderTossId;
+    private String url;
+    private String cardType;
+    private String easyPay;
+    private String method;
+    private List<OrderItem> orderItemList;
+    public void setPopupStore(String title, String placeDetail, String bannerImgUrl) {
+        if (this.popupStore == null) {
+            this.popupStore = new PopupStore();
+        }
+        this.popupStore.setTitle(title);
+        this.popupStore.setPlaceDetail(placeDetail);
+        this.popupStore.setBannerImgUrl(bannerImgUrl);
+    }
 }
