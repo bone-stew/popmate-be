@@ -1,7 +1,7 @@
 package com.bonestew.popmate.reservation.domain;
 
-import com.bonestew.popmate.date.BaseTime;
 import com.bonestew.popmate.auth.domain.User;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserReservation extends BaseTime {
+public class UserReservation {
 
     private Long userReservationId;
     private User user;
@@ -21,6 +21,7 @@ public class UserReservation extends BaseTime {
     private int guestCount;
     private String qrImgUrl;
     private UserReservationStatus status;
+    private LocalDateTime createdAt;
 
     public UserReservation(User user, Reservation reservation, int guestCount, String qrImgUrl, UserReservationStatus status) {
         this.user = user;

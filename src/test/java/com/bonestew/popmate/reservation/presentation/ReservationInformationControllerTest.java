@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.bonestew.popmate.auth.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
-import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
@@ -55,15 +54,14 @@ class ReservationInformationControllerTest {
         date = LocalDate.of(2023, 10, 1);
         popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), "Your Title", "Your Organizer",
             "Your Place Detail", "Your Description", "Your Event Description", "Your Banner Image URL", 100, 200, true,
-            15, 5, 10, dateTime, dateTime.plusDays(14), dateTime, dateTime.plusHours(8), 0L);
-
+            15, 5, 10, dateTime, dateTime.plusDays(14), dateTime, dateTime.plusHours(8), 0L, dateTime);
     }
 
     @Test
     void 진행_중인_예약을_조회한다() throws Exception {
         // given
         Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.ACTIVE,
-            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45));
+            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
 
         // when
         given(reservationInformationService.getActiveReservation(popupStoreId)).willReturn(reservation);
@@ -98,7 +96,7 @@ class ReservationInformationControllerTest {
         // given
         List<Reservation> reservations = List.of(
             new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.ACTIVE,
-                dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45))
+                dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime)
         );
 
         // when
@@ -135,9 +133,9 @@ class ReservationInformationControllerTest {
         Long reservationId = 1L;
         Long userId = 1L;
         Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.ACTIVE,
-            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45));
+            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
         UserReservation userReservation = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
-            UserReservationStatus.RESERVED);
+            UserReservationStatus.RESERVED, dateTime);
 
         // when
         given(reservationInformationService.getMyReservation(reservationId, userId)).willReturn(userReservation);

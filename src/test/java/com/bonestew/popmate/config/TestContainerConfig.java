@@ -1,8 +1,11 @@
-package com.bonestew.popmate;
+package com.bonestew.popmate.config;
 
+import java.io.File;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
 public class TestContainerConfig implements BeforeAllCallback {
@@ -10,6 +13,13 @@ public class TestContainerConfig implements BeforeAllCallback {
     private static final String REDIS_IMAGE = "redis:7.0.8-alpine";
     private static final int REDIS_PORT = 6379;
     private GenericContainer redis;
+
+    @Container
+    static final DockerComposeContainer<?> container;
+
+    static {
+        container = new DockerComposeContainer<>(new File("src/test/resources/docker-compose.yml"));
+    }
 
     @Override
     public void beforeAll(ExtensionContext context) {

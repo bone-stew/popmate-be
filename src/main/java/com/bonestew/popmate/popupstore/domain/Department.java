@@ -1,6 +1,5 @@
 package com.bonestew.popmate.popupstore.domain;
 
-import com.bonestew.popmate.date.BaseTime;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Department extends BaseTime {
+public class Department {
     
     private Long departmentId;
     private String name;
@@ -22,4 +21,5 @@ public class Department extends BaseTime {
     private double longitude;
     private LocalDateTime openTime;
     private LocalDateTime closeTime;
+    private LocalDateTime createdAt;
 }
