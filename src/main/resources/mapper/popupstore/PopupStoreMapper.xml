@@ -105,6 +105,7 @@
     popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
     FROM
     tb_popup_store
+    where sysdate &lt;= close_date
     ORDER BY views
     FETCH FIRST 5 ROWS ONLY
   </select>
@@ -152,7 +153,6 @@
     SELECT *
     FROM tb_popup_store_img
     WHERE popup_store_id = #{popupStoreId}
-
   </select>
 
 
@@ -169,5 +169,6 @@
     FROM tb_popup_store
     where department_id = (select department_id from tb_popup_store where popup_store_id = #{popupStoreId})
     and popup_store_id != #{popupStoreId}
+    and sysdate &lt;= close_date
   </select>
 </mapper>
