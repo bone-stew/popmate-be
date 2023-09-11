@@ -6,6 +6,13 @@
 
   <resultMap id="popupStoreMap" type="PopupStore">
     <result column="popup_store_id" property="popupStoreId"/>
+    <result column="title" property="title"/>
+    <result column="place_detail" property="placeDetail"/>
+    <result column="banner_img_url" property="bannerImgUrl"/>
+  </resultMap>
+
+  <resultMap id="userMap" type="User">
+    <result column="user_id" property="userId"/>
   </resultMap>
 
   <resultMap id="popupStoreItemMap" type="PopupStoreItem">
@@ -19,11 +26,78 @@
     <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
   </resultMap>
 
+  <resultMap id="orderMap" type="Order">
+    <result column="order_id" property="orderId"/>
+    <result column="amount" property="totalAmount"/>
+    <result column="status" property="status"/>
+    <result column="created_at" property="createdAt"/>
+    <result column="order_toss_id" property="orderTossId"/>
+    <result column="url" property="url"/>
+    <result column="order_card_type" property="cardType"/>
+    <result column="easy_pay" property="easyPay"/>
+    <result column="method" property="method"/>
+    <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
+    <collection column="title" property="popupStore" resultMap="popupStoreMap"/>
+    <collection column="place_detail" property="popupStore" resultMap="popupStoreMap"/>
+    <collection column="banner_img_url" property="popupStore" resultMap="popupStoreMap"/>
+    <collection column="user_id" property="user" resultMap="userMap"/>
+  </resultMap>
+
 
   <select id="getItems" parameterType="long" resultMap="popupStoreItemMap">
     SELECT *
     FROM TB_POPUP_STORE_ITEM
     WHERE popup_store_id = #{popupStoreId}
+  </select>
+
+  <select id="selectSequence" resultType="long">
+    SELECT tb_order_seq.NEXTVAL as orderId FROM DUAL
+  </select>
+
+  <insert id="insertOrderTable" parameterType="java.util.Map">
+    INSERT INTO tb_order (order_id, user_id, popup_store_id, amount, order_toss_id, order_card_type, url, easy_pay, method)
+    VALUES (#{orderId}, #{userId}, #{storeId}, #{totalAmount}, #{orderTossId}, #{cardType}, #{url}, #{easyPay}, #{method})
+  </insert>
+
+  <select id="findStock" parameterType="java.util.Map" resultType="int">
+    SELECT stock
+    FROM TB_POPUP_STORE_ITEM
+    WHERE popup_store_id = #{storeId} and popup_store_item_id = #{itemId}
+  </select>
+
+  <insert id="insertOrderItemTable" parameterType="java.util.Map">
+    INSERT INTO tb_order_item (order_id, popup_store_item_id, total_amount, total_quantity)
+    VALUES (#{orderId}, #{itemId}, #{totalItemAmount}, #{totalQuantity})
+  </insert>
+
+  <update id="updateStoreItemTable" parameterType="java.util.Map">
+    UPDATE tb_popup_store_item
+    SET stock = #{updateStock}
+    WHERE popup_store_item_id = #{itemId} and popup_store_id = #{storeId}
+  </update>
+
+  <select id="getOrders" parameterType="long" resultMap="orderMap">
+    SELECT *
+    FROM tb_order
+    WHERE user_id = #{userId}
+  </select>
+
+  <select id="getRequestOrders" parameterType="java.util.Map" resultMap="orderMap">
+    SELECT title, place_detail, banner_img_url
+    FROM tb_popup_store
+    WHERE user_id = #{userId} AND popup_store_id = #{popupStoreId}
+  </select>
+
+  <select id="getOrderItems" parameterType="java.util.Map" resultType="OrderItem">
+    SELECT order_id as orderItemId, popup_store_item_id as storeItemId , total_amount as totalAmount, total_quantity as totalQuantity, created_at as createdAt
+    FROM tb_order_item
+    WHERE order_id = #{orderId}
+  </select>
+
+  <select id="getItemInfo" parameterType="java.util.Map" resultType="PopupStoreItem">
+    select *
+    from tb_popup_store_item
+    where popup_store_item_id= #{storeItemId} and popup_store_id= #{popupStoreId}
   </select>
 
 </mapper>

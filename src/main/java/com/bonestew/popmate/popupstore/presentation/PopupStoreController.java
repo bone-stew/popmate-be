@@ -9,7 +9,6 @@ import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,22 +19,17 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreHomeResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreDetailResponse;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoresResponse;
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/popup-stores")
 public class PopupStoreController {
-
-    private static final Long USER_ID = 1L;
 
     private final PopupStoreService popupStoreService;
     private final FileService awsFileService;
@@ -67,7 +61,7 @@ public class PopupStoreController {
             userId = popmateUser.getUserId();
         }
         List<Banner> bannerList = popupStoreService.getBanners();
-        List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(userId);
+        List<PopupStore> popupStoresVisitedByList = popupStoreService.getPopupStoresVisitedBy(popmateUser.getUserId());
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();
         List<PopupStore> popupStoresEndingSoonList = popupStoreService.getPopupStoresEndingSoon();
         return ApiResponse.success(PopupStoreHomeResponse.of(bannerList, popupStoresVisitedByList, popupStoresRecommendList,
@@ -77,6 +71,7 @@ public class PopupStoreController {
     @GetMapping("/{popupStoreId}")
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
                                                                    @AuthenticationPrincipal PopmateUser popmateUser) {
+
         Long userId;
         if (popmateUser == null){
             userId = null;
@@ -84,11 +79,13 @@ public class PopupStoreController {
             userId = popmateUser.getUserId();
         }
         PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
+
         List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
         List<PopupStore> popupStoreNearByList = popupStoreService.getPopupStoresInDepartment(popupStoreId);
-        return ApiResponse.success(PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList, popupStoreNearByList));
-
+        return ApiResponse.success(
+            PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList, popupStoreNearByList)
+        );
     }
 
 
@@ -100,6 +97,4 @@ public class PopupStoreController {
         }
         return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
     }
-
 }
-
