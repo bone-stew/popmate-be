@@ -53,6 +53,34 @@
     <association property="popupStore" resultMap="popupStoreMap"/>
   </resultMap>
 
+  <resultMap id="popupStoreSnsMap" type="PopupStoreSns">
+    <result column="sns_id" property="snsId"/>
+    <result column="platform" property="platform"/>
+    <result column="url" property="url"/>
+  </resultMap>
+
+  <resultMap id="popupStoreImgMap" type="PopupStoreImg">
+    <result column="popup_store_img_id" property="popupStoreImgId"/>
+    <result column="img_url" property="imgUrl"/>
+  </resultMap>
+
+  <resultMap id="popupStoreItemMap" type="PopupStoreItem">
+    <result column="popup_store_item_id" property="popupStoreItemId"/>
+    <result column="name" property="name"/>
+    <result column="img_url" property="imgUrl"/>
+    <result column="amount" property="amount"/>
+    <result column="stock" property="stock"/>
+    <result column="order_limit" property="orderLimit"/>
+  </resultMap>
+
+  <resultMap id="popupStoreInfoMap" type="com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo">
+    <association property="popupStore" resultMap="popupStoreMap"/>
+    <association property="popupStoreSns" resultMap="popupStoreSnsMap"/>
+    <association property="popupStoreImg" resultMap="popupStoreImgMap"/>
+    <association property="popupStoreItem" resultMap="popupStoreItemMap"/>
+  </resultMap>
+
+
   <select id="findById" parameterType="long" resultType="PopupStore">
     SELECT *
     FROM tb_popup_store
@@ -170,5 +198,16 @@
     where department_id = (select department_id from tb_popup_store where popup_store_id = #{popupStoreId})
     and popup_store_id != #{popupStoreId}
     and sysdate &lt;= close_date
+  </select>
+
+  <select id="findPopupStoreDetailByIdForAdmin" parameterType="long" resultMap="popupStoreInfoMap">
+    select *
+    from tb_popup_store ps join tb_popup_store_sns pss
+    on ps.popup_store_id = pss.popup_store_id
+    join tb_popup_store_img psi
+    on ps.popup_store_id = psi.popup_store_id
+    join tb_popup_store_item psii
+    on ps.popup_store_id = psii.popup_store_id
+    where ps.popup_store_id = #{popupStoreId}
   </select>
 </mapper>

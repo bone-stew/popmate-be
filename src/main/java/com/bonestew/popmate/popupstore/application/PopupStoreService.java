@@ -3,8 +3,6 @@ package com.bonestew.popmate.popupstore.application;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
-import com.bonestew.popmate.popupstore.domain.PopupStoreInfo;
-import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
@@ -12,6 +10,7 @@ import com.bonestew.popmate.popupstore.persistence.PopupStoreRepository;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import java.time.LocalDate;
@@ -155,9 +154,11 @@ public class PopupStoreService {
     public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
     }
-
-
     public PopupStore postNewPopupStore(PopupStoreInfo popupStoreInfo) {
         return popupStoreDao.insertPopupStore(popupStoreInfo);
+    }
+
+    public List<PopupStoreInfo> getPopupStoreDetailForAdmin(Long popupStoreId) {
+        return popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
     }
 }

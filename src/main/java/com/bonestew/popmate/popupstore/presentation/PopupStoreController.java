@@ -7,7 +7,8 @@ import com.bonestew.popmate.popupstore.config.FolderType;
 import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
-import com.bonestew.popmate.popupstore.domain.PopupStoreInfo;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfoResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -84,7 +85,6 @@ public class PopupStoreController {
             userId = popmateUser.getUserId();
         }
         PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
-
         List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
         List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
         List<PopupStore> popupStoreNearByList = popupStoreService.getPopupStoresInDepartment(popupStoreId);
@@ -109,12 +109,12 @@ public class PopupStoreController {
         PopupStore popupstoreResult = popupStoreService.postNewPopupStore(popupStoreInfo);
         return ApiResponse.success(popupstoreResult);
     }
-//
-//    @GetMapping("/{popupStoreId}/edit")
-//    public ApiResponse<PopupStoreInfo> getPopupStoreInfoForAdmin(@PathVariable("popupStoreId") Long popupStoreId){
-//        PopupStoreInfo popupStoreInfo = popupStoreService.getPopupStoreDetailForAdmin(popupStoreId);
-//        return ApiResponse.success(popupStoreInfo);
-//    }
+
+    @GetMapping("/{popupStoreId}/edit")
+    public ApiResponse<PopupStoreInfoResponse> getPopupStoreInfoForAdmin(@PathVariable("popupStoreId") Long popupStoreId){
+        List<PopupStoreInfo> popupStoreInfoList = popupStoreService.getPopupStoreDetailForAdmin(popupStoreId);
+        return ApiResponse.success(PopupStoreInfoResponse.from(popupStoreInfoList));
+    }
 //
 //    @PutMapping("/{popupStoreId}")
 //    public ApiResponse<PopupStore> updatePopupStore(@RequestBody PopupStoreInfo popupStoreInfo) {
