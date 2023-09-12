@@ -8,7 +8,7 @@ public enum ReservationStatus {
 
     PENDING(0, "예약 대기"),
 
-    ACTIVE(1, "예약 진행"),
+    ACTIVE(1, "예약 중"),
 
     CONFIRMED(2, "예약 완료");
 
