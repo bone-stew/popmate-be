@@ -1,4 +1,4 @@
-package com.bonestew.popmate.auth.domain;
+package com.bonestew.popmate.user.domain;
 
 public enum Role {
     ROLE_USER,

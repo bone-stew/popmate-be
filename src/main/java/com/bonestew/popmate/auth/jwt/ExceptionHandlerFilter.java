@@ -1,4 +1,4 @@
-package com.bonestew.popmate.auth.config;
+package com.bonestew.popmate.auth.jwt;
 
 import static com.bonestew.popmate.exception.enums.ResultCode.TOKEN_EXPIRATION;
 import com.bonestew.popmate.dto.ApiResponse;
