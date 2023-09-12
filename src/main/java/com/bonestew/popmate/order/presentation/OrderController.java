@@ -6,11 +6,15 @@ import com.bonestew.popmate.order.application.OrderService;
 import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.domain.OrderItem;
+import com.bonestew.popmate.order.domain.StockCheckItem;
+import com.bonestew.popmate.order.presentation.dto.OrderCheckStockRequest;
 import com.bonestew.popmate.order.presentation.dto.OrderItemRequest;
 import com.bonestew.popmate.order.presentation.dto.OrderListItemResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderListItemsResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderResponse;
 import com.bonestew.popmate.order.presentation.dto.PopupStoreItemsResponse;
+import com.bonestew.popmate.order.presentation.dto.StockCheckItemsResponse;
+import com.bonestew.popmate.order.presentation.dto.StockCheckRequest;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import java.util.List;
 import javax.swing.text.StyledEditorKit.BoldAction;
@@ -56,6 +60,15 @@ public class OrderController {
 
         return ApiResponse.success(
             OrderListItemsResponse.from(orders)
+        );
+    }
+
+    @PostMapping("/orders/stockCheck")
+    public ApiResponse<StockCheckItemsResponse> checkItemStock(@RequestBody List<StockCheckRequest> stockCheckRequest){
+        List<StockCheckItem> checkItems = orderService.getCheckItems(stockCheckRequest);
+
+        return ApiResponse.success(
+            StockCheckItemsResponse.from(checkItems)
         );
     }
 
