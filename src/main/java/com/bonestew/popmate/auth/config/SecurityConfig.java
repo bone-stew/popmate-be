@@ -2,6 +2,10 @@ package com.bonestew.popmate.auth.config;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+import com.bonestew.popmate.auth.jwt.ExceptionHandlerFilter;
+import com.bonestew.popmate.auth.jwt.JwtAccessDeniedHandler;
+import com.bonestew.popmate.auth.jwt.JwtAuthenticationEntryPoint;
+import com.bonestew.popmate.auth.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

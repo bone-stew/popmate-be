@@ -1,6 +1,6 @@
 package com.bonestew.popmate.auth.application;
 
-import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

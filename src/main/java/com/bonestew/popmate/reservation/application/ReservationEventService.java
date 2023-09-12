@@ -1,6 +1,6 @@
 package com.bonestew.popmate.reservation.application;
 
-import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.user.domain.User;
 import com.bonestew.popmate.reservation.application.dto.ReservationRequest;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.UserReservation;
