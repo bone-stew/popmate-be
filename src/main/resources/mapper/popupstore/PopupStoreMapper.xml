@@ -204,9 +204,9 @@
     select *
     from tb_popup_store ps join tb_popup_store_sns pss
     on ps.popup_store_id = pss.popup_store_id
-    join tb_popup_store_img psi
+    left join tb_popup_store_img psi
     on ps.popup_store_id = psi.popup_store_id
-    join tb_popup_store_item psii
+    left join tb_popup_store_item psii
     on ps.popup_store_id = psii.popup_store_id
     where ps.popup_store_id = #{popupStoreId}
   </select>

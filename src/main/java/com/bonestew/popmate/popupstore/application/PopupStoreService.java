@@ -150,7 +150,6 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoreImgs(popupStoreId);
     }
 
-
     public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
     }
@@ -159,6 +158,10 @@ public class PopupStoreService {
     }
 
     public List<PopupStoreInfo> getPopupStoreDetailForAdmin(Long popupStoreId) {
+        List<PopupStoreInfo> popupStoreInfoList = popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
+        if(popupStoreInfoList.isEmpty()){
+           throw new PopupStoreNotFoundException(popupStoreId);
+        }
         return popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
     }
 }
