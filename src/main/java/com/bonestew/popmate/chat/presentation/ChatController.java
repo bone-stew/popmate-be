@@ -66,4 +66,10 @@ public class ChatController {
         List<ChatMessage> res = chatService.loadChatMessagesByRoomId(roomId);
         return ApiResponse.success(MessagesResponse.of(res, user.getUserId(), user.getName()));
     }
+
+    @GetMapping("/thumbnail/{roomId}")
+    public  ApiResponse<MessagesResponse> thumbnail(@PathVariable Long roomId) {
+        log.debug("여긴아예 못오나?");
+        return ApiResponse.success(MessagesResponse.of(chatService.loadChatThumbnail(roomId)));
+    }
 }
