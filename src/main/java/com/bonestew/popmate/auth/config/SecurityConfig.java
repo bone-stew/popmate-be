@@ -32,7 +32,8 @@ public class SecurityConfig {
                 "/api/v1/popup-stores/{popupStoreId}",
                 "/api/v1/popup-stores/banner",
                 "/api/v1/popup-stores/{popupStoreId}/reservations", // TODO:: STAFF, MANAGER 만 접근할 수 있도록 추후 변경
-                "/ws-chat/**"
+                "/ws-chat/**",
+                "/api/v1/chat/thumbnail/{roomId}"
                 ).permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
