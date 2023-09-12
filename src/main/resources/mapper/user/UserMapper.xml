@@ -15,4 +15,10 @@
     VALUES (#{email}, #{name}, #{provider})
   </insert>
 
+  <select id="findById" parameterType="long" resultType="User">
+    SELECT *
+    FROM TB_USER
+    WHERE USER_ID = #{userId}
+  </select>
+
 </mapper>
