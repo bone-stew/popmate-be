@@ -28,7 +28,7 @@ public class PopupStore {
     private String bannerImgUrl;
     private int entryFee;
     private int maxCapacity;
-    private boolean reservationEnabled;
+    private Boolean reservationEnabled;
     private int reservationInterval;
     private int intervalCapacity;
     private int teamSizeLimit;
