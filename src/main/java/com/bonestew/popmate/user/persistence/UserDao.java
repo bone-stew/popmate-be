@@ -10,4 +10,6 @@ public interface UserDao {
     Optional<User> findByEmail(String email);
 
     void register(User user);
+
+    Optional<User> findById(Long userId);
 }

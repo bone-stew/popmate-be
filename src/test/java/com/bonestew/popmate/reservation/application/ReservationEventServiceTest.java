@@ -3,6 +3,9 @@ package com.bonestew.popmate.reservation.application;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.bonestew.popmate.reservation.application.dto.ReservationRequest;
+import com.bonestew.popmate.reservation.application.dto.WifiInfoRequest;
+import com.bonestew.popmate.reservation.application.dto.WifiRequest;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,7 +24,8 @@ class ReservationEventServiceTest {
 
     @Test
     void 동시에_예약을_요청하면_정해진_인원수만_예약된다() throws InterruptedException {
-        final ReservationRequest reservationRequest = new ReservationRequest(3, 37.27538, 127.05488);
+        final WifiInfoRequest wifiInfoRequest = new WifiInfoRequest("ssid", "bssid");
+        final ReservationRequest reservationRequest = new ReservationRequest(3, List.of(wifiInfoRequest));
         final int peopleCount = 10;
         final ExecutorService executorService = Executors.newFixedThreadPool(peopleCount);
         final CountDownLatch countDownLatch = new CountDownLatch(peopleCount);
