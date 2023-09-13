@@ -7,6 +7,7 @@ import com.bonestew.popmate.popupstore.config.FolderType;
 import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfoResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -128,9 +129,15 @@ public class PopupStoreController {
 
     // TODO: AuthenticationPrincipal user role admin?
     @PostMapping("/new")
-    public ApiResponse<PopupStore> createPopupStore(@RequestBody PopupStoreInfo popupStoreInfo) {
-        PopupStore popupstoreResult = popupStoreService.postNewPopupStore(popupStoreInfo);
-        return ApiResponse.success(popupstoreResult);
+    public ApiResponse<PopupStore> createPopupStore(@RequestBody PopupStoreCreateRequest popupStoreCreateRequest,
+                                                    @RequestParam List<MultipartFile> storeImageFiles,
+                                                    @RequestParam List<MultipartFile> storeItemImageFiles) {
+        List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
+        List<String> storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
+        popupStoreCreateRequest.setPopupStoreImageList(storeImageList);
+        popupStoreCreateRequest.setPopupStoreImageList(storeItemImageList);
+        PopupStore popupStore = popupStoreService.postNewPopupStore(popupStoreCreateRequest);
+        return ApiResponse.success(popupStore);
     }
 
     @GetMapping("/{popupStoreId}/edit")

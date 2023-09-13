@@ -10,6 +10,7 @@ import com.bonestew.popmate.popupstore.persistence.PopupStoreRepository;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
@@ -20,9 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,8 +152,8 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
     }
 
-    public PopupStore postNewPopupStore(PopupStoreInfo popupStoreInfo) {
-        return popupStoreDao.insertPopupStore(popupStoreInfo);
+    public PopupStore postNewPopupStore(PopupStoreCreateRequest popupStoreCreateRequest) {
+        return popupStoreDao.insertPopupStore(popupStoreCreateRequest);
     }
 
     public List<PopupStoreInfo> getPopupStoreDetailForAdmin(Long popupStoreId) {
