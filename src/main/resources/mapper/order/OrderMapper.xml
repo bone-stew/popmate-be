@@ -80,6 +80,7 @@
     SELECT *
     FROM tb_order
     WHERE user_id = #{userId}
+    order by status, created_at desc
   </select>
 
   <select id="getRequestOrders" parameterType="java.util.Map" resultMap="orderMap">
@@ -98,6 +99,16 @@
     select *
     from tb_popup_store_item
     where popup_store_item_id= #{storeItemId} and popup_store_id= #{popupStoreId}
+  </select>
+
+  <select id="getPlaceDetails" parameterType="java.util.Map" resultType="OrderPlaceDetail">
+    select a.title, a.place_detail, b.place_description
+    from tb_popup_store a
+    join( select * from tb_department
+    where department_id  = (select department_id from
+    tb_popup_store
+    where popup_store_id= #{popupStoreId})) b on a.department_id = b.department_id
+    where a.popup_store_id=#{popupStoreId}
   </select>
 
 </mapper>

@@ -3,6 +3,7 @@ package com.bonestew.popmate.order.application;
 import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.domain.OrderItem;
+import com.bonestew.popmate.order.domain.OrderPlaceDetail;
 import com.bonestew.popmate.order.domain.StockCheckItem;
 import com.bonestew.popmate.order.exception.StockNotFoundException;
 import com.bonestew.popmate.order.persistence.OrderDao;
@@ -105,5 +106,9 @@ public class OrderService {
             stockCheckItems.add(stockCheckItem);
         }
         return stockCheckItems;
+    }
+
+    public OrderPlaceDetail getPlaceDetails(Long popupStoreId) {
+        return orderDao.getPlaceDetails(popupStoreId);
     }
 }
