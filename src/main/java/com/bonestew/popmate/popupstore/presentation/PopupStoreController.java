@@ -12,9 +12,11 @@ import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfoResponse;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -94,14 +96,35 @@ public class PopupStoreController {
     }
 
 
-    @PostMapping("/banner")
-    public ApiResponse<String> addBanner(@RequestParam MultipartFile multipartFile) {
+//    @PostMapping("/banner")
+//    public ApiResponse<List<String>> addBanner(@RequestParam List<MultipartFile> multipartFiles) {
+//        List<String> bannerList = new ArrayList<>();
+//        for(MultipartFile file: multipartFiles){
+//            Optional<String> bannerImgUrl = awsFileService.upload(file, FolderType.BANNERS);
+//            bannerList.add(bannerImgUrl.get());
+//        }
+//        return ApiResponse.success(bannerList);
+//    }
+
+
+    @PostMapping("/image")
+    public ApiResponse<String> addStoreImage(@RequestParam MultipartFile multipartFile) {
         Optional<String> bannerImgUrl = awsFileService.upload(multipartFile, FolderType.BANNERS);
         if (bannerImgUrl.isPresent()) {
             return ApiResponse.success(bannerImgUrl.get());
         }
         return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
     }
+
+//    @DeleteMapping("/image")
+//    public ApiResponse<String> deleteStoreImage(@RequestParam MultipartFile multipartFile) {
+//        Optional<String> bannerImgUrl = awsFileService.upload(multipartFile, FolderType.BANNERS);
+//        if (bannerImgUrl.isPresent()) {
+//            return ApiResponse.success(bannerImgUrl.get());
+//        }
+//        return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
+//    }
+
 
     // TODO: AuthenticationPrincipal user role admin?
     @PostMapping("/new")
@@ -115,11 +138,11 @@ public class PopupStoreController {
         List<PopupStoreInfo> popupStoreInfoList = popupStoreService.getPopupStoreDetailForAdmin(popupStoreId);
         return ApiResponse.success(PopupStoreInfoResponse.from(popupStoreInfoList));
     }
-//
-//    @PutMapping("/{popupStoreId}")
-//    public ApiResponse<PopupStore> updatePopupStore(@RequestBody PopupStoreInfo popupStoreInfo) {
-//        PopupStore popupstoreResult = popupStoreService.updatePopupStore(popupStoreInfo);
-//        return ApiResponse.success(popupstoreResult);
-//    }
+
+    @PutMapping("/{popupStoreId}")
+    public ApiResponse<PopupStore> updatePopupStore(@RequestBody PopupStoreInfo popupStoreInfo) {
+        PopupStore popupstoreResult = popupStoreService.updatePopupStore(popupStoreInfo);
+        return ApiResponse.success(popupstoreResult);
+    }
 
 }

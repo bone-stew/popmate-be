@@ -47,4 +47,6 @@ public interface PopupStoreDao {
     PopupStore insertPopupStore(PopupStoreInfo popupStoreInfo);
 
     List<PopupStoreInfo> findPopupStoreDetailByIdForAdmin(Long popupStoreId);
+
+    PopupStore updsatePopupStoreInfo(PopupStoreInfo popupStoreInfo);
 }

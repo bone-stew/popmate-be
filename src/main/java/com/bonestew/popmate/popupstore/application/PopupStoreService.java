@@ -141,7 +141,6 @@ public class PopupStoreService {
         }
     }
 
-
     public List<PopupStoreSns> getPopupStoreSnss(Long popupStoreId) {
         return popupStoreDao.selectPopupStoreSnss(popupStoreId);
     }
@@ -153,6 +152,7 @@ public class PopupStoreService {
     public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
     }
+
     public PopupStore postNewPopupStore(PopupStoreInfo popupStoreInfo) {
         return popupStoreDao.insertPopupStore(popupStoreInfo);
     }
@@ -163,5 +163,9 @@ public class PopupStoreService {
            throw new PopupStoreNotFoundException(popupStoreId);
         }
         return popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
+    }
+
+    public PopupStore updatePopupStore(PopupStoreInfo popupStoreInfo) {
+        return popupStoreDao.updsatePopupStoreInfo(popupStoreInfo);
     }
 }
