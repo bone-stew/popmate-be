@@ -6,9 +6,11 @@ import com.bonestew.popmate.order.application.OrderService;
 import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.domain.OrderItem;
+import com.bonestew.popmate.order.domain.OrderPlaceDetail;
 import com.bonestew.popmate.order.presentation.dto.OrderItemRequest;
 import com.bonestew.popmate.order.presentation.dto.OrderListItemResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderListItemsResponse;
+import com.bonestew.popmate.order.presentation.dto.OrderPlaceDetailResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderResponse;
 import com.bonestew.popmate.order.presentation.dto.PopupStoreItemsResponse;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
@@ -44,7 +46,7 @@ public class OrderController {
     @PostMapping("/orders/new")
     public ApiResponse<OrderResponse> orderPopupStoreItems(@RequestBody OrderItemRequest popupStore, @AuthenticationPrincipal PopmateUser popmateUser){
         List<AndroidOrderItem> orderItems = popupStore.getPopupStore();
-        String insertCheck = orderService.insertItems(orderItems, USER_ID, popupStore.getOrderId(), popupStore.getCardType(),popupStore.getUrl(),popupStore.getEasyPay(),popupStore.getMethod());
+        String insertCheck = orderService.insertItems(orderItems, popmateUser.getUserId(), popupStore.getOrderId(), popupStore.getCardType(),popupStore.getUrl(),popupStore.getEasyPay(),popupStore.getMethod());
         return ApiResponse.success(
             OrderResponse.from(insertCheck)
         );
@@ -52,11 +54,19 @@ public class OrderController {
 
     @GetMapping("/orders/me")
     public ApiResponse<OrderListItemsResponse> orderLists(@AuthenticationPrincipal PopmateUser popmateUser){
-        List<Order> orders = orderService.getOrders(USER_ID);
+        List<Order> orders = orderService.getOrders(popmateUser.getUserId());
 
         return ApiResponse.success(
             OrderListItemsResponse.from(orders)
         );
+    }
+
+    @GetMapping("/orders/placedetails/{popupStoreId}")
+    public ApiResponse<OrderPlaceDetailResponse> getPopupStorePlaceDetails(@PathVariable("popupStoreId") Long popupStoreId){
+        OrderPlaceDetail orderPlaceDetail = orderService.getPlaceDetails(popupStoreId);
+       return ApiResponse.success(
+           OrderPlaceDetailResponse.from(orderPlaceDetail)
+       );
     }
 
 }
