@@ -6,6 +6,8 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public record PopupStoreDetailResponse(
@@ -23,34 +25,57 @@ public record PopupStoreDetailResponse(
         LocalDateTime closeTime,
         int status,
         Long views,
+        Boolean reservationEnabled,
         Department department,
         List<PopupStoreSns> popupStoreSnsResponses,
         List<PopupStoreImg> popupStoreImgResponses,
         List<PopupStore> popupStoresNearBy
 ) {
 
-    public static PopupStoreDetailResponse of(PopupStoreDetailDto popupStoreDto,
-            List<PopupStoreSns> popupStoreSnsList,
-            List<PopupStoreImg> popupStoreImgList,
-            List<PopupStore> popupStoresNearBy) {
+    public static PopupStoreDetailResponse of(List<PopupStoreDetailDto> popupStoreDtoList,
+                                              List<PopupStore> popupStoresNearBy) {
+        PopupStore popupStore = popupStoreDtoList.get(0).getPopupStore();
+        List<PopupStoreSns> popupStoreSnsResponse = new ArrayList<>();
+        List<PopupStoreImg> popupStoreImgResponse = new ArrayList<>();
+        HashSet<Long> popupStoreSnsIds = new HashSet<>();
+        HashSet<Long> popupStoreImgIds = new HashSet<>();
+        for (PopupStoreDetailDto popupStoreDetailDto : popupStoreDtoList) {
+            if (popupStoreDetailDto.getPopupStoreSns() != null) {
+                PopupStoreSns sns = popupStoreDetailDto.getPopupStoreSns();
+                Long snsId = sns.getSnsId();
+                if (!popupStoreSnsIds.contains(snsId)) {
+                    popupStoreSnsIds.add(snsId);
+                    popupStoreSnsResponse.add(sns);
+                }
+            }
+            if (popupStoreDetailDto.getPopupStoreImg() != null) {
+                PopupStoreImg img = popupStoreDetailDto.getPopupStoreImg();
+                Long imgId = img.getPopupStoreImgId();
+                if (!popupStoreImgIds.contains(imgId)) {
+                    popupStoreImgIds.add(imgId);
+                    popupStoreImgResponse.add(img);
+                }
+            }
+        }
         return new PopupStoreDetailResponse(
-                popupStoreDto.getPopupStore().getPopupStoreId(),
-                popupStoreDto.getPopupStore().getTitle(),
-                popupStoreDto.getPopupStore().getOrganizer(),
-                popupStoreDto.getPopupStore().getPlaceDetail(),
-                popupStoreDto.getPopupStore().getDescription(),
-                popupStoreDto.getPopupStore().getEventDescription(),
-                popupStoreDto.getPopupStore().getBannerImgUrl(),
-                popupStoreDto.getPopupStore().getEntryFee(),
-                popupStoreDto.getPopupStore().getOpenDate(),
-                popupStoreDto.getPopupStore().getCloseDate(),
-                popupStoreDto.getPopupStore().getOpenTime(),
-                popupStoreDto.getPopupStore().getCloseTime(),
-                popupStoreDto.getUserReservationStatus().getCode(),
-                popupStoreDto.getPopupStore().getViews(),
-                popupStoreDto.getDepartment(),
-                popupStoreSnsList,
-                popupStoreImgList,
+                popupStore.getPopupStoreId(),
+                popupStore.getTitle(),
+                popupStore.getOrganizer(),
+                popupStore.getPlaceDetail(),
+                popupStore.getDescription(),
+                popupStore.getEventDescription(),
+                popupStore.getBannerImgUrl(),
+                popupStore.getEntryFee(),
+                popupStore.getOpenDate(),
+                popupStore.getCloseDate(),
+                popupStore.getOpenTime(),
+                popupStore.getCloseTime(),
+                popupStoreDtoList.get(0).getUserReservationStatus().getCode(),
+                popupStore.getViews(),
+                popupStore.getReservationEnabled(),
+                popupStore.getDepartment(),
+                popupStoreSnsResponse,
+                popupStoreImgResponse,
                 popupStoresNearBy
         );
     }

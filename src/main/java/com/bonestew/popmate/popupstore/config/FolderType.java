@@ -3,7 +3,8 @@ package com.bonestew.popmate.popupstore.config;
 public enum FolderType {
     ITEMS("item_imgs"),
     STORES("store_imgs"),
-    BANNERS("banner_imgs");
+    BANNERS("banner_imgs"),
+    RESERVATIONS("popup-stores/%s/reservations/%s");
 
     private final String folderName;
 

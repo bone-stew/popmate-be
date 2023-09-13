@@ -1,10 +1,10 @@
-package com.bonestew.popmate.auth.config;
+package com.bonestew.popmate.auth.jwt;
 
-import static com.bonestew.popmate.auth.domain.Role.ROLE_USER;
+import static com.bonestew.popmate.user.domain.Role.ROLE_USER;
 
 import com.bonestew.popmate.auth.application.JwtService;
 import com.bonestew.popmate.auth.domain.PopmateUser;
-import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.user.domain.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         User user = jwtService.getUserInfo(jwtToken);
         if (StringUtils.hasText(jwtToken) && jwtService.validateToken(jwtToken)) {
             List<GrantedAuthority> authority = List.of(new SimpleGrantedAuthority(ROLE_USER.name()));
-            PopmateUser popmateUser = new PopmateUser(user.getUserId(), user.getName(), authority);
+            PopmateUser popmateUser = new PopmateUser(user.getUserId(), user.getNickname(), authority);
             Authentication authentication = new UsernamePasswordAuthenticationToken(popmateUser, jwtToken, authority);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

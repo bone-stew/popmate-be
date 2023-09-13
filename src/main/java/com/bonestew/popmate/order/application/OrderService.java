@@ -4,9 +4,12 @@ import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.domain.OrderItem;
 import com.bonestew.popmate.order.domain.OrderPlaceDetail;
+import com.bonestew.popmate.order.domain.StockCheckItem;
 import com.bonestew.popmate.order.exception.StockNotFoundException;
 import com.bonestew.popmate.order.persistence.OrderDao;
+import com.bonestew.popmate.order.presentation.dto.StockCheckRequest;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -83,6 +86,27 @@ public class OrderService {
         return orderList;
     }
 
+
+    public List<StockCheckItem> getCheckItems(List<StockCheckRequest> orderItems) {
+        List<StockCheckItem> stockCheckItems = new ArrayList<>();;
+        for(StockCheckRequest stockCheckRequest : orderItems){
+            StockCheckItem stockCheckItem = new StockCheckItem();
+            boolean check = true;
+            //itemId를 넘겨서 재고 확인해주고 맞으면
+            PopupStoreItem popupStoreItem = orderDao.getItemInfo(stockCheckRequest.getItemId(), stockCheckRequest.getPopupStoreId());
+
+            if(popupStoreItem.getStock() < stockCheckRequest.getTotalQuantity()){
+                stockCheckItem.setCheck(false);
+                stockCheckItem.setItemId(popupStoreItem.getPopupStoreItemId());
+            }else{
+                stockCheckItem.setCheck(true);
+                stockCheckItem.setItemId(popupStoreItem.getPopupStoreItemId());
+            }
+            assert false;
+            stockCheckItems.add(stockCheckItem);
+        }
+        return stockCheckItems;
+    }
 
     public OrderPlaceDetail getPlaceDetails(Long popupStoreId) {
         return orderDao.getPlaceDetails(popupStoreId);

@@ -1,4 +1,4 @@
-package com.bonestew.popmate.auth.persistence.dto;
+package com.bonestew.popmate.auth.application.dto;
 
 public record KakaoUserResponse(
     Long id,

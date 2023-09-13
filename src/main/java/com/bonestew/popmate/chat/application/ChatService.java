@@ -8,6 +8,9 @@ import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.persistence.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
@@ -45,5 +48,10 @@ public class ChatService {
 
     public List<ChatMessage> loadChatMessagesByRoomId(Long roomId) {
         return chatMessageRepository.findChatMessageByRoomIdOrderByCreatedAtAsc(roomId);
+    }
+
+    public List<ChatMessage> loadChatThumbnail(Long roomId) {
+
+        return chatMessageRepository.findChatMessageThumbNail(roomId, PageRequest.of(0, 10));
     }
 }

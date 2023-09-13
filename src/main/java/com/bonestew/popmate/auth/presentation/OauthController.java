@@ -1,7 +1,7 @@
 package com.bonestew.popmate.auth.presentation;
 
 import com.bonestew.popmate.auth.application.OauthService;
-import com.bonestew.popmate.auth.persistence.dto.JwtAuthenticationResponse;
+import com.bonestew.popmate.auth.application.dto.JwtAuthenticationResponse;
 import com.bonestew.popmate.auth.presentation.dto.GoogleLoginRequest;
 import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
