@@ -1,4 +1,4 @@
-package com.bonestew.popmate.auth.domain;
+package com.bonestew.popmate.user.domain;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;

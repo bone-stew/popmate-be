@@ -45,6 +45,19 @@
   <resultMap id="popupStoreDetailMap" type="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto">
     <association property="popupStore" resultMap="popupStoreMap"/>
     <association property="department" resultMap="departmentMap"/>
+    <association property="popupStoreSns" resultMap="popupStoreSnsMap"/>
+    <association property="popupStoreImg" resultMap="popupStoreImgMap"/>
+  </resultMap>
+
+  <resultMap id="popupStoreSnsMap" type="PopupStoreSns">
+    <result column="sns_id" property="snsId"/>
+    <result column="platform" property="platform"/>
+    <result column="url" property="url"/>
+  </resultMap>
+
+  <resultMap id="popupStoreImgMap" type="PopupStoreImg">
+    <result column="popup_store_img_id" property="popupStoreImgId"/>
+    <result column="img_url" property="imgUrl"/>
   </resultMap>
 
   <resultMap id="bannerMap" type="Banner">
@@ -122,14 +135,15 @@
 
   <select id="findPopupStoreDetailById" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto"
     resultMap="popupStoreDetailMap">
-    SELECT
-    *
-    FROM
-    tb_popup_store ps
-    JOIN
-    tb_department dep ON ps.department_id = dep.department_id
-    WHERE
-    ps.popup_store_id = #{popupStoreId}
+    select *
+    from tb_popup_store ps
+    left join tb_popup_store_sns pss on
+    ps.popup_store_id = pss.popup_store_id
+    left join tb_popup_store_img psi on
+    ps.popup_store_id = psi.popup_store_id
+    left join tb_department td on
+    ps.department_id = td.department_id
+    where ps.popup_store_id = #{popupStoreId}
   </select>
 
   <select id="findUserReservationById" parameterType="long" resultType="UserReservationStatus">
@@ -142,19 +156,6 @@
     order by ur.created_at desc
     fetch first row only
   </select>
-
-  <select id="selectPopupStoreSnss" parameterType="long" resultType="PopupStoreSns">
-    SELECT *
-    FROM tb_popup_store_sns
-    WHERE popup_store_id = #{popupStoreId}
-  </select>
-
-  <select id="selectPopupStoreImgs" parameterType="long" resultType="PopupStoreImg">
-    SELECT *
-    FROM tb_popup_store_img
-    WHERE popup_store_id = #{popupStoreId}
-  </select>
-
 
   <update id="batchUpdatePopupStoreViews" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto">
     <foreach collection="list" index="index" item="updateDto" open="DECLARE BEGIN" separator=";" close="; END;">

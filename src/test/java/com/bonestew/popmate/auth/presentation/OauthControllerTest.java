@@ -10,7 +10,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bonestew.popmate.auth.application.OauthService;
-import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.user.domain.User;
 import com.bonestew.popmate.exception.enums.ResultCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;

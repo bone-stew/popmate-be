@@ -1,6 +1,6 @@
 package com.bonestew.popmate.reservation.domain;
 
-import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.user.domain.User;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

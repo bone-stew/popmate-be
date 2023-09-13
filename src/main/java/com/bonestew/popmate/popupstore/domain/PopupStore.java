@@ -1,7 +1,7 @@
 package com.bonestew.popmate.popupstore.domain;
 
 import com.bonestew.popmate.chat.domain.ChatRoom;
-import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.user.domain.User;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class PopupStore {
     private String bannerImgUrl;
     private int entryFee;
     private int maxCapacity;
-    private boolean reservationEnabled;
+    private Boolean reservationEnabled;
     private int reservationInterval;
     private int intervalCapacity;
     private int teamSizeLimit;

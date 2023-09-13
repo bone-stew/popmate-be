@@ -1,8 +1,8 @@
 package com.bonestew.popmate.auth.application;
 
-import com.bonestew.popmate.auth.domain.SocialProvider;
-import com.bonestew.popmate.auth.domain.User;
-import com.bonestew.popmate.auth.persistence.UserDao;
+import com.bonestew.popmate.user.domain.SocialProvider;
+import com.bonestew.popmate.user.domain.User;
+import com.bonestew.popmate.user.persistence.UserDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

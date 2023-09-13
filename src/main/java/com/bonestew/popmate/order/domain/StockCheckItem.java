@@ -14,4 +14,8 @@ import lombok.ToString;
 public class StockCheckItem {
     Long itemId;
     boolean check;
+
+    public boolean getCheck() {
+        return check;
+    }
 }

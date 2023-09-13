@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public record ReservationResponse(
     Long reservationId,
-    UserReservationStatus reservationStatus,
+    String reservationStatus,
     LocalDateTime startTime,
     LocalDateTime endTime,
     Long popupStoreId,
@@ -16,8 +16,8 @@ public record ReservationResponse(
 
     public static ReservationResponse from(UserReservation userReservation) {
         return new ReservationResponse(
-            userReservation.getUserReservationId(),
-            userReservation.getStatus(),
+            userReservation.getReservation().getReservationId(),
+            userReservation.getStatus().getDescription(),
             userReservation.getReservation().getStartTime(),
             userReservation.getReservation().getEndTime(),
             userReservation.getReservation().getPopupStore().getPopupStoreId(),
