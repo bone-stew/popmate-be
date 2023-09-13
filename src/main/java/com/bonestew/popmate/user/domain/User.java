@@ -22,5 +22,6 @@ public class User {
     private SocialProvider provider;
     private Role role;
     private String name;
+    private String nickname;
     private LocalDateTime createdAt;
 }

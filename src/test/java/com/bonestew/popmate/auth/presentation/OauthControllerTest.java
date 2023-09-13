@@ -86,6 +86,7 @@ class OauthControllerTest {
                 requestFields(
                     fieldWithPath("email").description("이메일"),
                     fieldWithPath("name").description("이름"),
+                    fieldWithPath("nickname").description("닉네임"),
                     fieldWithPath("provider").description("제공자"),
                     fieldWithPath("createdAt").description("생성일").optional(), // optional 필드로 처리
                     fieldWithPath("userId").description("사용자 ID").optional(), // optional 필드로 처리

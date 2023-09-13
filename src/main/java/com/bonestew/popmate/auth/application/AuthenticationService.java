@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService  {
     private final UserDao userDao;
     private final JwtService jwtService;
+    private final RandomNickNameService randomNickNameService;
 
     public String signup(String name, String email, SocialProvider provider) {
         // UserDetail에 넣는 것
@@ -18,6 +19,7 @@ public class AuthenticationService  {
             .email(email)
             .provider(provider)
             .name(name)
+            .nickname(randomNickNameService.generate())
             .build();
         userDao.register(user);
         return jwtService.generateToken(user);

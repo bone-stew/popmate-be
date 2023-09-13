@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
     private static final String USER_ID = "userId";
-    private static final String USER_NAME = "userName";
+    private static final String USER_NAME = "nickname";
 
     @Value("${token.sign.key}")
     private String jwtSignKey;
@@ -32,7 +32,7 @@ public class JwtService {
         return Jwts.builder()
             .setSubject(user.getEmail())
             .claim(USER_ID, user.getUserId())
-            .claim(USER_NAME, user.getName())
+            .claim(USER_NAME, user.getNickname())
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + accessTokenValidityInSeconds * 1000))
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -65,7 +65,7 @@ public class JwtService {
             .getBody();
         User user = new User();
         user.setUserId(claims.get(USER_ID, Long.class));
-        user.setName(claims.get(USER_NAME, String.class));
+        user.setNickname((claims.get(USER_NAME, String.class)));
         return user;
     }
 

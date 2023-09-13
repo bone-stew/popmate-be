@@ -44,7 +44,6 @@ public class ReservationEventService {
         Reservation reservation = reservationDao.findById(reservationId)
             .orElseThrow(() -> new ReservationNotFoundException(reservationId));
         User user = userService.getUserById(userId);
-
         boolean isCheck = reservationWifiService.check(
             reservationId,
             new WifiRequest(reservationRequest.wifiList())
