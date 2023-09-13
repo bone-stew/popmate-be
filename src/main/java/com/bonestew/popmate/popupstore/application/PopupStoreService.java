@@ -2,9 +2,6 @@ package com.bonestew.popmate.popupstore.application;
 
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
-import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
-import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
-import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreRepository;
@@ -20,9 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,25 +87,27 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoresEndingSoon();
     }
 
-    public PopupStoreDetailDto getPopupStoreDetail(Long popupStoreId, Long userId) {
+    public List<PopupStoreDetailDto> getPopupStoreDetail(Long popupStoreId, Long userId) {
         PopupStoreQueryDto popupStoreQueryDto = new PopupStoreQueryDto(popupStoreId, userId);
-        PopupStoreDetailDto popupStoreDetailDto = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto)
-                .orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
+        List<PopupStoreDetailDto> popupStoreDetailDtoList = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto);
+        if(popupStoreDetailDtoList.isEmpty()) {
+            throw new PopupStoreNotFoundException(popupStoreId);
+        }
         if (userId == null) {
-            popupStoreDetailDto.setUserReservationStatus(UserReservationStatus.CANCELED);
+            popupStoreDetailDtoList.get(0).setUserReservationStatus(UserReservationStatus.CANCELED);
         } else {
             Optional<UserReservationStatus> userReservationStatus = popupStoreDao.findUserReservationById(popupStoreQueryDto);
             if (userReservationStatus.isPresent()) {
-                popupStoreDetailDto.setUserReservationStatus(userReservationStatus.get());
+                popupStoreDetailDtoList.get(0).setUserReservationStatus(userReservationStatus.get());
             } else {
-                popupStoreDetailDto.setUserReservationStatus(UserReservationStatus.CANCELED);
+                popupStoreDetailDtoList.get(0).setUserReservationStatus(UserReservationStatus.CANCELED);
             }
         }
         if (userFirstTimeViewingPost(popupStoreId, userId)) {
             popupStoreRepository.createUserViewedKey(popupStoreId, userId);
-            popupStoreRepository.incrementPostView(popupStoreId, popupStoreDetailDto.getPopupStore().getViews());
+            popupStoreRepository.incrementPostView(popupStoreId, popupStoreDetailDtoList.get(0).getPopupStore().getViews());
         }
-        return popupStoreDetailDto;
+        return popupStoreDetailDtoList;
     }
 
     private boolean userFirstTimeViewingPost(Long popupStoreId, Long userId) {
@@ -139,15 +136,6 @@ public class PopupStoreService {
         if (!updates.isEmpty()) {
             popupStoreDao.batchUpdatePopupStoreViews(updates);
         }
-    }
-
-
-    public List<PopupStoreSns> getPopupStoreSnss(Long popupStoreId) {
-        return popupStoreDao.selectPopupStoreSnss(popupStoreId);
-    }
-
-    public List<PopupStoreImg> getPopupStoreImgs(Long popupStoreId) {
-        return popupStoreDao.selectPopupStoreImgs(popupStoreId);
     }
 
 

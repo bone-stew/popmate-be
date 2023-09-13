@@ -31,11 +31,7 @@ public interface PopupStoreDao {
 
     List<PopupStore> selectPopupStoresEndingSoon();
 
-    Optional<PopupStoreDetailDto> findPopupStoreDetailById(PopupStoreQueryDto popupStoreQueryDto);
-
-    List<PopupStoreSns> selectPopupStoreSnss(Long popupStoreId);
-
-    List<PopupStoreImg> selectPopupStoreImgs(Long popupStoreId);
+    List<PopupStoreDetailDto> findPopupStoreDetailById(PopupStoreQueryDto popupStoreQueryDto);
 
     Optional<UserReservationStatus> findUserReservationById(PopupStoreQueryDto popupStoreQueryDto);
 
