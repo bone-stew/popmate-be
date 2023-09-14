@@ -24,4 +24,8 @@ public interface ReservationDao {
     void updateReservationStatusToInProgress();
 
     void updateReservationStatusToClosed();
+
+    List<Reservation> findAllToInProgress();
+
+    List<Reservation> findAllToClosed();
 }

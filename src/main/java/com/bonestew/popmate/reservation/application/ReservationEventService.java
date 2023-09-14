@@ -4,6 +4,7 @@ import static com.bonestew.popmate.popupstore.config.FolderType.RESERVATIONS;
 
 import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.reservation.application.dto.WifiRequest;
+import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import com.bonestew.popmate.reservation.exception.WifiCheckException;
 import com.bonestew.popmate.user.application.UserService;
 import com.bonestew.popmate.user.domain.User;
@@ -15,6 +16,7 @@ import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
 import com.bonestew.popmate.reservation.persistence.ReservationDao;
 import com.bonestew.popmate.reservation.persistence.UserReservationDao;
 import java.io.InputStream;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -70,22 +72,36 @@ public class ReservationEventService {
         log.info("Reservation successful for user ID: {}, reservation ID: {}", user.getUserId(), reservationId);
     }
 
-    /**
-     * 예약 상태를 변경하는 스케줄러 (매일 9시부터 22시까지 매 분 0초에 실행)
-     */
-    @Transactional
-    @Scheduled(cron = "0 * 9-22 * * *")
-    public void changeReservationStatus() {
-        reservationDao.updateReservationStatusToInProgress();
-        reservationDao.updateReservationStatusToClosed();
-        log.info("Reservation status changed");
-    }
-
     private String generateReservationQrCode(User user, Reservation reservation) {
         InputStream inputStream = qrService.generateQRCode(user.getUserId(), reservation.getReservationId());
         String directory = String.format(RESERVATIONS.getFolderName(),
             reservation.getPopupStore().getPopupStoreId(), reservation.getReservationId());
 
         return fileService.uploadInputStream(inputStream, directory);
+    }
+
+    /**
+     * 예약 상태를 변경하는 스케줄러 (매일 9시부터 22시까지 매 분 0초에 실행)
+     */
+    @Transactional
+    @Scheduled(cron = "0 * 9-22 * * *")
+    public void changeReservationStatus() {
+        List<Reservation> activeReservations = reservationDao.findAllToInProgress();
+        List<Reservation> closedReservations = reservationDao.findAllToClosed();
+
+        activeReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.IN_PROGRESS));
+        closedReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.CLOSED));
+
+        reservationDao.updateReservationStatusToInProgress();
+        reservationDao.updateReservationStatusToClosed();
+    }
+
+    private void logChangedReservations(Reservation reservation, ReservationStatus status) {
+        String format = "Changing reservation status to {}. [Reservation ID: {}]";
+        switch (status) {
+            case IN_PROGRESS -> log.info(format, ReservationStatus.IN_PROGRESS.name(), reservation.getReservationId());
+            case CLOSED -> log.info(format, ReservationStatus.CLOSED.name(), reservation.getReservationId());
+            default -> throw new IllegalArgumentException("Unknown ReservationStatus code: " + status);
+        }
     }
 }
