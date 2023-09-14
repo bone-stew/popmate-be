@@ -32,7 +32,7 @@ public class Reservation {
     private LocalDateTime createdAt;
 
     public void validate(final int guestCount) {
-        if (this.status != ReservationStatus.ACTIVE) {
+        if (this.status != ReservationStatus.IN_PROGRESS) {
             throw new ReservationNotActiveException(this.getReservationId());
         }
         if (this.currentGuestCount >= this.guestLimit) {

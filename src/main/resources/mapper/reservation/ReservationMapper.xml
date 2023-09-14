@@ -52,7 +52,7 @@
     FROM tb_reservation A
            LEFT JOIN tb_popup_store B on A.popup_store_id = B.popup_store_id
     WHERE A.popup_store_id = #{popupStoreId}
-   <![CDATA[ AND start_time <= SYSDATE ]]>
+      <![CDATA[ AND start_time <= SYSDATE ]]>
       AND end_time > SYSDATE
   </select>
 
@@ -79,4 +79,33 @@
     WHERE reservation_id = #{reservationId}
   </update>
 
+  <select id="findAllToInProgress" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE status = 0
+      <![CDATA[ AND start_time <= SYSDATE ]]>
+      AND end_time > SYSDATE
+  </select>
+
+  <select id="findAllToClosed" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE (status = 0 OR status = 1)
+        <![CDATA[ AND end_time <= SYSDATE ]]>
+  </select>
+
+  <update id="updateReservationStatusToInProgress">
+    UPDATE tb_reservation
+    SET status = 1
+    WHERE status = 0
+      <![CDATA[ AND start_time <= SYSDATE ]]>
+      AND end_time > SYSDATE
+  </update>
+
+  <update id="updateReservationStatusToClosed">
+    UPDATE tb_reservation
+    SET status = 2
+    WHERE (status = 0 OR status = 1)
+        <![CDATA[ AND end_time <= SYSDATE ]]>
+  </update>
 </mapper>
