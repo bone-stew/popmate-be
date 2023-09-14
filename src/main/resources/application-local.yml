@@ -26,7 +26,7 @@ jasypt:
 
 logging:
   level:
-    com.bonestew.popmate: debug
+    com.bonestew.popmate: info
 
 token:
   sign:
