@@ -62,7 +62,7 @@ class ReservationInformationControllerTest {
     @Test
     void 진행_중인_예약을_조회한다() throws Exception {
         // given
-        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.ACTIVE,
+        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.IN_PROGRESS,
             dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
 
         // when
@@ -97,7 +97,7 @@ class ReservationInformationControllerTest {
     void 일일_예약_목록_조회한다() throws Exception {
         // given
         List<Reservation> reservations = List.of(
-            new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.ACTIVE,
+            new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.IN_PROGRESS,
                 dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime)
         );
 
@@ -123,7 +123,7 @@ class ReservationInformationControllerTest {
                     fieldWithPath("data[].endTime").description("입장 종료 시간"),
                     fieldWithPath("data[].guestLimit").description(10),
                     fieldWithPath("data[].currentGuestCount").description(5),
-                    fieldWithPath("data[].status").description(ReservationStatus.ACTIVE.getDescription())
+                    fieldWithPath("data[].status").description(ReservationStatus.IN_PROGRESS.getDescription())
                 )
             ));
 
@@ -134,7 +134,7 @@ class ReservationInformationControllerTest {
         // given
         Long reservationId = 1L;
         Long userId = 1L;
-        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.ACTIVE,
+        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.IN_PROGRESS,
             dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
         UserReservation userReservation = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
             UserReservationStatus.RESERVED, dateTime);
