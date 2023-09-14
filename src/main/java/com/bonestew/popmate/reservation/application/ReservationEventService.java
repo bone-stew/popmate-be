@@ -17,6 +17,7 @@ import com.bonestew.popmate.reservation.persistence.UserReservationDao;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +68,17 @@ public class ReservationEventService {
         ));
 
         log.info("Reservation successful for user ID: {}, reservation ID: {}", user.getUserId(), reservationId);
+    }
+
+    /**
+     * 예약 상태를 변경하는 스케줄러 (매일 9시부터 22시까지 매 분 0초에 실행)
+     */
+    @Transactional
+    @Scheduled(cron = "0 * 9-22 * * *")
+    public void changeReservationStatus() {
+        reservationDao.updateReservationStatusToInProgress();
+        reservationDao.updateReservationStatusToClosed();
+        log.info("Reservation status changed");
     }
 
     private String generateReservationQrCode(User user, Reservation reservation) {
