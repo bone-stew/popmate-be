@@ -3,6 +3,7 @@ package com.bonestew.popmate.reservation.application;
 import static com.bonestew.popmate.popupstore.config.FolderType.RESERVATIONS;
 
 import com.bonestew.popmate.popupstore.config.service.FileService;
+import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.application.dto.WifiRequest;
 import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import com.bonestew.popmate.reservation.exception.WifiCheckException;
@@ -16,6 +17,7 @@ import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
 import com.bonestew.popmate.reservation.persistence.ReservationDao;
 import com.bonestew.popmate.reservation.persistence.UserReservationDao;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,6 +80,14 @@ public class ReservationEventService {
             reservation.getPopupStore().getPopupStoreId(), reservation.getReservationId());
 
         return fileService.uploadInputStream(inputStream, directory);
+    }
+
+    /**
+     * 팝업스토어 생성 시 예약 정보를 생성하는 프로시저를 실행하는 메서드
+     */
+    @Transactional
+    public void createReservation(CreateReservationDto createReservationDto) {
+        reservationDao.saveAll(createReservationDto);
     }
 
     /**

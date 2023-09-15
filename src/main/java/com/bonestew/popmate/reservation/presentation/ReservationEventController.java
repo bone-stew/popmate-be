@@ -3,9 +3,12 @@ package com.bonestew.popmate.reservation.presentation;
 import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationEventService;
+import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.application.dto.ReservationRequest;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,5 +34,21 @@ public class ReservationEventController {
                                      @AuthenticationPrincipal PopmateUser popmateUser) {
         reservationEventService.reserve(reservationId, popmateUser.getUserId(), reservationRequest);
         return ApiResponse.success();
+    }
+
+    /**
+     * 추후 popupstore-api에서 호출 예정
+     */
+    @Deprecated
+    @GetMapping("/test")
+    public void createReservation() {
+        CreateReservationDto sampleReservationDto = new CreateReservationDto(
+            15,
+            LocalDateTime.of(2023, 9, 11, 10, 0),
+            LocalDateTime.of(2023, 9, 22, 20, 0),
+            21L,
+            50,
+            6);
+        reservationEventService.createReservation(sampleReservationDto);
     }
 }

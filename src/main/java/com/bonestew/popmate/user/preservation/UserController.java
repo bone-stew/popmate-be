@@ -19,6 +19,8 @@ public class UserController {
 
     /**
      * 나의 정보 조회
+     *
+     * @return 회원 정보
      */
     @GetMapping("/me")
     public ApiResponse<UserInformationResponse> getMyInformation(@AuthenticationPrincipal PopmateUser popmateUser) {
