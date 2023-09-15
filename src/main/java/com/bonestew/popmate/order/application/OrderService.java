@@ -72,7 +72,9 @@ public class OrderService {
 
         // 여기는 백화점 상세정보 가져와서 세팅해주는 곳
         for(Order order : orderList){
-            Order requestOrder = orderDao.getRequestOrders(order.getUser().getUserId(),order.getPopupStore().getPopupStoreId());
+            System.out.println(order.toString());
+            Order requestOrder = orderDao.getRequestOrders(order.getPopupStore().getPopupStoreId());
+            System.out.println(requestOrder.toString());
             order.setPopupStore(requestOrder.getPopupStore().getTitle(), requestOrder.getPopupStore().getPlaceDetail(), requestOrder.getPopupStore().getBannerImgUrl());
             List<OrderItem> orderItems = orderDao.getOrderItems(order.getOrderId());
             System.out.println(orderItems.toString());

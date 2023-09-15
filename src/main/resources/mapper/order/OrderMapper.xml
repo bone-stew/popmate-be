@@ -86,7 +86,7 @@
   <select id="getRequestOrders" parameterType="java.util.Map" resultMap="orderMap">
     SELECT title, place_detail, banner_img_url
     FROM tb_popup_store
-    WHERE user_id = #{userId} AND popup_store_id = #{popupStoreId}
+    WHERE popup_store_id = #{popupStoreId}
   </select>
 
   <select id="getOrderItems" parameterType="java.util.Map" resultType="OrderItem">
