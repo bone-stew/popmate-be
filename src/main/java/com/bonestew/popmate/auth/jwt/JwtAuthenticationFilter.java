@@ -5,6 +5,7 @@ import static com.bonestew.popmate.user.domain.Role.ROLE_USER;
 import com.bonestew.popmate.auth.application.JwtService;
 import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.user.domain.User;
+import com.bonestew.popmate.user.persistence.UserDao;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final UserDao userDao;
     private static final String BEARER = "Bearer ";
 
     @Override
@@ -39,8 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         String jwtToken = authHeader.substring(7);
         User user = jwtService.getUserInfo(jwtToken);
+        String role = userDao.getRole(user.getUserId());
         if (StringUtils.hasText(jwtToken) && jwtService.validateToken(jwtToken)) {
-            List<GrantedAuthority> authority = List.of(new SimpleGrantedAuthority(ROLE_USER.name()));
+            List<GrantedAuthority> authority = List.of(new SimpleGrantedAuthority(role));
             PopmateUser popmateUser = new PopmateUser(user.getUserId(), user.getNickname(), authority);
             Authentication authentication = new UsernamePasswordAuthenticationToken(popmateUser, jwtToken, authority);
             SecurityContextHolder.getContext().setAuthentication(authentication);
