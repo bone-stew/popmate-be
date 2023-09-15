@@ -1,6 +1,8 @@
 package com.bonestew.popmate.auth.application;
 
 import com.bonestew.popmate.auth.application.dto.UserInformationDto;
+import com.bonestew.popmate.auth.exception.BackOfficeUserNotFoundException;
+import com.bonestew.popmate.auth.presentation.dto.BackOfficeLoginRequest;
 import com.bonestew.popmate.user.domain.SocialProvider;
 import com.bonestew.popmate.user.domain.User;
 import com.bonestew.popmate.auth.presentation.dto.GoogleLoginRequest;
@@ -35,4 +37,12 @@ public class OauthService {
         return authenticationService.signup(request.name(), request.email(), SocialProvider.GOOGLE);
     }
 
+    public String loginBackOffice(BackOfficeLoginRequest backOfficeLoginRequest) {
+        Optional<User> user = userDao.findBackOfficeUser(backOfficeLoginRequest.id(),backOfficeLoginRequest.password());
+        if(user.isPresent()){
+            return authenticationService.signin(user.get().getEmail());
+        }else{
+            throw new BackOfficeUserNotFoundException("유효하지 않은 아이디와 비밀번호입니다.");
+        }
+    }
 }

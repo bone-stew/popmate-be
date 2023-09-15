@@ -21,4 +21,16 @@
     WHERE USER_ID = #{userId}
   </select>
 
+  <select id="getRole" parameterType="long" resultType="String">
+    SELECT role
+    FROM TB_USER
+    WHERE USER_ID = #{userId}
+  </select>
+
+  <select id="findBackOfficeUser" parameterType="java.util.Map" resultType="User">
+    SELECT *
+    FROM TB_USER
+    WHERE email = #{email} and password = #{password}
+  </select>
+
 </mapper>
