@@ -108,4 +108,15 @@
     WHERE (status = 0 OR status = 1)
         <![CDATA[ AND end_time <= SYSDATE ]]>
   </update>
+
+  <insert id="saveAll" parameterType="com.bonestew.popmate.reservation.application.dto.CreateReservationDto" statementType="CALLABLE">
+    {CALL generate_reservations(
+      #{reservationInterval, mode=IN, jdbcType=INTEGER},
+      #{openDateTime, jdbcType=TIMESTAMP, mode=IN},
+      #{closeDateTime, jdbcType=TIMESTAMP, mode=IN},
+      #{popupStoreId, jdbcType=BIGINT, mode=IN},
+      #{guestLimit, mode=IN, jdbcType=INTEGER},
+      #{teamSizeLimit, mode=IN, jdbcType=INTEGER}
+      )}
+  </insert>
 </mapper>
