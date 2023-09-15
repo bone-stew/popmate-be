@@ -40,8 +40,9 @@ public class ChatController {
      * @param roomId 채팅방 ID
      */
     @GetMapping("/enter/{roomId}")
-    public ApiResponse<ChatRoom> enter(@PathVariable String roomId) {
-        return ApiResponse.success(chatService.enterChatRoom(roomId));
+    public ApiResponse<PopmateUser> enter(@AuthenticationPrincipal PopmateUser userPrincipal ,@PathVariable String roomId) {
+        chatService.enterChatRoom(roomId);
+        return ApiResponse.success(userPrincipal);
     }
 
     /**
@@ -62,15 +63,14 @@ public class ChatController {
      * @return 채팅 메세지 리스트
      */
     @GetMapping("/room/messages/{roomId}")
-    public ApiResponse<MessagesResponse> messages(@AuthenticationPrincipal PopmateUser user, Pageable pageable , @PathVariable Long roomId) {
+    public ApiResponse<MessagesResponse> messages(Pageable pageable , @PathVariable Long roomId) {
         log.debug("{}번 채팅방 메세지 조회 API 호출", roomId);
         List<ChatMessage> res = chatService.loadChatMessagesByRoomId(roomId, pageable);
-        return ApiResponse.success(MessagesResponse.of(res, user.getUserId(), user.getName()));
+        return ApiResponse.success(MessagesResponse.of(res));
     }
 
     @GetMapping("/thumbnail/{roomId}")
     public  ApiResponse<MessagesResponse> thumbnail(@PathVariable Long roomId) {
-        log.debug("여긴아예 못오나?");
         return ApiResponse.success(MessagesResponse.of(chatService.loadChatThumbnail(roomId)));
     }
 }
