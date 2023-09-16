@@ -87,7 +87,7 @@ public class OrderService {
 
 
     public List<StockCheckItem> getCheckItems(List<StockCheckRequest> orderItems) {
-        List<StockCheckItem> stockCheckItems = new ArrayList<>();;
+        List<StockCheckItem> stockCheckItems = new ArrayList<>();
         for(StockCheckRequest stockCheckRequest : orderItems){
             StockCheckItem stockCheckItem = new StockCheckItem();
             boolean check = true;

@@ -2,7 +2,6 @@ package com.bonestew.popmate.admin.presentation;
 
 import com.bonestew.popmate.admin.application.AdminService;
 import com.bonestew.popmate.admin.domain.MainBanner;
-import com.bonestew.popmate.admin.presentation.dto.BannerResponse;
 import com.bonestew.popmate.admin.presentation.dto.BannersResponse;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.exception.enums.ResultCode;
