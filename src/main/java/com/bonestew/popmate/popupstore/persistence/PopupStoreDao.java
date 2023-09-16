@@ -2,9 +2,6 @@ package com.bonestew.popmate.popupstore.persistence;
 
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
-import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
-import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
-import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
@@ -38,4 +35,5 @@ public interface PopupStoreDao {
     int batchUpdatePopupStoreViews(List<PopupStoreUpdateDto> updates);
 
     List<PopupStore> selectPopupStoresNearBy(Long popupStoreId);
+
 }

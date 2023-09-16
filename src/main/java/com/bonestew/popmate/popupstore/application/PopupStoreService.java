@@ -141,6 +141,6 @@ public class PopupStoreService {
 
     public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
-
     }
+
 }
