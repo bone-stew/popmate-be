@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.bonestew.popmate.popupstore.domain.Banner;
-import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
-import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreHomeResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreDetailResponse;
@@ -94,4 +92,5 @@ public class PopupStoreController {
         }
         return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
     }
+
 }

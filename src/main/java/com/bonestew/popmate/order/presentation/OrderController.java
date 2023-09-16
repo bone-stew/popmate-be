@@ -78,4 +78,12 @@ public class OrderController {
        );
     }
 
+    @GetMapping("/orders/backoffice/orderList/{popupStoreId}")
+    public ApiResponse<OrderListItemsResponse> getBackOfficeOrderLists(@PathVariable("popupStoreId") Long popupStoreId){
+        List<Order> orders = orderService.getBackOfficeOrderLists(popupStoreId);
+
+        return ApiResponse.success(
+            OrderListItemsResponse.from(orders)
+        );
+    }
 }

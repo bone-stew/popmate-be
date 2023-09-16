@@ -48,4 +48,7 @@ public interface OrderDao {
 
     OrderPlaceDetail getPlaceDetails(@Param("popupStoreId") Long popupStoreId);
 
+    List<Order> getBackOfficeOrders(Long popupStoreId);
+
+    List<OrderItem> getBackOfficeOrderItems(Long orderId);
 }

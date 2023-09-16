@@ -172,4 +172,5 @@
     and popup_store_id != #{popupStoreId}
     and sysdate &lt;= close_date
   </select>
+
 </mapper>

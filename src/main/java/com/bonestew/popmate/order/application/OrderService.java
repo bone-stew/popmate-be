@@ -72,12 +72,9 @@ public class OrderService {
 
         // 여기는 백화점 상세정보 가져와서 세팅해주는 곳
         for(Order order : orderList){
-            System.out.println(order.toString());
             Order requestOrder = orderDao.getRequestOrders(order.getPopupStore().getPopupStoreId());
-            System.out.println(requestOrder.toString());
             order.setPopupStore(requestOrder.getPopupStore().getTitle(), requestOrder.getPopupStore().getPlaceDetail(), requestOrder.getPopupStore().getBannerImgUrl());
             List<OrderItem> orderItems = orderDao.getOrderItems(order.getOrderId());
-            System.out.println(orderItems.toString());
             for(OrderItem orderItem : orderItems){
                 PopupStoreItem popupStoreItem =  orderDao.getItemInfo(orderItem.getStoreItemId(), order.getPopupStore().getPopupStoreId());
                 orderItem.setPopupStoreItem(popupStoreItem);
@@ -90,7 +87,7 @@ public class OrderService {
 
 
     public List<StockCheckItem> getCheckItems(List<StockCheckRequest> orderItems) {
-        List<StockCheckItem> stockCheckItems = new ArrayList<>();;
+        List<StockCheckItem> stockCheckItems = new ArrayList<>();
         for(StockCheckRequest stockCheckRequest : orderItems){
             StockCheckItem stockCheckItem = new StockCheckItem();
             boolean check = true;
@@ -112,5 +109,15 @@ public class OrderService {
 
     public OrderPlaceDetail getPlaceDetails(Long popupStoreId) {
         return orderDao.getPlaceDetails(popupStoreId);
+    }
+
+    public List<Order> getBackOfficeOrderLists(Long popupStoreId) {
+        List<Order> orderList = orderDao.getBackOfficeOrders(popupStoreId);
+        for(Order order : orderList){
+              List<OrderItem> orderItems = orderDao.getBackOfficeOrderItems(order.getOrderId());
+              System.out.println(orderItems.toString());
+              order.setOrderItemList(orderItems);
+        }
+        return orderList;
     }
 }
