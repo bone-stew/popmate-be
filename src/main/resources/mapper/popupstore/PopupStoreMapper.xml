@@ -49,16 +49,6 @@
     <association property="popupStoreImg" resultMap="popupStoreImgMap"/>
   </resultMap>
 
-  <resultMap id="popupStoreSnsMap" type="PopupStoreSns">
-    <result column="sns_id" property="snsId"/>
-    <result column="platform" property="platform"/>
-    <result column="url" property="url"/>
-  </resultMap>
-
-  <resultMap id="popupStoreImgMap" type="PopupStoreImg">
-    <result column="popup_store_img_id" property="popupStoreImgId"/>
-    <result column="img_url" property="imgUrl"/>
-  </resultMap>
 
   <resultMap id="bannerMap" type="Banner">
     <result column="banner_id" property="bannerId"/>
@@ -147,6 +137,7 @@
     FROM
     tb_popup_store
     where sysdate &lt;= close_date
+    AND trunc(SYSDATE) > open_date
     ORDER BY views
     FETCH FIRST 5 ROWS ONLY
   </select>
