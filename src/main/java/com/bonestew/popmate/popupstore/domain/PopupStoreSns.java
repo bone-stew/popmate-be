@@ -14,6 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class PopupStoreSns {
 
+    private PopupStore popupStore;
     private Long snsId;
     private String platform;
     private String url;

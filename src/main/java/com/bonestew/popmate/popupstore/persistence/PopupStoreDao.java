@@ -2,10 +2,12 @@ package com.bonestew.popmate.popupstore.persistence;
 
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
+import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
+import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
+import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
@@ -38,9 +40,17 @@ public interface PopupStoreDao {
 
     List<PopupStore> selectPopupStoresNearBy(Long popupStoreId);
 
-    PopupStore insertPopupStore(PopupStoreCreateRequest popupStoreCreateRequest);
-
     List<PopupStoreInfo> findPopupStoreDetailByIdForAdmin(Long popupStoreId);
 
     PopupStore updsatePopupStoreInfo(PopupStoreInfo popupStoreInfo);
+
+    void insertPopupStore(PopupStore popupStore);
+//    PopupStore insertPopupStore(PopupStoreCreateDto popupStoreCreateDto);
+
+    void insertPopupStoreImgs(List<PopupStoreImg> popupStoreImgs);
+
+    void insertPopupStoreItems(List<PopupStoreItem> popupStoreItemList);
+
+    void insertPopupStoreSns(List<PopupStoreSns> popupStoreSnsList);
+
 }

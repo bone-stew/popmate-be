@@ -10,14 +10,9 @@ import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfoResponse;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +26,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -124,17 +120,16 @@ public class PopupStoreController {
 //    }
 
 
-    // TODO: AuthenticationPrincipal user role admin?
     @PostMapping("/new")
-    public ApiResponse<PopupStore> createPopupStore(@RequestBody PopupStoreCreateRequest popupStoreCreateRequest,
-                                                    @RequestParam List<MultipartFile> storeImageFiles,
-                                                    @RequestParam List<MultipartFile> storeItemImageFiles) {
+    public ApiResponse<Long> createPopupStore(@RequestPart(value="popupStore",required=false) PopupStoreCreateRequest popupStoreCreateRequest,
+                                                    @RequestPart("storeImageFiles") List<MultipartFile> storeImageFiles,
+                                                    @RequestPart("storeItemImageFiles") List<MultipartFile> storeItemImageFiles) {
         List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
         List<String> storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
-        popupStoreCreateRequest.setPopupStoreImageList(storeImageList);
-        popupStoreCreateRequest.setPopupStoreImageList(storeItemImageList);
-        PopupStore popupStore = popupStoreService.postNewPopupStore(popupStoreCreateRequest);
-        return ApiResponse.success(popupStore);
+//        popupStoreCreateRequest.setPopupStoreImageList(storeImageList);
+//        popupStoreCreateRequest.setPopupStoreItemImageList(storeItemImageList);
+        Long storeId = popupStoreService.postNewPopupStore(popupStoreCreateRequest, storeImageList, storeItemImageList);
+        return ApiResponse.success(storeId);
     }
 
     @GetMapping("/{popupStoreId}/edit")

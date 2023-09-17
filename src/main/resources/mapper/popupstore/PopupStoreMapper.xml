@@ -215,4 +215,77 @@
     on ps.popup_store_id = psii.popup_store_id
     where ps.popup_store_id = #{popupStoreId}
   </select>
+
+
+  <insert id="insertPopupStore" parameterType="PopupStore">
+    <selectKey keyColumn="popup_store_id" keyProperty="popupStoreId" resultType="Long" order="AFTER">
+      select TB_POPUP_STORE_SEQ.CURRVAL from dual
+    </selectKey>
+    INSERT INTO tb_popup_store (
+    user_id,
+    department_id,
+    title,
+    organizer,
+    place_detail,
+    description,
+    event_description,
+    banner_img_url,
+    entry_fee,
+    max_capacity,
+    reservation_enabled,
+    reservation_interval,
+    interval_capacity,
+    team_size_limit,
+    open_date,
+    close_date,
+    open_time,
+    close_time,
+    views
+    )
+    VALUES (
+    #{user.userId},
+    #{department.departmentId},
+    #{title},
+    #{organizer},
+    #{placeDetail},
+    #{description},
+    #{eventDescription},
+    #{bannerImgUrl},
+    #{entryFee},
+    #{maxCapacity},
+    #{reservationEnabled},
+    #{reservationInterval},
+    #{intervalCapacity},
+    #{teamSizeLimit},
+    #{openDate},
+    #{closeDate},
+    #{openTime},
+    #{closeTime},
+    #{views}
+    )
+  </insert>
+
+  <insert id="insertPopupStoreImgs" parameterType="java.util.List">
+    INSERT INTO tb_popup_store_img (popup_store_id, img_url)
+    VALUES
+    <foreach collection="list" item="img" separator=",">
+      (#{img.popupStore.popupStoreId}, #{img.imgUrl})
+    </foreach>
+  </insert>
+
+  <insert id="insertPopupStoreItems" parameterType="java.util.List">
+    INSERT INTO tb_popup_store_item (popup_store_id, name, img_url, amount, stock, order_limit)
+    VALUES
+    <foreach collection="list" item="item" separator=",">
+      (#{item.popupStore.popupStoreId}, #{item.name}, #{item.imgUrl}, #{item.amount}, #{item.stock}, #{item.orderLimit})
+    </foreach>
+  </insert>
+
+  <insert id="insertPopupStoreSns" parameterType="java.util.List">
+    INSERT INTO tb_popup_store_sns (popup_store_id, platform, url)
+    VALUES
+    <foreach collection="list" item="sns" separator=",">
+      (#{sns.popupStore.popupStoreId}, #{sns.platform}, #{sns.url})
+    </foreach>
+  </insert>
 </mapper>
