@@ -91,25 +91,27 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoresEndingSoon();
     }
 
-    public PopupStoreDetailDto getPopupStoreDetail(Long popupStoreId, Long userId) {
+    public List<PopupStoreDetailDto> getPopupStoreDetail(Long popupStoreId, Long userId) {
         PopupStoreQueryDto popupStoreQueryDto = new PopupStoreQueryDto(popupStoreId, userId);
-        PopupStoreDetailDto popupStoreDetailDto = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto)
-                .orElseThrow(() -> new PopupStoreNotFoundException(popupStoreId));
+        List<PopupStoreDetailDto> popupStoreDetailDtoList = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto);
+        if(popupStoreDetailDtoList.isEmpty()) {
+            throw new PopupStoreNotFoundException(popupStoreId);
+        }
         if (userId == null) {
-            popupStoreDetailDto.setUserReservationStatus(UserReservationStatus.CANCELED);
+            popupStoreDetailDtoList.get(0).setUserReservationStatus(UserReservationStatus.CANCELED);
         } else {
             Optional<UserReservationStatus> userReservationStatus = popupStoreDao.findUserReservationById(popupStoreQueryDto);
             if (userReservationStatus.isPresent()) {
-                popupStoreDetailDto.setUserReservationStatus(userReservationStatus.get());
+                popupStoreDetailDtoList.get(0).setUserReservationStatus(userReservationStatus.get());
             } else {
-                popupStoreDetailDto.setUserReservationStatus(UserReservationStatus.CANCELED);
+                popupStoreDetailDtoList.get(0).setUserReservationStatus(UserReservationStatus.CANCELED);
             }
         }
         if (userFirstTimeViewingPost(popupStoreId, userId)) {
             popupStoreRepository.createUserViewedKey(popupStoreId, userId);
-            popupStoreRepository.incrementPostView(popupStoreId, popupStoreDetailDto.getPopupStore().getViews());
+            popupStoreRepository.incrementPostView(popupStoreId, popupStoreDetailDtoList.get(0).getPopupStore().getViews());
         }
-        return popupStoreDetailDto;
+        return popupStoreDetailDtoList;
     }
 
     private boolean userFirstTimeViewingPost(Long popupStoreId, Long userId) {
@@ -140,13 +142,6 @@ public class PopupStoreService {
         }
     }
 
-    public List<PopupStoreSns> getPopupStoreSnss(Long popupStoreId) {
-        return popupStoreDao.selectPopupStoreSnss(popupStoreId);
-    }
-
-    public List<PopupStoreImg> getPopupStoreImgs(Long popupStoreId) {
-        return popupStoreDao.selectPopupStoreImgs(popupStoreId);
-    }
 
     public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
@@ -167,4 +162,5 @@ public class PopupStoreService {
     public PopupStore updatePopupStore(PopupStoreInfo popupStoreInfo) {
         return popupStoreDao.updsatePopupStoreInfo(popupStoreInfo);
     }
+
 }

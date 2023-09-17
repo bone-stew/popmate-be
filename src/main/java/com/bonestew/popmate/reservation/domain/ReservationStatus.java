@@ -6,11 +6,11 @@ public enum ReservationStatus {
 
     CANCELED(-1, "예약 중단"),
 
-    PENDING(0, "예약 대기"),
+    SCHEDULED(0, "예약 예정"),
 
-    ACTIVE(1, "예약 진행"),
+    IN_PROGRESS(1, "예약 중"),
 
-    CONFIRMED(2, "예약 완료");
+    CLOSED(2, "예약 완료");
 
     private final int code;
     private final String description;

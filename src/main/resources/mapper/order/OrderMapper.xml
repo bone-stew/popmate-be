@@ -13,6 +13,7 @@
 
   <resultMap id="userMap" type="User">
     <result column="user_id" property="userId"/>
+    <result column="name" property="name"/>
   </resultMap>
 
   <resultMap id="popupStoreItemMap" type="PopupStoreItem">
@@ -41,6 +42,17 @@
     <collection column="place_detail" property="popupStore" resultMap="popupStoreMap"/>
     <collection column="banner_img_url" property="popupStore" resultMap="popupStoreMap"/>
     <collection column="user_id" property="user" resultMap="userMap"/>
+    <collection column="name" property="user" resultMap="userMap"/>
+  </resultMap>
+
+  <resultMap id="orderItemMap" type="OrderItem">
+    <result column="total_amount" property="totalAmount"/>
+    <result column="total_quantity" property="totalQuantity"/>
+    <collection column="popup_store_item_id" property="popupStoreItem" resultMap="popupStoreItemMap"/>
+    <collection column="name" property="popupStoreItem" resultMap="popupStoreItemMap"/>
+    <collection column="amount" property="popupStoreItem" resultMap="popupStoreItemMap"/>
+    <collection column="stock" property="popupStoreItem" resultMap="popupStoreItemMap"/>
+    <collection column="order_limit" property="popupStoreItem" resultMap="popupStoreItemMap"/>
   </resultMap>
 
 
@@ -80,12 +92,13 @@
     SELECT *
     FROM tb_order
     WHERE user_id = #{userId}
+    order by status, created_at desc
   </select>
 
   <select id="getRequestOrders" parameterType="java.util.Map" resultMap="orderMap">
     SELECT title, place_detail, banner_img_url
     FROM tb_popup_store
-    WHERE user_id = #{userId} AND popup_store_id = #{popupStoreId}
+    WHERE popup_store_id = #{popupStoreId}
   </select>
 
   <select id="getOrderItems" parameterType="java.util.Map" resultType="OrderItem">
@@ -98,6 +111,32 @@
     select *
     from tb_popup_store_item
     where popup_store_item_id= #{storeItemId} and popup_store_id= #{popupStoreId}
+  </select>
+
+  <select id="getPlaceDetails" parameterType="java.util.Map" resultType="OrderPlaceDetail">
+    select a.title, a.place_detail, b.place_description
+    from tb_popup_store a
+    join( select * from tb_department
+    where department_id  = (select department_id from
+    tb_popup_store
+    where popup_store_id= #{popupStoreId})) b on a.department_id = b.department_id
+    where a.popup_store_id=#{popupStoreId}
+  </select>
+
+  <select id="getBackOfficeOrders" parameterType="long" resultMap="orderMap">
+    select a.order_id,a.popup_store_id, a.status, a.amount,a.created_at, a.order_toss_id,a.order_card_type,a.method, b.name from
+    tb_order a
+    join tb_user b on a.user_id = b.user_id
+    where a.popup_store_id=#{popupStoreId}
+    order by created_at desc
+  </select>
+
+  <select id="getBackOfficeOrderItems" parameterType="long" resultMap="orderItemMap">
+    select a.popup_store_item_id, a.total_amount, a.total_quantity, b.name, b.amount, b.img_url, b.stock, b.order_limit
+    from tb_order_item a
+    join tb_popup_store_item b on a.popup_store_item_id = b.popup_store_item_id
+    where a.order_id = #{orderId}
+    order by popup_store_item_id
   </select>
 
 </mapper>

@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.bonestew.popmate.popupstore.domain.Banner;
-import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
-import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreHomeResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreDetailResponse;
@@ -81,18 +79,17 @@ public class PopupStoreController {
     @GetMapping("/{popupStoreId}")
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
                                                                    @AuthenticationPrincipal PopmateUser popmateUser) {
+
         Long userId;
         if (popmateUser == null){
             userId = null;
         } else {
             userId = popmateUser.getUserId();
         }
-        PopupStoreDetailDto popupStoreDto = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
-        List<PopupStoreSns> popupStoreSnsList = popupStoreService.getPopupStoreSnss(popupStoreId);
-        List<PopupStoreImg> popupStoreImgList = popupStoreService.getPopupStoreImgs(popupStoreId);
+        List<PopupStoreDetailDto> popupStoreDetailDtoList = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
         List<PopupStore> popupStoreNearByList = popupStoreService.getPopupStoresInDepartment(popupStoreId);
         return ApiResponse.success(
-            PopupStoreDetailResponse.of(popupStoreDto, popupStoreSnsList, popupStoreImgList, popupStoreNearByList)
+            PopupStoreDetailResponse.of(popupStoreDetailDtoList, popupStoreNearByList)
         );
     }
 
@@ -151,5 +148,6 @@ public class PopupStoreController {
         PopupStore popupstoreResult = popupStoreService.updatePopupStore(popupStoreInfo);
         return ApiResponse.success(popupstoreResult);
     }
+
 
 }

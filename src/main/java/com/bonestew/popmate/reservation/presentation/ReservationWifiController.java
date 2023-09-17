@@ -1,7 +1,7 @@
 package com.bonestew.popmate.reservation.presentation;
 
 import com.bonestew.popmate.dto.ApiResponse;
-import com.bonestew.popmate.reservation.application.CheckWifiResponse;
+import com.bonestew.popmate.reservation.presentation.dto.CheckWifiResponse;
 import com.bonestew.popmate.reservation.application.ReservationWifiService;
 import com.bonestew.popmate.reservation.application.dto.WifiRequest;
 import lombok.RequiredArgsConstructor;

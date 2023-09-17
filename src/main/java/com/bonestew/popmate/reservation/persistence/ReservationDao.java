@@ -1,5 +1,6 @@
 package com.bonestew.popmate.reservation.persistence;
 
+import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.Wifi;
 import java.time.LocalDate;
@@ -20,4 +21,14 @@ public interface ReservationDao {
     List<Wifi> findWifiById(Long reservationId);
 
     void updateCurrentGuestCount(Reservation reservation);
+
+    List<Reservation> findAllToInProgress();
+
+    List<Reservation> findAllToClosed();
+
+    void updateReservationStatusToInProgress();
+
+    void updateReservationStatusToClosed();
+
+    void saveAll(CreateReservationDto createReservationDto);
 }

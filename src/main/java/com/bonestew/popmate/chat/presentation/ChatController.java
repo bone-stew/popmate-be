@@ -9,6 +9,7 @@ import com.bonestew.popmate.chat.presentation.dto.MessagesResponse;
 import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +40,9 @@ public class ChatController {
      * @param roomId 채팅방 ID
      */
     @GetMapping("/enter/{roomId}")
-    public ApiResponse<ChatRoom> enter(@PathVariable String roomId) {
-        return ApiResponse.success(chatService.enterChatRoom(roomId));
+    public ApiResponse<PopmateUser> enter(@AuthenticationPrincipal PopmateUser userPrincipal ,@PathVariable String roomId) {
+        chatService.enterChatRoom(roomId);
+        return ApiResponse.success(userPrincipal);
     }
 
     /**
@@ -61,9 +63,14 @@ public class ChatController {
      * @return 채팅 메세지 리스트
      */
     @GetMapping("/room/messages/{roomId}")
-    public ApiResponse<MessagesResponse> messages(@AuthenticationPrincipal PopmateUser user, @PathVariable Long roomId) {
+    public ApiResponse<MessagesResponse> messages(Pageable pageable , @PathVariable Long roomId) {
         log.debug("{}번 채팅방 메세지 조회 API 호출", roomId);
-        List<ChatMessage> res = chatService.loadChatMessagesByRoomId(roomId);
-        return ApiResponse.success(MessagesResponse.of(res, user.getUserId(), user.getName()));
+        List<ChatMessage> res = chatService.loadChatMessagesByRoomId(roomId, pageable);
+        return ApiResponse.success(MessagesResponse.of(res));
+    }
+
+    @GetMapping("/thumbnail/{roomId}")
+    public  ApiResponse<MessagesResponse> thumbnail(@PathVariable Long roomId) {
+        return ApiResponse.success(MessagesResponse.of(chatService.loadChatThumbnail(roomId)));
     }
 }

@@ -11,7 +11,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.user.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.exception.enums.ResultCode;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
@@ -19,11 +19,9 @@ import com.bonestew.popmate.popupstore.domain.Department;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.utils.WithMockCustomUser;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

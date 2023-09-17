@@ -8,6 +8,9 @@ import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.persistence.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
@@ -31,7 +34,7 @@ public class ChatService {
 
     public ChatRoom enterChatRoom(String roomId) {
         ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomId);
-        if(chatRoom == null) {
+        if (chatRoom == null) {
             chatRoom = chatRoomDao.findById(roomId).orElseThrow(ChatRoomNotFoundException::new);
             redisMessageListenerContainer.addMessageListener(redisSubscriber, getTopic(roomId));
             chatRoomRepository.registerChatRoom(chatRoom);
@@ -41,9 +44,15 @@ public class ChatService {
 
     public ChannelTopic getTopic(String roomId) {
         return new ChannelTopic(roomId);
-    };
+    }
 
-    public List<ChatMessage> loadChatMessagesByRoomId(Long roomId) {
-        return chatMessageRepository.findChatMessageByRoomIdOrderByCreatedAtAsc(roomId);
+    ;
+
+    public List<ChatMessage> loadChatMessagesByRoomId(Long roomId, Pageable pageable) {
+        return chatMessageRepository.findChatMessageByRoomId(roomId, pageable);
+    }
+
+    public List<ChatMessage> loadChatThumbnail(Long roomId) {
+        return chatMessageRepository.findChatMessageThumbNail(roomId, PageRequest.of(0, 10));
     }
 }

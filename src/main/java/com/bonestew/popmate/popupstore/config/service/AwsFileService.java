@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.bonestew.popmate.popupstore.config.FolderType;
 import com.bonestew.popmate.popupstore.exception.ImageUploadFailedException;
+import com.bonestew.popmate.popupstore.config.exception.AwsS3Exception;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -54,5 +55,29 @@ public class AwsFileService implements FileService {
             throw new ImageUploadFailedException();
         }
         return urlList;
+    }
+
+    @Override
+    public String uploadInputStream(InputStream inputStream, String directory) {
+        try (InputStream resource = inputStream) {
+            String fileName = generateFileName(directory);
+            amazonS3Client.putObject(bucketName, fileName, resource, null);
+            return getResourceUrl(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new AwsS3Exception();
+        }
+    }
+
+    private String generateFileName(String directory) {
+        return String.format("%s/%s.png", directory, getRandomUUID());
+    }
+
+    private String getRandomUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    private String getResourceUrl(String savedFileName) {
+        return amazonS3Client.getResourceUrl(bucketName, savedFileName);
     }
 }

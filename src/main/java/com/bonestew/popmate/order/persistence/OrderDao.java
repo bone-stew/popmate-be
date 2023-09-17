@@ -2,6 +2,7 @@ package com.bonestew.popmate.order.persistence;
 
 import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.domain.OrderItem;
+import com.bonestew.popmate.order.domain.OrderPlaceDetail;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import java.util.List;
 import java.util.Optional;
@@ -38,10 +39,16 @@ public interface OrderDao {
 
     List<Order> getOrders(@Param("userId") Long userId);
 
-    Order getRequestOrders(@Param("userId") Long userId, @Param("popupStoreId") Long popupStoreId);
+    Order getRequestOrders(@Param("popupStoreId") Long popupStoreId);
 
     List<OrderItem> getOrderItems(@Param("orderId") Long orderId);
 
     PopupStoreItem getItemInfo(@Param("storeItemId") Long storeItemId,
                                @Param("popupStoreId") Long popupStoreId);
+
+    OrderPlaceDetail getPlaceDetails(@Param("popupStoreId") Long popupStoreId);
+
+    List<Order> getBackOfficeOrders(Long popupStoreId);
+
+    List<OrderItem> getBackOfficeOrderItems(Long orderId);
 }

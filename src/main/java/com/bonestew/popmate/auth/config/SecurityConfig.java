@@ -2,6 +2,10 @@ package com.bonestew.popmate.auth.config;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+import com.bonestew.popmate.auth.jwt.ExceptionHandlerFilter;
+import com.bonestew.popmate.auth.jwt.JwtAccessDeniedHandler;
+import com.bonestew.popmate.auth.jwt.JwtAuthenticationEntryPoint;
+import com.bonestew.popmate.auth.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +36,8 @@ public class SecurityConfig {
                 "/api/v1/popup-stores/{popupStoreId}",
                 "/api/v1/popup-stores/banner",
                 "/api/v1/popup-stores/{popupStoreId}/reservations", // TODO:: STAFF, MANAGER 만 접근할 수 있도록 추후 변경
-                "/ws-chat/**"
+                "/ws-chat/**",
+                "/api/v1/chat/thumbnail/{roomId}"
                 ).permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))

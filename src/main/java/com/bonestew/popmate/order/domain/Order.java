@@ -1,7 +1,7 @@
 package com.bonestew.popmate.order.domain;
 
 import com.bonestew.popmate.popupstore.domain.PopupStore;
-import com.bonestew.popmate.auth.domain.User;
+import com.bonestew.popmate.user.domain.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;

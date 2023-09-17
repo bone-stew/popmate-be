@@ -1,7 +1,8 @@
 package com.bonestew.popmate.auth.presentation;
 
 import com.bonestew.popmate.auth.application.OauthService;
-import com.bonestew.popmate.auth.persistence.dto.JwtAuthenticationResponse;
+import com.bonestew.popmate.auth.application.dto.JwtAuthenticationResponse;
+import com.bonestew.popmate.auth.presentation.dto.BackOfficeLoginRequest;
 import com.bonestew.popmate.auth.presentation.dto.GoogleLoginRequest;
 import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,15 @@ public class OauthController {
     @PostMapping("/google")
     public ApiResponse<JwtAuthenticationResponse> loginGoogle(@RequestBody GoogleLoginRequest googleLoginRequest){
         String accessToken = oauthService.loginGoogle(googleLoginRequest);
+        return ApiResponse.success(
+            new JwtAuthenticationResponse(accessToken)
+        );
+    }
+
+    // 백오피스 로그인
+    @PostMapping("/office")
+    public ApiResponse<JwtAuthenticationResponse> loginOffice(@RequestBody BackOfficeLoginRequest backOfficeLoginRequest){
+        String accessToken = oauthService.loginBackOffice(backOfficeLoginRequest);
         return ApiResponse.success(
             new JwtAuthenticationResponse(accessToken)
         );

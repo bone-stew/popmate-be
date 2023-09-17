@@ -1,7 +1,7 @@
 package com.bonestew.popmate.auth.application;
 
 import com.bonestew.popmate.auth.application.dto.UserInformationDto;
-import com.bonestew.popmate.auth.persistence.dto.KakaoUserResponse;
+import com.bonestew.popmate.auth.application.dto.KakaoUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
