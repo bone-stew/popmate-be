@@ -1,11 +1,13 @@
 package com.bonestew.popmate.auth.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.bonestew.popmate.auth.jwt.ExceptionHandlerFilter;
 import com.bonestew.popmate.auth.jwt.JwtAccessDeniedHandler;
 import com.bonestew.popmate.auth.jwt.JwtAuthenticationEntryPoint;
 import com.bonestew.popmate.auth.jwt.JwtAuthenticationFilter;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +16,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -27,17 +32,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+            .cors(withDefaults())
             .authorizeHttpRequests(request -> request.requestMatchers(
-                "/docs/**",
-                "/openapi/**",
-                "/api/v1/oauth/**",
-                "/api/v1/popup-stores",
-                "/api/v1/popup-stores/home",
-                "/api/v1/popup-stores/{popupStoreId}",
-                "/api/v1/popup-stores/banner",
-                "/api/v1/popup-stores/{popupStoreId}/reservations", // TODO:: STAFF, MANAGER 만 접근할 수 있도록 추후 변경
-                "/ws-chat/**",
-                "/api/v1/chat/thumbnail/{roomId}"
+                    "/docs/**",
+                    "/openapi/**",
+                    "/api/v1/oauth/**",
+                    "/api/v1/popup-stores",
+                    "/api/v1/popup-stores/home",
+                    "/api/v1/popup-stores/{popupStoreId}",
+                    "/api/v1/popup-stores/banner",
+                    "/api/v1/popup-stores/{popupStoreId}/reservations", // TODO:: STAFF, MANAGER 만 접근할 수 있도록 추후 변경
+                    "/ws-chat/**",
+                    "/api/v1/chat/thumbnail/{roomId}"
                 ).permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
@@ -46,5 +52,15 @@ public class SecurityConfig {
             .exceptionHandling(handler -> handler.authenticationEntryPoint(jwtAuthenticationEntryPoint))
             .exceptionHandling(handler-> handler.accessDeniedHandler(jwtAccessDeniedHandler));
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
