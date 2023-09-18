@@ -27,11 +27,12 @@ public class AdminController {
     private final FileService awsFileService;
 
     @PostMapping("/banners/new")
-    public ApiResponse<String> addMainBanner(@RequestParam MultipartFile multipartFile, @RequestParam Long popupStoreId) {
+    public ApiResponse<MainBanner> addMainBanner(@RequestParam MultipartFile multipartFile, @RequestParam Long popupStoreId) {
         Optional<String> bannerImgUrl = awsFileService.upload(multipartFile, FolderType.BANNERS);
         if (bannerImgUrl.isPresent()) {
             adminService.insertMainBanner(popupStoreId, String.valueOf(bannerImgUrl));
-            return ApiResponse.success(bannerImgUrl.get());
+            MainBanner mainBanner = adminService.getOneMainBanner();
+            return ApiResponse.success(mainBanner);
         }
         return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
     }

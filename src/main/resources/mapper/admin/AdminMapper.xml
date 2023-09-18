@@ -9,13 +9,20 @@
     values(#{bannerImgUrl}, #{popupStoreId})
   </insert>
 
+  <select id="getOneMainBanner" resultType="MainBanner">
+    select a.popup_store_id, a.title, a.organizer, a.place_detail, a.open_date, a.close_date, b.banner_id,b.img_url
+    from tb_popup_store a join tb_banner b on a.popup_store_id = b.popup_store_id
+    where rownum=1
+    order by banner_id desc
+  </select>
+
   <delete id="deleteBanner" parameterType="long">
     delete from tb_banner
     where banner_id = #{bannerId}
   </delete>
 
   <select id="getMainBanner" resultType="MainBanner">
-    select *
-    from tb_banner
+    select a.popup_store_id, a.title, a.organizer, a.place_detail, a.open_date, a.close_date, b.banner_id,b.img_url
+    from tb_popup_store a join tb_banner b on a.popup_store_id = b.popup_store_id
   </select>
 </mapper>

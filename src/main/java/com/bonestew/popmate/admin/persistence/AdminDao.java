@@ -10,6 +10,8 @@ public interface AdminDao {
     void insertMainBanner(@Param("popupStoreId") Long popupStoreId,
                           @Param("bannerImgUrl") String bannerImgUrl);
 
+    MainBanner getOneMainBanner();
+
     void deleteBanner(Long bannerId);
 
     List<MainBanner> getMainBanner();

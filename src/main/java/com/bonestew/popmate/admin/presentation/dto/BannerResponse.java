@@ -5,18 +5,26 @@ import java.time.LocalDateTime;
 
 public record BannerResponse(
     Long bannerId,
-    String imgUrl,
-    String popupStoreId,
-    LocalDateTime createdAt
+    Long popupStoreId,
+    String title,
+    String organizer,
+    String placeDetail,
+    String openDate,
+    String closeDate,
+    String imgUrl
 ) {
     public static BannerResponse from(
         MainBanner mainBanner
     ){
         return new BannerResponse(
             mainBanner.getBannerId(),
-            mainBanner.getImgUrl(),
             mainBanner.getPopupStoreId(),
-            mainBanner.getCreatedAt()
+            mainBanner.getTitle(),
+            mainBanner.getOrganizer(),
+            mainBanner.getPlaceDetail(),
+            mainBanner.getOpenDate(),
+            mainBanner.getCloseDate(),
+            mainBanner.getImgUrl()
         );
     }
 }

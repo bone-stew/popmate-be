@@ -15,12 +15,17 @@ public class AdminService {
         adminDao.insertMainBanner(popupStoreId, bannerImgUrl);
     }
 
+    public MainBanner getOneMainBanner() {
+        return adminDao.getOneMainBanner();
+    }
+
     public void deleteBanner(Long bannerId) {
         adminDao.deleteBanner(bannerId);
     }
 
     public List<MainBanner> getMainBanner() {
-        System.out.println("여기까지와");
         return adminDao.getMainBanner();
     }
+
+
 }
