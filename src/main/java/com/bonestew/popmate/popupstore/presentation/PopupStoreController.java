@@ -121,7 +121,7 @@ public class PopupStoreController {
 
 
     @PostMapping("/new")
-    public ApiResponse<Long> createPopupStore(@RequestPart(value="popupStore",required=false) PopupStoreCreateRequest popupStoreCreateRequest,
+    public ApiResponse<Long> createPopupStore(@RequestPart(value="storeInfo") PopupStoreCreateRequest popupStoreCreateRequest,
                                                     @RequestPart("storeImageFiles") List<MultipartFile> storeImageFiles,
                                                     @RequestPart("storeItemImageFiles") List<MultipartFile> storeItemImageFiles) {
         List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);

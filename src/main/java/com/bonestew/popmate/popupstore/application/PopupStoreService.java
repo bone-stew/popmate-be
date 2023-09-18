@@ -99,7 +99,7 @@ public class PopupStoreService {
     public List<PopupStoreDetailDto> getPopupStoreDetail(Long popupStoreId, Long userId) {
         PopupStoreQueryDto popupStoreQueryDto = new PopupStoreQueryDto(popupStoreId, userId);
         List<PopupStoreDetailDto> popupStoreDetailDtoList = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto);
-        if(popupStoreDetailDtoList.isEmpty()) {
+        if (popupStoreDetailDtoList.isEmpty()) {
             throw new PopupStoreNotFoundException(popupStoreId);
         }
         if (userId == null) {
@@ -162,33 +162,38 @@ public class PopupStoreService {
         Long storeId = popupStoreCreateRequest.getPopupStore().getPopupStoreId();
         PopupStore popupStore = new PopupStore();
         popupStore.setPopupStoreId(storeId);
-        List<PopupStoreImg> popupStoreImgs = new ArrayList<>();
-        for(String url : storeImageList) {
-            PopupStoreImg storeImg = new PopupStoreImg();
-            storeImg.setPopupStore(popupStore);
-            storeImg.setImgUrl(url);
-            popupStoreImgs.add(storeImg);
+        if (!storeImageList.isEmpty()) {
+            List<PopupStoreImg> popupStoreImgs = new ArrayList<>();
+            for (String url : storeImageList) {
+                PopupStoreImg storeImg = new PopupStoreImg();
+                storeImg.setPopupStore(popupStore);
+                storeImg.setImgUrl(url);
+                popupStoreImgs.add(storeImg);
+            }
+            popupStoreDao.insertPopupStoreImgs(popupStoreImgs);
         }
-
-        log.info("storeImg {}", popupStoreImgs);
-        for (int i = 0; i < popupStoreCreateRequest.getPopupStoreItemList().size(); i++) {
-            PopupStoreItem popupStoreItem = popupStoreCreateRequest.getPopupStoreItemList().get(i);
-            popupStoreItem.setImgUrl(storeItemImageList.get(i));
-            popupStoreItem.setPopupStore(popupStore);
+//        log.info("storeImg {}", popupStoreImgs);
+        if (!popupStoreCreateRequest.getPopupStoreItemList().isEmpty()) {
+            for (int i = 0; i < popupStoreCreateRequest.getPopupStoreItemList().size(); i++) {
+                PopupStoreItem popupStoreItem = popupStoreCreateRequest.getPopupStoreItemList().get(i);
+                popupStoreItem.setImgUrl(storeItemImageList.get(i));
+                popupStoreItem.setPopupStore(popupStore);
+                popupStoreDao.insertPopupStoreItems(popupStoreCreateRequest.getPopupStoreItemList());
+            }
         }
-        for (PopupStoreSns popupStoreSns : popupStoreCreateRequest.getPopupStoreSnsList()){
-            popupStoreSns.setPopupStore(popupStore);
+        if (!popupStoreCreateRequest.getPopupStoreSnsList().isEmpty()) {
+            for (PopupStoreSns popupStoreSns : popupStoreCreateRequest.getPopupStoreSnsList()) {
+                popupStoreSns.setPopupStore(popupStore);
+            }
+            popupStoreDao.insertPopupStoreSns(popupStoreCreateRequest.getPopupStoreSnsList());
         }
-        popupStoreDao.insertPopupStoreImgs(popupStoreImgs);
-        popupStoreDao.insertPopupStoreItems(popupStoreCreateRequest.getPopupStoreItemList());
-        popupStoreDao.insertPopupStoreSns(popupStoreCreateRequest.getPopupStoreSnsList());
         return storeId;
     }
 
     public List<PopupStoreInfo> getPopupStoreDetailForAdmin(Long popupStoreId) {
         List<PopupStoreInfo> popupStoreInfoList = popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
-        if(popupStoreInfoList.isEmpty()){
-           throw new PopupStoreNotFoundException(popupStoreId);
+        if (popupStoreInfoList.isEmpty()) {
+            throw new PopupStoreNotFoundException(popupStoreId);
         }
         return popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
     }
