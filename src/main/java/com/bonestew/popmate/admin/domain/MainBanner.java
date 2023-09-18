@@ -16,6 +16,7 @@ public class MainBanner {
     String placeDetail;
     String openDate;
     String closeDate;
+    String bannerImgUrl;
     String imgUrl;
     LocalDateTime createdAt;
 }

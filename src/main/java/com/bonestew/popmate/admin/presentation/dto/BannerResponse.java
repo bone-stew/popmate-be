@@ -11,6 +11,7 @@ public record BannerResponse(
     String placeDetail,
     String openDate,
     String closeDate,
+    String bannerImgUrl,
     String imgUrl
 ) {
     public static BannerResponse from(
@@ -24,6 +25,7 @@ public record BannerResponse(
             mainBanner.getPlaceDetail(),
             mainBanner.getOpenDate(),
             mainBanner.getCloseDate(),
+            mainBanner.getBannerImgUrl(),
             mainBanner.getImgUrl()
         );
     }
