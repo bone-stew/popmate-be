@@ -1,7 +1,9 @@
 package com.bonestew.popmate.admin.presentation;
 
 import com.bonestew.popmate.admin.application.AdminService;
+import com.bonestew.popmate.admin.domain.BackOfficePopupStore;
 import com.bonestew.popmate.admin.domain.MainBanner;
+import com.bonestew.popmate.admin.presentation.dto.BackOfficePopupStoresResponse;
 import com.bonestew.popmate.admin.presentation.dto.BannersResponse;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.exception.enums.ResultCode;
@@ -25,6 +27,15 @@ import org.springframework.web.multipart.MultipartFile;
 public class AdminController {
     private final AdminService adminService;
     private final FileService awsFileService;
+
+
+    @GetMapping("/title")
+    public ApiResponse<BackOfficePopupStoresResponse> getPopupStore(){
+        List<BackOfficePopupStore> backOfficePopupStores = adminService.getPopupStore();
+        return ApiResponse.success(
+            BackOfficePopupStoresResponse.from(backOfficePopupStores)
+        );
+    }
 
     @PostMapping("/banners/new")
     public ApiResponse<MainBanner> addMainBanner(@RequestParam MultipartFile multipartFile, @RequestParam Long popupStoreId) {

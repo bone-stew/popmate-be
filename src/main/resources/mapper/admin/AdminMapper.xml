@@ -4,6 +4,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bonestew.popmate.admin.persistence.AdminDao">
 
+
+  <select id="getPopupStore" resultType="BackOfficePopupStore">
+    select popup_store_id, title from tb_popup_store
+    order by popup_store_id desc
+  </select>
+
   <insert id="insertMainBanner" parameterType="java.util.Map">
     insert into tb_banner (img_url, popup_store_id)
     values(#{bannerImgUrl}, #{popupStoreId})
