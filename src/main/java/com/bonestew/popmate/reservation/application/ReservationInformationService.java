@@ -35,4 +35,17 @@ public class ReservationInformationService {
         return userReservationDao.findByReservationIdAndUserId(reservationId, userId)
             .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
     }
+
+    public Reservation getCurrentlyEnteredReservation(Long popupStoreId) {
+        // 현재 입장중인 예약 정보가 없으면 가장 마지막으로 종료된 예약 정보를 반환한다.
+        return reservationDao.findByVisitStartTimeLessThanEqualAndVisitEndTimeGreaterThanEqualAndPopupStoreId(popupStoreId)
+            .orElseGet(() ->
+                reservationDao.findTopByStatusAndPopupStoreIdOrderByEndTimeDesc(popupStoreId)
+                    .orElseThrow(() -> new ReservationNotFoundException(popupStoreId))
+            );
+    }
+
+    public List<Reservation> getTodayReservations(Long popupStoreId) {
+        return reservationDao.findByVisitEndTimeGreaterThanEqualAndPopupStoreId(popupStoreId);
+    }
 }
