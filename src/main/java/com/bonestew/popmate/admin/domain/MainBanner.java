@@ -10,7 +10,13 @@ import lombok.ToString;
 @ToString
 public class MainBanner {
     Long bannerId;
+    Long popupStoreId;
+    String title;
+    String organizer;
+    String placeDetail;
+    String openDate;
+    String closeDate;
+    String bannerImgUrl;
     String imgUrl;
-    String popupStoreId;
     LocalDateTime createdAt;
 }

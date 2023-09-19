@@ -17,18 +17,6 @@ include::{snippets}/reservation-information-controller-test/진행_중인_예약
 include::{snippets}/reservation-information-controller-test/진행_중인_예약을_조회한다/response-fields.adoc[]
 
 
-== 일일 예약 목록을 조회한다
-
-=== Request
-include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/path-parameters.adoc[]
-
-=== Parameters
-include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/query-parameters.adoc[]
-
-=== Response
-include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/response-fields.adoc[]
-
-
 == wifi 목록을 통해 예약 가능한 위치인지 확인한다
 
 === Request
@@ -45,3 +33,24 @@ include::{snippets}/reservation-information-controller-test/나의_예약_정보
 
 === Response
 include::{snippets}/reservation-information-controller-test/나의_예약_정보을_조회한다/response-fields.adoc[]
+
+
+== 일일 예약 목록을 조회한다 (관리자)
+
+=== Request
+include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/path-parameters.adoc[]
+
+=== Parameters
+include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/query-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/response-fields.adoc[]
+
+
+== 오늘의 예약 목록을 조회한다 (관리자)
+
+=== Request
+include::{snippets}/reservation-information-controller-test/오늘의_예약_목록을_조회한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/오늘의_예약_목록을_조회한다/response-fields.adoc[]

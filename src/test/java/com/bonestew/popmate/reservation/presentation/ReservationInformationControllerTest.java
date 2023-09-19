@@ -1,6 +1,7 @@
 package com.bonestew.popmate.reservation.presentation;
 
 import static com.bonestew.popmate.helper.RestDocsHelper.customDocument;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -30,6 +31,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -64,7 +66,7 @@ class ReservationInformationControllerTest {
     @Test
     void 진행_중인_예약을_조회한다() throws Exception {
         // given
-        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.IN_PROGRESS,
+        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 50, 30, ReservationStatus.IN_PROGRESS,
             dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
 
         // when
@@ -99,7 +101,7 @@ class ReservationInformationControllerTest {
     void 일일_예약_목록_조회한다() throws Exception {
         // given
         List<Reservation> reservations = List.of(
-            new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.IN_PROGRESS,
+            new Reservation(1L, popupStore, 10, 5, 50, 30, ReservationStatus.IN_PROGRESS,
                 dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime)
         );
 
@@ -141,7 +143,7 @@ class ReservationInformationControllerTest {
         // given
         Long reservationId = 1L;
         Long userId = 1L;
-        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 5, ReservationStatus.IN_PROGRESS,
+        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 50, 30, ReservationStatus.IN_PROGRESS,
             dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
         UserReservation userReservation = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
             UserReservationStatus.RESERVED, dateTime);
@@ -170,6 +172,67 @@ class ReservationInformationControllerTest {
                     fieldWithPath("data.visitStartTime").description("입장 시작 시간"),
                     fieldWithPath("data.visitEndTime").description("입장 종료 시간"),
                     fieldWithPath("data.reservationStatus").description("예약 상태 (예: PENDING)")
+                )
+            ));
+    }
+
+    @Test
+    void 오늘의_예약_목록을_조회한다() throws Exception {
+        // given
+        Reservation activeReservation = new Reservation(1L, popupStore, 10, 5, 50, 30, ReservationStatus.IN_PROGRESS,
+            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
+        Reservation reservation1 = new Reservation(2L, popupStore, 8, 3, 40, 25, ReservationStatus.CLOSED,
+            dateTime.plusHours(1), dateTime.plusHours(1).plusMinutes(15), dateTime.plusHours(1).plusMinutes(30),
+            dateTime.plusHours(1).plusMinutes(45), dateTime);
+        Reservation reservation2 = new Reservation(3L, popupStore, 12, 6, 60, 35, ReservationStatus.IN_PROGRESS,
+            dateTime.plusHours(2), dateTime.plusHours(2).plusMinutes(15), dateTime.plusHours(2).plusMinutes(30),
+            dateTime.plusHours(2).plusMinutes(45), dateTime);
+        List<Reservation> reservations = List.of(reservation1, reservation2);
+
+        given(reservationInformationService.getCurrentlyEnteredReservation(anyLong())).willReturn(activeReservation);
+        given(reservationInformationService.getTodayReservations(anyLong())).willReturn(reservations);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            get("/api/v1/popup-stores/{popupStoreId}/reservations/today", popupStoreId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(customDocument(
+                pathParameters(
+                    parameterWithName("popupStoreId").description("팝업 스토어 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 코드")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("message").description("응답 메시지")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data.popupStoreId").description("팝업 스토어 ID")
+                        .type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.popupStoreName").description("팝업 스토어 이름")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data.currentReservationStartTime").description("현재 예약 시작 시간")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data.currentReservationEndTime").description("현재 예약 종료 시간")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data.reservedGuestCount").description("예약된 손님 수")
+                        .type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.entryGuestCount").description("입장한 손님 수")
+                        .type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.upComingReservations").description("다가오는 예약 목록")
+                        .type(JsonFieldType.ARRAY),
+                    fieldWithPath("data.upComingReservations[].reservationId").description("예약 ID")
+                        .type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.upComingReservations[].visitStartTime").description("예약 시작 시간")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data.upComingReservations[].visitEndTime").description("예약 종료 시간")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data.upComingReservations[].currentGuestCount").description("현재 손님 수")
+                        .type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.upComingReservations[].status").description("예약 상태")
+                        .type(JsonFieldType.STRING)
                 )
             ));
     }

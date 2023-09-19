@@ -24,6 +24,7 @@ public class Reservation {
     private int guestLimit; // 총 예약 가능 인원
     private int teamSizeLimit; // 팀 당 예약 가능 인원
     private int currentGuestCount; // 현재 예약 인원
+    private int enteredGuestCount; // 입장한 인원
     private ReservationStatus status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
