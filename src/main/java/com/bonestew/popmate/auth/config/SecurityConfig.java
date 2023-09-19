@@ -8,6 +8,7 @@ import com.bonestew.popmate.auth.jwt.JwtAccessDeniedHandler;
 import com.bonestew.popmate.auth.jwt.JwtAuthenticationEntryPoint;
 import com.bonestew.popmate.auth.jwt.JwtAuthenticationFilter;
 import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final ExceptionHandlerFilter exceptionHandlerFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -50,15 +52,16 @@ public class SecurityConfig {
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(exceptionHandlerFilter, JwtAuthenticationFilter.class)
             .exceptionHandling(handler -> handler.authenticationEntryPoint(jwtAuthenticationEntryPoint))
-            .exceptionHandling(handler-> handler.accessDeniedHandler(jwtAccessDeniedHandler));
+            .exceptionHandling(handler -> handler.accessDeniedHandler(jwtAccessDeniedHandler));
         return http.build();
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","https://dashboard.popmate.xyz"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://dashboard.popmate.xyz"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("Authorization"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
