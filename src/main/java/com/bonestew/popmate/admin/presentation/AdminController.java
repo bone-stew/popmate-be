@@ -38,10 +38,10 @@ public class AdminController {
     }
 
     @PostMapping("/banners/new")
-    public ApiResponse<MainBanner> addMainBanner(@RequestParam MultipartFile multipartFile, @RequestParam Long popupStoreId) {
+    public ApiResponse<MainBanner> addMainBanner(@RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("popupStoreId") Long popupStoreId) {
         Optional<String> bannerImgUrl = awsFileService.upload(multipartFile, FolderType.BANNERS);
         if (bannerImgUrl.isPresent()) {
-            adminService.insertMainBanner(popupStoreId, String.valueOf(bannerImgUrl));
+            adminService.insertMainBanner(popupStoreId, bannerImgUrl.get());
             MainBanner mainBanner = adminService.getOneMainBanner();
             return ApiResponse.success(mainBanner);
         }
