@@ -35,7 +35,7 @@ public record PopupStoreInfoResponse(
         List<PopupStoreItem> popupStoreItemResponse
 ) {
 
-    public static PopupStoreInfoResponse from (List<PopupStoreInfo> popupStoreInfoList){
+    public static PopupStoreInfoResponse from(List<PopupStoreInfo> popupStoreInfoList) {
         PopupStoreInfo popupStoreInfo = popupStoreInfoList.get(0);
         List<PopupStoreSns> popupStoreSnsResponses = new ArrayList<>();
         List<PopupStoreImg> popupStoreImgResponses = new ArrayList<>();
@@ -43,24 +43,28 @@ public record PopupStoreInfoResponse(
         HashSet<Long> snsIdSet = new HashSet<>();
         HashSet<Long> imgIdSet = new HashSet<>();
         HashSet<Long> itemIdSet = new HashSet<>();
-        for(PopupStoreInfo info: popupStoreInfoList){
+        for (PopupStoreInfo info : popupStoreInfoList) {
             PopupStoreSns sns = info.getPopupStoreSns();
-            Long snsId = sns.getSnsId();
-            if(!snsIdSet.contains(snsId)){
-                popupStoreSnsResponses.add(sns);
-                snsIdSet.add(snsId);
+            if (sns != null) {
+                Long snsId = sns.getSnsId();
+                if (!snsIdSet.contains(snsId)) {
+                    popupStoreSnsResponses.add(sns);
+                    snsIdSet.add(snsId);
+                }
             }
             PopupStoreImg img = info.getPopupStoreImg();
             Long imgId = img.getPopupStoreImgId();
-            if(!imgIdSet.contains(imgId)){
+            if (!imgIdSet.contains(imgId)) {
                 popupStoreImgResponses.add(img);
                 imgIdSet.add(imgId);
             }
             PopupStoreItem item = info.getPopupStoreItem();
-            Long itemId = item.getPopupStoreItemId();
-            if(!itemIdSet.contains(itemId)){
-                popupStoreItemResponses.add(item);
-                itemIdSet.add(itemId);
+            if (item != null) {
+                Long itemId = item.getPopupStoreItemId();
+                if (!itemIdSet.contains(itemId)) {
+                    popupStoreItemResponses.add(item);
+                    itemIdSet.add(itemId);
+                }
             }
         }
         return new PopupStoreInfoResponse(

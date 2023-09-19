@@ -207,11 +207,11 @@
 
   <select id="findPopupStoreDetailByIdForAdmin" parameterType="long" resultMap="popupStoreInfoMap">
     select *
-    from tb_popup_store ps join tb_popup_store_sns pss
+    from tb_popup_store ps left outer join tb_popup_store_sns pss
     on ps.popup_store_id = pss.popup_store_id
-    left join tb_popup_store_img psi
+    left outer join tb_popup_store_img psi
     on ps.popup_store_id = psi.popup_store_id
-    left join tb_popup_store_item psii
+    left outer join tb_popup_store_item psii
     on ps.popup_store_id = psii.popup_store_id
     where ps.popup_store_id = #{popupStoreId}
   </select>
@@ -265,27 +265,21 @@
     )
   </insert>
 
-  <insert id="insertPopupStoreImgs" parameterType="java.util.List">
-    INSERT INTO tb_popup_store_img (popup_store_id, img_url)
-    VALUES
-    <foreach collection="list" item="img" separator=",">
-      (#{img.popupStore.popupStoreId}, #{img.imgUrl})
-    </foreach>
+  <insert id="insertPopupStoreImg" parameterType="PopupStoreImg">
+     insert into tb_popup_store_img (popup_store_id, img_url)
+      values (#{popupStore.popupStoreId}, #{imgUrl})
   </insert>
 
-  <insert id="insertPopupStoreItems" parameterType="java.util.List">
+  <insert id="insertPopupStoreItem" parameterType="PopupStoreItem">
     INSERT INTO tb_popup_store_item (popup_store_id, name, img_url, amount, stock, order_limit)
     VALUES
-    <foreach collection="list" item="item" separator=",">
-      (#{item.popupStore.popupStoreId}, #{item.name}, #{item.imgUrl}, #{item.amount}, #{item.stock}, #{item.orderLimit})
-    </foreach>
+      (#{popupStore.popupStoreId}, #{name}, #{imgUrl}, #{amount}, #{stock}, #{orderLimit})
   </insert>
 
-  <insert id="insertPopupStoreSns" parameterType="java.util.List">
+  <insert id="insertPopupStoreSns" parameterType="PopupStoreSns">
     INSERT INTO tb_popup_store_sns (popup_store_id, platform, url)
     VALUES
-    <foreach collection="list" item="sns" separator=",">
-      (#{sns.popupStore.popupStoreId}, #{sns.platform}, #{sns.url})
-    </foreach>
+      (#{popupStore.popupStoreId}, #{platform}, #{url})
   </insert>
+
 </mapper>

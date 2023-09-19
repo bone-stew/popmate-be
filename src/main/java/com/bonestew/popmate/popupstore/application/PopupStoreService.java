@@ -163,29 +163,26 @@ public class PopupStoreService {
         PopupStore popupStore = new PopupStore();
         popupStore.setPopupStoreId(storeId);
         if (!storeImageList.isEmpty()) {
-            List<PopupStoreImg> popupStoreImgs = new ArrayList<>();
             for (String url : storeImageList) {
                 PopupStoreImg storeImg = new PopupStoreImg();
                 storeImg.setPopupStore(popupStore);
                 storeImg.setImgUrl(url);
-                popupStoreImgs.add(storeImg);
+            popupStoreDao.insertPopupStoreImg(storeImg);
             }
-            popupStoreDao.insertPopupStoreImgs(popupStoreImgs);
         }
-//        log.info("storeImg {}", popupStoreImgs);
         if (!popupStoreCreateRequest.getPopupStoreItemList().isEmpty()) {
             for (int i = 0; i < popupStoreCreateRequest.getPopupStoreItemList().size(); i++) {
                 PopupStoreItem popupStoreItem = popupStoreCreateRequest.getPopupStoreItemList().get(i);
                 popupStoreItem.setImgUrl(storeItemImageList.get(i));
                 popupStoreItem.setPopupStore(popupStore);
-                popupStoreDao.insertPopupStoreItems(popupStoreCreateRequest.getPopupStoreItemList());
+                popupStoreDao.insertPopupStoreItem(popupStoreItem);
             }
         }
         if (!popupStoreCreateRequest.getPopupStoreSnsList().isEmpty()) {
             for (PopupStoreSns popupStoreSns : popupStoreCreateRequest.getPopupStoreSnsList()) {
                 popupStoreSns.setPopupStore(popupStore);
+                popupStoreDao.insertPopupStoreSns(popupStoreSns);
             }
-            popupStoreDao.insertPopupStoreSns(popupStoreCreateRequest.getPopupStoreSnsList());
         }
         return storeId;
     }

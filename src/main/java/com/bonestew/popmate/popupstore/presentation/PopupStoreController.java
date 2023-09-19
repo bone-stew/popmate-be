@@ -10,10 +10,13 @@ import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfoResponse;
+import java.util.ArrayList;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.bonestew.popmate.popupstore.domain.Banner;
@@ -33,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/popup-stores")
+@Slf4j
 public class PopupStoreController {
 
     private final PopupStoreService popupStoreService;
@@ -120,12 +124,16 @@ public class PopupStoreController {
 //    }
 
 
-    @PostMapping("/new")
+    @PostMapping(value="/new", consumes = {"multipart/form-data"})
     public ApiResponse<Long> createPopupStore(@RequestPart(value="storeInfo") PopupStoreCreateRequest popupStoreCreateRequest,
                                                     @RequestPart("storeImageFiles") List<MultipartFile> storeImageFiles,
-                                                    @RequestPart("storeItemImageFiles") List<MultipartFile> storeItemImageFiles) {
+                                                    @RequestPart(value = "storeItemImageFiles", required = false) List<MultipartFile> storeItemImageFiles) {
+        log.info("PopupStoreCreateRequest {}", popupStoreCreateRequest.toString());
         List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
-        List<String> storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
+        List<String> storeItemImageList = new ArrayList<>();
+        if (storeItemImageFiles != null){
+         storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
+        }
 //        popupStoreCreateRequest.setPopupStoreImageList(storeImageList);
 //        popupStoreCreateRequest.setPopupStoreItemImageList(storeItemImageList);
         Long storeId = popupStoreService.postNewPopupStore(popupStoreCreateRequest, storeImageList, storeItemImageList);

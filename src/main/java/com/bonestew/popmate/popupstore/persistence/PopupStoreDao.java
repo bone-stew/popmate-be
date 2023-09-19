@@ -47,10 +47,10 @@ public interface PopupStoreDao {
     void insertPopupStore(PopupStore popupStore);
 //    PopupStore insertPopupStore(PopupStoreCreateDto popupStoreCreateDto);
 
-    void insertPopupStoreImgs(List<PopupStoreImg> popupStoreImgs);
+    void insertPopupStoreImg(PopupStoreImg popupStoreImg);
 
-    void insertPopupStoreItems(List<PopupStoreItem> popupStoreItemList);
+    void insertPopupStoreItem(PopupStoreItem popupStoreItemList);
 
-    void insertPopupStoreSns(List<PopupStoreSns> popupStoreSnsList);
+    void insertPopupStoreSns(PopupStoreSns popupStoreSnsList);
 
 }
