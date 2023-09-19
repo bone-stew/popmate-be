@@ -38,4 +38,5 @@ public class PopupStore {
     private LocalDateTime closeTime;
     private Long views;
     private LocalDateTime createdAt;
+    private int total;
 }

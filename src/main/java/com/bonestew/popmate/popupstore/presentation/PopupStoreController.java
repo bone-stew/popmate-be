@@ -8,7 +8,11 @@ import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import java.util.Optional;
+
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/v1/popup-stores")
 public class PopupStoreController {
 
@@ -41,6 +46,7 @@ public class PopupStoreController {
             @RequestParam(value = "offSetRows", required = false) Integer offSetRows,
             @RequestParam(value = "rowsToGet", required = false) Integer rowsToGet
     ) {
+        log.info("팝업스토어 목록 조회 API");
         List<PopupStore> popupStoreList = popupStoreService.getPopupStores(isOpeningSoon,
                 startDateText,
                 endDateText,
@@ -48,6 +54,13 @@ public class PopupStoreController {
                 offSetRows,
                 rowsToGet);
         return ApiResponse.success(PopupStoresResponse.from(popupStoreList));
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<PopupStoresResponse> search(PopupStoreQueryRequest request, Pageable pageable) {
+        log.info("query: {}, pageable: {}", request, pageable);
+        var list = popupStoreService.getPopupStoresByQuery(request, pageable);
+        return ApiResponse.success(PopupStoresResponse.from(list));
     }
 
     @GetMapping("/home")

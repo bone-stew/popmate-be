@@ -24,6 +24,7 @@
     <result column="team_size_limit" property="teamSizeLimit"/>
     <result column="created_at" property="createdAt"/>
     <result column="views" property="views"/>
+    <result column="total" property="total"/>
     <association property="user" resultMap="userMap"/>
     <association property="department" resultMap="departmentMap"/>
   </resultMap>
@@ -72,14 +73,41 @@
     WHERE popup_store_id = #{popupStoreId}
   </select>
 
+  <select id="selectPopupStoresByQuery" resultMap="popupStoreMap" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto">
+    SELECT POPUP_STORE_ID, TITLE, NAME, OPEN_DATE, CLOSE_DATE, ORGANIZER, d.CREATED_AT as CREATED_AT, COUNT(*) over () total
+      FROM TB_POPUP_STORE s
+      JOIN TB_DEPARTMENT d
+        ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
+    <where>
+      <if test="request.type == 0 or request.type == 1">
+          OR s.TITLE LIKE '%' || #{request.query} || '%'
+      </if>
+      <if test="request.type == 0 or request.type == 2">
+          OR d.name LIKE '%' || #{request.query} || '%'
+      </if>
+      <if test="request.type == 0 or request.type == 3">
+          OR s.ORGANIZER LIKE '%' || #{request.query} || '%'
+      </if>
+    </where>
+    <if test="pageable.sort.sorted">
+      <trim prefix="order by">
+        <foreach item="order" index="i" collection="pageable.sort" separator=", ">
+          ${order.property} ${order.direction}
+        </foreach>
+      </trim>
+    </if>
+    OFFSET ${pageable.page}*${pageable.size} ROWS FETCH FIRST ${pageable.size} ROWS ONLY
+  </select>
 
   <select id="selectPopupStores" parameterType="com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest"
-    resultType="PopupStore">
-    SELECT popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
-    FROM tb_popup_store
+    resultMap="popupStoreMap">
+    SELECT *
+    FROM tb_popup_store s
+    JOIN TB_DEPARTMENT d
+      ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
     <where>
       <if test="keyword != null and keyword != ''">
-        AND title LIKE CONCAT(CONCAT('%', #{keyword}), '%')
+        AND title LIKE '%' || #{keyword} || '%'
       </if>
       <if test="isOpeningSoon">
         AND trunc(SYSDATE) &lt; open_date
