@@ -2,6 +2,7 @@ package com.bonestew.popmate.reservation.application;
 
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.UserReservation;
+import com.bonestew.popmate.reservation.exception.PopupStoreNotInProgressException;
 import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
 import com.bonestew.popmate.reservation.exception.UserReservationNotFoundException;
 import com.bonestew.popmate.reservation.persistence.ReservationDao;
@@ -34,5 +35,14 @@ public class ReservationInformationService {
     public UserReservation getMyReservation(Long reservationId, Long userId) {
         return userReservationDao.findByReservationIdAndUserId(reservationId, userId)
             .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
+    }
+
+    public Reservation getCurrentlyEnteredReservation(Long popupStoreId) {
+        return reservationDao.findByVisitStartTimeLessThanEqualAndVisitEndTimeGreaterThanEqualAndPopupStoreId(popupStoreId)
+            .orElseThrow(() -> new PopupStoreNotInProgressException(popupStoreId));
+    }
+
+    public List<Reservation> getTodayReservations(Long popupStoreId) {
+        return reservationDao.findByVisitEndTimeGreaterThanEqualAndPopupStoreId(popupStoreId);
     }
 }

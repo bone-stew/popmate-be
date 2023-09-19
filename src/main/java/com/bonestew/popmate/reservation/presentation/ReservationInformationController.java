@@ -9,6 +9,7 @@ import com.bonestew.popmate.reservation.presentation.dto.ActiveReservationRespon
 import com.bonestew.popmate.reservation.presentation.dto.DailyReservationResponse;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.presentation.dto.MyReservationsResponse;
+import com.bonestew.popmate.reservation.presentation.dto.TodayReservationResponse;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -41,23 +42,6 @@ public class ReservationInformationController {
     }
 
     /**
-     * 일일 예약 목록 조회
-     *
-     * @param popupStoreId 팝업스토어 식별자
-     * @param date         조회 일자
-     * @return 예약 목록
-     */
-    @GetMapping("/popup-stores/{popupStoreId}/reservations")
-    public ApiResponse<List<DailyReservationResponse>> getDailyReservations(@PathVariable("popupStoreId") Long popupStoreId,
-                                                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        List<Reservation> reservations = reservationInformationService.getDailyReservations(popupStoreId, date);
-        List<DailyReservationResponse> dailyReservationResponses = reservations.stream()
-            .map(DailyReservationResponse::from)
-            .toList();
-        return ApiResponse.success(dailyReservationResponses);
-    }
-
-    /**
      * 내가 예약한 목록 조회
      *
      * @return 예약 목록
@@ -83,5 +67,37 @@ public class ReservationInformationController {
             MyReservationResponse.from(
                 reservationInformationService.getMyReservation(reservationId, popmateUser.getUserId())
             ));
+    }
+
+    /**
+     * 일일 예약 목록 조회 (백오피스용)
+     *
+     * @param popupStoreId 팝업스토어 식별자
+     * @param date         조회 일자
+     * @return 예약 목록
+     */
+    @GetMapping("/popup-stores/{popupStoreId}/reservations")
+    public ApiResponse<List<DailyReservationResponse>> getDailyReservations(@PathVariable("popupStoreId") Long popupStoreId,
+                                                                            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        List<Reservation> reservations = reservationInformationService.getDailyReservations(popupStoreId, date);
+        List<DailyReservationResponse> dailyReservationResponses = reservations.stream()
+            .map(DailyReservationResponse::from)
+            .toList();
+        return ApiResponse.success(dailyReservationResponses);
+    }
+
+    /**
+     * 오늘의 예약 목록 조회 (백오피스용)
+     *
+     * @param popupStoreId 팝업스토어 식별자
+     * @return 오늘의 예약 목록
+     */
+    @GetMapping("/popup-stores/{popupStoreId}/reservations/today")
+    public ApiResponse<TodayReservationResponse> getTodayReservations(@PathVariable("popupStoreId") Long popupStoreId) {
+        Reservation activeReservation = reservationInformationService.getCurrentlyEnteredReservation(popupStoreId);
+        List<Reservation> reservations = reservationInformationService.getTodayReservations(popupStoreId);
+        return ApiResponse.success(
+            TodayReservationResponse.of(activeReservation, reservations)
+        );
     }
 }

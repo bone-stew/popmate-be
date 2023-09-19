@@ -14,7 +14,7 @@ public interface ReservationDao {
 
     Optional<Reservation> findById(Long reservationId);
 
-    Optional<Reservation> findActiveByPopupStoreId(@Param("popupStoreId") Long popupStoreId);
+    Optional<Reservation> findActiveByPopupStoreId(Long popupStoreId);
 
     List<Reservation> findByPopupStoreIdAndStartDate(Long popupStoreId, LocalDate date);
 
@@ -31,4 +31,8 @@ public interface ReservationDao {
     void updateReservationStatusToClosed();
 
     void saveAll(CreateReservationDto createReservationDto);
+
+    List<Reservation> findByVisitEndTimeGreaterThanEqualAndPopupStoreId(Long popupStoreId);
+
+    Optional<Reservation> findByVisitStartTimeLessThanEqualAndVisitEndTimeGreaterThanEqualAndPopupStoreId(Long popupStoreId);
 }
