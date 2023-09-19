@@ -7,6 +7,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bonestew.popmate.user.domain.User;
@@ -29,6 +30,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -84,6 +86,8 @@ class ReservationInformationControllerTest {
                     fieldWithPath("data.reservationId").description("예약 id"),
                     fieldWithPath("data.startTime").description("예약 시작 시간"),
                     fieldWithPath("data.endTime").description("예약 종료 시간"),
+                    fieldWithPath("data.visitStartTime").description(" 시작 시간"),
+                    fieldWithPath("data.visitEndTime").description("예약 종료 시간"),
                     fieldWithPath("data.status").description("예약 상태"),
                     fieldWithPath("data.popupStoreTitle").description("팝업스토어 제목"),
                     fieldWithPath("data.popupStoreDescription").description("팝업스토어 설명"),
@@ -115,15 +119,18 @@ class ReservationInformationControllerTest {
                 pathParameters(
                     parameterWithName("popupStoreId").description("조회할 팝업스토어 id")
                 ),
+                queryParameters(
+                    parameterWithName("date").description("조회할 날짜 (예: 2023-10-01)")
+                ),
                 responseFields(
-                    fieldWithPath("code").description("응답 코드"),
-                    fieldWithPath("message").description("응답 메시지"),
-                    fieldWithPath("data[].reservationId").description(10),
-                    fieldWithPath("data[].startTime").description("입장 시작 시간"),
-                    fieldWithPath("data[].endTime").description("입장 종료 시간"),
-                    fieldWithPath("data[].guestLimit").description(10),
-                    fieldWithPath("data[].currentGuestCount").description(5),
-                    fieldWithPath("data[].status").description(ReservationStatus.IN_PROGRESS.getDescription())
+                    fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                    fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                    fieldWithPath("data[].reservationId").type(JsonFieldType.NUMBER).description("예약 id"),
+                    fieldWithPath("data[].startTime").type(JsonFieldType.STRING).description("입장 시작 시간"),
+                    fieldWithPath("data[].endTime").type(JsonFieldType.STRING).description("입장 종료 시간"),
+                    fieldWithPath("data[].guestLimit").type(JsonFieldType.NUMBER).description("예약 최대 인원 수"),
+                    fieldWithPath("data[].currentGuestCount").type(JsonFieldType.NUMBER).description("현재 예약 인원 수"),
+                    fieldWithPath("data[].status").type(JsonFieldType.STRING).description("예약 상태(예: IN_PROGRESS)")
                 )
             ));
 
