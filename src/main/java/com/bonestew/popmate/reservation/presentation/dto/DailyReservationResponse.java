@@ -7,6 +7,8 @@ public record DailyReservationResponse(
     Long reservationId,
     LocalDateTime startTime,
     LocalDateTime endTime,
+    LocalDateTime visitStartTime,
+    LocalDateTime visitEndTime,
     int guestLimit,
     int currentGuestCount,
     String status
@@ -17,6 +19,8 @@ public record DailyReservationResponse(
             reservation.getReservationId(),
             reservation.getStartTime(),
             reservation.getEndTime(),
+            reservation.getVisitStartTime(),
+            reservation.getVisitEndTime(),
             reservation.getGuestLimit(),
             reservation.getCurrentGuestCount(),
             reservation.getStatus().getDescription());

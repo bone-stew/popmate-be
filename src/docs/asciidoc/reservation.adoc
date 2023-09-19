@@ -22,6 +22,9 @@ include::{snippets}/reservation-information-controller-test/진행_중인_예약
 === Request
 include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/path-parameters.adoc[]
 
+=== Parameters
+include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/query-parameters.adoc[]
+
 === Response
 include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/response-fields.adoc[]
 

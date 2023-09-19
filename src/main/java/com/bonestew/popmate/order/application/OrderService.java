@@ -115,7 +115,6 @@ public class OrderService {
         List<Order> orderList = orderDao.getBackOfficeOrders(popupStoreId);
         for(Order order : orderList){
               List<OrderItem> orderItems = orderDao.getBackOfficeOrderItems(order.getOrderId());
-              System.out.println(orderItems.toString());
               order.setOrderItemList(orderItems);
         }
         return orderList;
