@@ -86,8 +86,6 @@ class ReservationInformationControllerTest {
                     fieldWithPath("data.reservationId").description("예약 id"),
                     fieldWithPath("data.startTime").description("예약 시작 시간"),
                     fieldWithPath("data.endTime").description("예약 종료 시간"),
-                    fieldWithPath("data.visitStartTime").description(" 시작 시간"),
-                    fieldWithPath("data.visitEndTime").description("예약 종료 시간"),
                     fieldWithPath("data.status").description("예약 상태"),
                     fieldWithPath("data.popupStoreTitle").description("팝업스토어 제목"),
                     fieldWithPath("data.popupStoreDescription").description("팝업스토어 설명"),
@@ -128,6 +126,8 @@ class ReservationInformationControllerTest {
                     fieldWithPath("data[].reservationId").type(JsonFieldType.NUMBER).description("예약 id"),
                     fieldWithPath("data[].startTime").type(JsonFieldType.STRING).description("입장 시작 시간"),
                     fieldWithPath("data[].endTime").type(JsonFieldType.STRING).description("입장 종료 시간"),
+                    fieldWithPath("data[].visitStartTime").type(JsonFieldType.STRING).description(" 시작 시간"),
+                    fieldWithPath("data[].visitEndTime").type(JsonFieldType.STRING).description("예약 종료 시간"),
                     fieldWithPath("data[].guestLimit").type(JsonFieldType.NUMBER).description("예약 최대 인원 수"),
                     fieldWithPath("data[].currentGuestCount").type(JsonFieldType.NUMBER).description("현재 예약 인원 수"),
                     fieldWithPath("data[].status").type(JsonFieldType.STRING).description("예약 상태(예: IN_PROGRESS)")
