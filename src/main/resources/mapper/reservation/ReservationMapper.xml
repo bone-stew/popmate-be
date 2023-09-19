@@ -148,6 +148,7 @@
     SELECT *
     FROM tb_reservation
     WHERE popup_store_id = #{popupStoreId}
+      AND TO_CHAR(visit_end_time, 'YYYYMMDD') = TO_CHAR(SYSDATE, 'YYYYMMDD')
     <![CDATA[ AND visit_end_time >= SYSDATE ]]>
     ORDER BY visit_start_time
   </select>
