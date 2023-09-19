@@ -4,10 +4,23 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bonestew.popmate.admin.persistence.AdminDao">
 
+
+  <select id="getPopupStore" resultType="BackOfficePopupStore">
+    select popup_store_id, title from tb_popup_store
+    order by popup_store_id desc
+  </select>
+
   <insert id="insertMainBanner" parameterType="java.util.Map">
     insert into tb_banner (img_url, popup_store_id)
     values(#{bannerImgUrl}, #{popupStoreId})
   </insert>
+
+  <select id="getOneMainBanner" resultType="MainBanner">
+    select a.popup_store_id, a.title, a.organizer, a.place_detail, a.open_date, a.close_date, a.banner_img_url, b.banner_id,b.img_url
+    from tb_popup_store a join tb_banner b on a.popup_store_id = b.popup_store_id
+    where rownum=1
+    order by banner_id desc
+  </select>
 
   <delete id="deleteBanner" parameterType="long">
     delete from tb_banner
@@ -15,7 +28,7 @@
   </delete>
 
   <select id="getMainBanner" resultType="MainBanner">
-    select *
-    from tb_banner
+    select a.popup_store_id, a.title, a.organizer, a.place_detail, a.open_date, a.close_date, a.banner_img_url, b.banner_id,b.img_url
+    from tb_popup_store a join tb_banner b on a.popup_store_id = b.popup_store_id
   </select>
 </mapper>

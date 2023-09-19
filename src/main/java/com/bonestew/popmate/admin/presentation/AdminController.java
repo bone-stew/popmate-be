@@ -1,7 +1,9 @@
 package com.bonestew.popmate.admin.presentation;
 
 import com.bonestew.popmate.admin.application.AdminService;
+import com.bonestew.popmate.admin.domain.BackOfficePopupStore;
 import com.bonestew.popmate.admin.domain.MainBanner;
+import com.bonestew.popmate.admin.presentation.dto.BackOfficePopupStoresResponse;
 import com.bonestew.popmate.admin.presentation.dto.BannersResponse;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.exception.enums.ResultCode;
@@ -26,12 +28,22 @@ public class AdminController {
     private final AdminService adminService;
     private final FileService awsFileService;
 
+
+    @GetMapping("/title")
+    public ApiResponse<BackOfficePopupStoresResponse> getPopupStore(){
+        List<BackOfficePopupStore> backOfficePopupStores = adminService.getPopupStore();
+        return ApiResponse.success(
+            BackOfficePopupStoresResponse.from(backOfficePopupStores)
+        );
+    }
+
     @PostMapping("/banners/new")
-    public ApiResponse<String> addMainBanner(@RequestParam MultipartFile multipartFile, @RequestParam Long popupStoreId) {
+    public ApiResponse<MainBanner> addMainBanner(@RequestParam("multipartFile") MultipartFile multipartFile, @RequestParam("popupStoreId") Long popupStoreId) {
         Optional<String> bannerImgUrl = awsFileService.upload(multipartFile, FolderType.BANNERS);
         if (bannerImgUrl.isPresent()) {
-            adminService.insertMainBanner(popupStoreId, String.valueOf(bannerImgUrl));
-            return ApiResponse.success(bannerImgUrl.get());
+            adminService.insertMainBanner(popupStoreId, bannerImgUrl.get());
+            MainBanner mainBanner = adminService.getOneMainBanner();
+            return ApiResponse.success(mainBanner);
         }
         return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
     }

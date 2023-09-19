@@ -7,6 +7,8 @@ import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.domain.OrderPlaceDetail;
 import com.bonestew.popmate.order.domain.StockCheckItem;
+import com.bonestew.popmate.order.presentation.dto.BackOrderListItemResponse;
+import com.bonestew.popmate.order.presentation.dto.BackOrderListItemsResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderItemRequest;
 import com.bonestew.popmate.order.presentation.dto.OrderListItemsResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderPlaceDetailResponse;
@@ -79,11 +81,11 @@ public class OrderController {
     }
 
     @GetMapping("/orders/backoffice/orderList/{popupStoreId}")
-    public ApiResponse<OrderListItemsResponse> getBackOfficeOrderLists(@PathVariable("popupStoreId") Long popupStoreId){
+    public ApiResponse<BackOrderListItemsResponse> getBackOfficeOrderLists(@PathVariable("popupStoreId") Long popupStoreId){
         List<Order> orders = orderService.getBackOfficeOrderLists(popupStoreId);
-
+        System.out.println(orders.toString());
         return ApiResponse.success(
-            OrderListItemsResponse.from(orders)
+            BackOrderListItemsResponse.from(orders)
         );
     }
 }

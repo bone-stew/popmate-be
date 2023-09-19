@@ -1,5 +1,6 @@
 package com.bonestew.popmate.admin.application;
 
+import com.bonestew.popmate.admin.domain.BackOfficePopupStore;
 import com.bonestew.popmate.admin.domain.MainBanner;
 import com.bonestew.popmate.admin.persistence.AdminDao;
 import java.util.List;
@@ -11,8 +12,16 @@ import org.springframework.stereotype.Service;
 public class AdminService {
     private final AdminDao adminDao;
 
+    public List<BackOfficePopupStore> getPopupStore() {
+        return adminDao.getPopupStore();
+    }
+
     public void insertMainBanner(Long popupStoreId, String bannerImgUrl) {
         adminDao.insertMainBanner(popupStoreId, bannerImgUrl);
+    }
+
+    public MainBanner getOneMainBanner() {
+        return adminDao.getOneMainBanner();
     }
 
     public void deleteBanner(Long bannerId) {
@@ -20,7 +29,7 @@ public class AdminService {
     }
 
     public List<MainBanner> getMainBanner() {
-        System.out.println("여기까지와");
         return adminDao.getMainBanner();
     }
+
 }
