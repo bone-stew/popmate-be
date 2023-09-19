@@ -34,7 +34,7 @@
     <result column="guest_limit" property="guestLimit"/>
     <result column="team_size_limit" property="teamSizeLimit"/>
     <result column="current_guest_count" property="currentGuestCount"/>
-    <result column="entered_guest_count" property="enteredGuestCount" />
+    <result column="entered_guest_count" property="enteredGuestCount"/>
     <result column="status" property="status"
       typeHandler="com.bonestew.popmate.reservation.persistence.typehandler.ReservationStatusTypeHandler"/>
     <result column="created_at" property="createdAt"/>
@@ -92,7 +92,8 @@
     SELECT *
     FROM tb_reservation
     WHERE (status = 0 OR status = 1)
-        <![CDATA[ AND end_time <= SYSDATE ]]>
+        <![CDATA[ AND end_time <= SYSDATE
+    ]]>
   </select>
 
   <update id="updateReservationStatusToInProgress">
@@ -107,10 +108,12 @@
     UPDATE tb_reservation
     SET status = 2
     WHERE (status = 0 OR status = 1)
-        <![CDATA[ AND end_time <= SYSDATE ]]>
+        <![CDATA[ AND end_time <= SYSDATE
+    ]]>
   </update>
 
-  <insert id="saveAll" parameterType="com.bonestew.popmate.reservation.application.dto.CreateReservationDto" statementType="CALLABLE">
+  <insert id="saveAll" parameterType="com.bonestew.popmate.reservation.application.dto.CreateReservationDto"
+    statementType="CALLABLE">
     {CALL generate_reservations(
       #{reservationInterval, mode=IN, jdbcType=INTEGER},
       #{openDateTime, jdbcType=TIMESTAMP, mode=IN},
@@ -121,7 +124,8 @@
       )}
   </insert>
 
-  <select id="findByVisitStartTimeLessThanEqualAndVisitEndTimeGreaterThanEqualAndPopupStoreId" parameterType="long" resultMap="reservationMap">
+  <select id="findByVisitStartTimeLessThanEqualAndVisitEndTimeGreaterThanEqualAndPopupStoreId" parameterType="long"
+    resultMap="reservationMap">
     SELECT *
     FROM tb_reservation A
            LEFT JOIN tb_popup_store B on A.popup_store_id = B.popup_store_id
@@ -136,5 +140,14 @@
     WHERE popup_store_id = #{popupStoreId}
     <![CDATA[ AND visit_end_time >= SYSDATE ]]>
     ORDER BY visit_start_time
+  </select>
+
+  <select id="findTopByStatusAndPopupStoreIdOrderByEndTimeDesc" resultMap="reservationMap">
+    SELECT *
+    FROM tb_reservation
+    WHERE status = 2
+      AND popup_store_id = #{popupStoreId}
+    ORDER BY visit_end_time DESC
+      FETCH FIRST 1 ROW ONLY;
   </select>
 </mapper>

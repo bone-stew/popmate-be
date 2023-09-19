@@ -2,7 +2,6 @@ package com.bonestew.popmate.reservation.application;
 
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.UserReservation;
-import com.bonestew.popmate.reservation.exception.PopupStoreNotInProgressException;
 import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
 import com.bonestew.popmate.reservation.exception.UserReservationNotFoundException;
 import com.bonestew.popmate.reservation.persistence.ReservationDao;
@@ -38,8 +37,12 @@ public class ReservationInformationService {
     }
 
     public Reservation getCurrentlyEnteredReservation(Long popupStoreId) {
+        // 현재 입장중인 예약 정보가 없으면 가장 마지막으로 종료된 예약 정보를 반환한다.
         return reservationDao.findByVisitStartTimeLessThanEqualAndVisitEndTimeGreaterThanEqualAndPopupStoreId(popupStoreId)
-            .orElseThrow(() -> new PopupStoreNotInProgressException(popupStoreId));
+            .orElseGet(() ->
+                reservationDao.findTopByStatusAndPopupStoreIdOrderByEndTimeDesc(popupStoreId)
+                    .orElseThrow(() -> new ReservationNotFoundException(popupStoreId))
+            );
     }
 
     public List<Reservation> getTodayReservations(Long popupStoreId) {
