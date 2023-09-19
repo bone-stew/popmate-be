@@ -3,7 +3,6 @@ package com.bonestew.popmate.reservation.presentation.dto;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public record TodayReservationResponse(
     Long popupStoreId,

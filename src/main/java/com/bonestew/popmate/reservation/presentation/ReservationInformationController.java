@@ -70,7 +70,7 @@ public class ReservationInformationController {
     }
 
     /**
-     * 일일 예약 목록 조회 (백오피스용)
+     * 일일 예약 목록 조회 (관리자)
      *
      * @param popupStoreId 팝업스토어 식별자
      * @param date         조회 일자
@@ -87,7 +87,7 @@ public class ReservationInformationController {
     }
 
     /**
-     * 오늘의 예약 목록 조회 (백오피스용)
+     * 오늘의 예약 목록 조회 (관리자)
      *
      * @param popupStoreId 팝업스토어 식별자
      * @return 오늘의 예약 목록
