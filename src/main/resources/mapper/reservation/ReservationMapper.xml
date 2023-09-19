@@ -134,6 +134,16 @@
       AND visit_end_time > SYSDATE
   </select>
 
+  <select id="findTopByStatusAndPopupStoreIdOrderByEndTimeDesc" resultMap="reservationMap">
+    SELECT *
+    FROM tb_reservation A
+           LEFT JOIN tb_popup_store B on A.popup_store_id = B.popup_store_id
+    WHERE status = 2
+      AND A.popup_store_id = #{popupStoreId}
+    ORDER BY visit_end_time DESC
+      FETCH FIRST 1 ROW ONLY
+  </select>
+
   <select id="findByVisitEndTimeGreaterThanEqualAndPopupStoreId" resultMap="reservationMap">
     SELECT *
     FROM tb_reservation
@@ -142,12 +152,4 @@
     ORDER BY visit_start_time
   </select>
 
-  <select id="findTopByStatusAndPopupStoreIdOrderByEndTimeDesc" resultMap="reservationMap">
-    SELECT *
-    FROM tb_reservation
-    WHERE status = 2
-      AND popup_store_id = #{popupStoreId}
-    ORDER BY visit_end_time DESC
-      FETCH FIRST 1 ROW ONLY;
-  </select>
 </mapper>

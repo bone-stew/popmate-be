@@ -25,6 +25,6 @@ public record TodayReservationResponse(
             currentReservation.getEnteredGuestCount(),
             reservations.stream()
                 .map(UpComingReservationResponse::from)
-                .collect(Collectors.toList()));
+                .toList());
     }
 }
