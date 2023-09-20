@@ -3,20 +3,22 @@ package com.bonestew.popmate.auth.presentation;
 import com.bonestew.popmate.auth.application.OauthService;
 import com.bonestew.popmate.auth.application.dto.FreeTokenRequest;
 import com.bonestew.popmate.auth.application.dto.JwtAuthenticationResponse;
+import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.auth.presentation.dto.BackOfficeLoginRequest;
 import com.bonestew.popmate.auth.presentation.dto.GoogleLoginRequest;
 import com.bonestew.popmate.dto.ApiResponse;
+import com.bonestew.popmate.exception.BadRequestException;
+import com.bonestew.popmate.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/oauth")
-
+@Slf4j
 public class OauthController {
 
     private final OauthService oauthService;
@@ -41,6 +43,7 @@ public class OauthController {
     // 관리자 로그인
     @PostMapping("/office")
     public ApiResponse<JwtAuthenticationResponse> loginOffice(@RequestBody BackOfficeLoginRequest backOfficeLoginRequest){
+        log.info(backOfficeLoginRequest.toString());
         String accessToken = oauthService.loginBackOffice(backOfficeLoginRequest);
         return ApiResponse.success(
             new JwtAuthenticationResponse(accessToken)
@@ -58,5 +61,11 @@ public class OauthController {
         return ApiResponse.success(
             new JwtAuthenticationResponse(accessToken)
         );
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<PopmateUser> me(@AuthenticationPrincipal PopmateUser user) {
+        if(user == null) throw new BadRequestException("유효한 토큰이 아닙니다.");
+        return ApiResponse.success(user);
     }
 }
