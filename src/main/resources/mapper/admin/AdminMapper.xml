@@ -16,10 +16,11 @@
   </insert>
 
   <select id="getOneMainBanner" resultType="MainBanner">
-    select a.popup_store_id, a.title, a.organizer, a.place_detail, a.open_date, a.close_date, a.banner_img_url, b.banner_id,b.img_url
-    from tb_popup_store a join tb_banner b on a.popup_store_id = b.popup_store_id
-    where rownum=1
-    order by banner_id desc
+    SELECT a.popup_store_id, a.title, a.organizer, a.place_detail, a.open_date, a.close_date, a.banner_img_url, b.banner_id, b.img_url
+    FROM tb_popup_store a
+    JOIN tb_banner b ON a.popup_store_id = b.popup_store_id
+    ORDER BY TO_NUMBER(b.banner_id) DESC
+    FETCH FIRST ROW ONLY
   </select>
 
   <delete id="deleteBanner" parameterType="long">
