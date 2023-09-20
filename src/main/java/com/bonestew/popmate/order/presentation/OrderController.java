@@ -7,7 +7,6 @@ import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.domain.OrderPlaceDetail;
 import com.bonestew.popmate.order.domain.StockCheckItem;
-import com.bonestew.popmate.order.presentation.dto.BackOrderListItemResponse;
 import com.bonestew.popmate.order.presentation.dto.BackOrderListItemsResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderItemRequest;
 import com.bonestew.popmate.order.presentation.dto.OrderListDetailsResponse;
@@ -51,7 +50,7 @@ public class OrderController {
     @PostMapping("/orders/new")
     public ApiResponse<OrderResponse> orderPopupStoreItems(@RequestBody OrderItemRequest popupStore, @AuthenticationPrincipal PopmateUser popmateUser){
         List<AndroidOrderItem> orderItems = popupStore.getPopupStore();
-        Long orderId = orderService.insertItems(orderItems, 42L, popupStore.getOrderId(), popupStore.getCardType(),popupStore.getUrl(),popupStore.getEasyPay(),popupStore.getMethod());
+        Long orderId = orderService.insertItems(orderItems, popmateUser.getUserId(), popupStore.getOrderId(), popupStore.getCardType(),popupStore.getUrl(),popupStore.getEasyPay(),popupStore.getMethod());
         return ApiResponse.success(
             OrderResponse.from(orderId)
         );
