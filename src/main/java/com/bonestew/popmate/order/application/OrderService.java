@@ -150,4 +150,9 @@ public class OrderService {
         order.setOrderItemList(orderItems);
         return order;
     }
+
+    public String getChangeStatus(Long orderId, Long userId) {
+        orderDao.getChangeStatus(orderId,userId);
+        return "픽업완료되었습니다.";
+    }
 }
