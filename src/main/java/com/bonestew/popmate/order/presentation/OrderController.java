@@ -108,4 +108,12 @@ public class OrderController {
             OrderListDetailsResponse.from(order)
         );
     }
+
+    @GetMapping("/orders/qrcode/{orderId}/{userId}")
+    public ApiResponse<String> getChangeStatus(@PathVariable("orderId") Long orderId, @PathVariable("userId") Long userId){
+        String message = orderService.getChangeStatus(orderId,userId);
+        return ApiResponse.success(
+            message
+        );
+    }
 }

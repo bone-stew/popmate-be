@@ -56,4 +56,7 @@ public interface OrderDao {
     List<Order> getTodayOrders(Long popupStoreId, String sort);
 
     Order getOrderDetails(@Param("orderId") Long orderId);
+
+    void getChangeStatus(@Param("orderId") Long orderId,
+                         @Param("userId") Long userId);
 }

@@ -164,4 +164,8 @@
     where order_id=#{orderId}
   </select>
 
+  <update id="getChangeStatus" parameterType="java.util.Map">
+    update tb_order set status=1
+    where order_id=#{orderId} and user_id = #{userId}
+  </update>
 </mapper>
