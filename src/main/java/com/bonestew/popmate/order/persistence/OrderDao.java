@@ -51,4 +51,6 @@ public interface OrderDao {
     List<Order> getBackOfficeOrders(Long popupStoreId);
 
     List<OrderItem> getBackOfficeOrderItems(Long orderId);
+
+    List<Order> getTodayOrders(Long popupStoreId, String sort);
 }

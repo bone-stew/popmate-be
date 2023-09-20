@@ -16,6 +16,7 @@ import com.bonestew.popmate.order.presentation.dto.OrderResponse;
 import com.bonestew.popmate.order.presentation.dto.PopupStoreItemsResponse;
 import com.bonestew.popmate.order.presentation.dto.StockCheckItemsResponse;
 import com.bonestew.popmate.order.presentation.dto.StockCheckRequest;
+import com.bonestew.popmate.order.presentation.dto.TodayOrderResponse;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -86,6 +88,17 @@ public class OrderController {
         System.out.println(orders.toString());
         return ApiResponse.success(
             BackOrderListItemsResponse.from(orders)
+        );
+    }
+
+    @GetMapping("/popup-stores/{popupStoreId}/orders/today")
+    public ApiResponse<List<TodayOrderResponse>> getTodayOrders(@PathVariable("popupStoreId") Long popupStoreId,
+                                                                @RequestParam String sort) {
+        List<Order> orders = orderService.getTodayOrders(popupStoreId, sort);
+        return ApiResponse.success(
+            orders.stream()
+                .map(TodayOrderResponse::from)
+                .toList()
         );
     }
 }
