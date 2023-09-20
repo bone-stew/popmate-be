@@ -10,6 +10,7 @@ import com.bonestew.popmate.popupstore.application.PopupStoreService;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfoResponse;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreUpdateRequest;
 import java.util.ArrayList;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -105,13 +106,16 @@ public class PopupStoreController {
 //    }
 
 
-    @PostMapping("/image")
-    public ApiResponse<String> addStoreImage(@RequestParam MultipartFile multipartFile) {
-        Optional<String> bannerImgUrl = awsFileService.upload(multipartFile, FolderType.BANNERS);
-        if (bannerImgUrl.isPresent()) {
-            return ApiResponse.success(bannerImgUrl.get());
-        }
-        return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
+    @PostMapping(value="/{storeId}/images", consumes = {"multipart/form-data"})
+    public ApiResponse<List<String>> addStoreImage(@RequestPart("storeImageFiles") List<MultipartFile> storeImageFiles) {
+        List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
+
+//        Optional<String> bannerImgUrl = awsFileService.upload(multipartFile, FolderType.BANNERS);
+//        if (bannerImgUrl.isPresent()) {
+//            return ApiResponse.success(bannerImgUrl.get());
+//        }
+//        return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
+        return ApiResponse.success(storeImageList);
     }
 
 //    @DeleteMapping("/image")
@@ -147,9 +151,10 @@ public class PopupStoreController {
     }
 
     @PutMapping("/{popupStoreId}")
-    public ApiResponse<PopupStore> updatePopupStore(@RequestBody PopupStoreInfo popupStoreInfo) {
-        PopupStore popupstoreResult = popupStoreService.updatePopupStore(popupStoreInfo);
-        return ApiResponse.success(popupstoreResult);
+    public ApiResponse<String> updatePopupStore(@RequestBody PopupStoreUpdateRequest popupStoreUpdateRequest) {
+        log.info(popupStoreUpdateRequest.toString());
+        popupStoreService.updatePopupStore(popupStoreUpdateRequest);
+        return ApiResponse.success("success");
     }
 
 

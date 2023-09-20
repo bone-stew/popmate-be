@@ -10,9 +10,11 @@ import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreUpdateRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import java.util.List;
 import java.util.Optional;
+import javax.swing.Popup;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +44,7 @@ public interface PopupStoreDao {
 
     List<PopupStoreInfo> findPopupStoreDetailByIdForAdmin(Long popupStoreId);
 
-    PopupStore updsatePopupStoreInfo(PopupStoreInfo popupStoreInfo);
+    void updatePopupStoreInfo(PopupStore popupStore);
 
     void insertPopupStore(PopupStore popupStore);
 //    PopupStore insertPopupStore(PopupStoreCreateDto popupStoreCreateDto);
@@ -52,5 +54,11 @@ public interface PopupStoreDao {
     void insertPopupStoreItem(PopupStoreItem popupStoreItemList);
 
     void insertPopupStoreSns(PopupStoreSns popupStoreSnsList);
+
+    void deleteStoreImageById(Long popupStoreId);
+
+    void deleteStoreItemsById(Long popupStoreId);
+
+    void deleteStoreSnsById(Long popupStoreId);
 
 }
