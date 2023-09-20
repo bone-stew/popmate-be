@@ -30,6 +30,7 @@ public class Order {
     private String cardType;
     private String easyPay;
     private String method;
+    private String qrImgUrl;
 
     private List<OrderItem> orderItemList;
     public void setPopupStore(String title, String placeDetail, String bannerImgUrl) {

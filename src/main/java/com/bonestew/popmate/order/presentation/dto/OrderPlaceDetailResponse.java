@@ -5,7 +5,8 @@ import com.bonestew.popmate.order.domain.OrderPlaceDetail;
 public record OrderPlaceDetailResponse(
     String title,
     String placeDetail,
-    String placeDescription
+    String placeDescription,
+    String bannerImgUrl
 ) {
     public static OrderPlaceDetailResponse from(
         OrderPlaceDetail orderPlaceDetail
@@ -13,7 +14,8 @@ public record OrderPlaceDetailResponse(
         return  new OrderPlaceDetailResponse(
             orderPlaceDetail.getTitle(),
             orderPlaceDetail.getPlaceDetail(),
-            orderPlaceDetail.getPlaceDescription()
+            orderPlaceDetail.getPlaceDescription(),
+            orderPlaceDetail.getBannerImgUrl()
         );
     }
 }

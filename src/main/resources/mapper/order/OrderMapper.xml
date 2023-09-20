@@ -37,6 +37,7 @@
     <result column="order_card_type" property="cardType"/>
     <result column="easy_pay" property="easyPay"/>
     <result column="method" property="method"/>
+    <result column="qr_img_url" property="qrImgUrl"/>
     <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
     <collection column="title" property="popupStore" resultMap="popupStoreMap"/>
     <collection column="place_detail" property="popupStore" resultMap="popupStoreMap"/>
@@ -67,8 +68,8 @@
   </select>
 
   <insert id="insertOrderTable" parameterType="java.util.Map">
-    INSERT INTO tb_order (order_id, user_id, popup_store_id, amount, order_toss_id, order_card_type, url, easy_pay, method)
-    VALUES (#{orderId}, #{userId}, #{storeId}, #{totalAmount}, #{orderTossId}, #{cardType}, #{url}, #{easyPay}, #{method})
+    INSERT INTO tb_order (order_id, user_id, popup_store_id, amount, order_toss_id, order_card_type, url, easy_pay, method, qr_img_url)
+    VALUES (#{orderId}, #{userId}, #{storeId}, #{totalAmount}, #{orderTossId}, #{cardType}, #{url}, #{easyPay}, #{method}, #{orderQrCode})
   </insert>
 
   <select id="findStock" parameterType="java.util.Map" resultType="int">
@@ -114,7 +115,7 @@
   </select>
 
   <select id="getPlaceDetails" parameterType="java.util.Map" resultType="OrderPlaceDetail">
-    select a.title, a.place_detail, b.place_description
+    select a.title, a.place_detail, a.banner_img_url, b.place_description
     from tb_popup_store a
     join( select * from tb_department
     where department_id  = (select department_id from
@@ -154,6 +155,13 @@
       <![CDATA[AND status <> -1 ]]>
       ORDER BY A.status
     </if>
+  </select>
+
+  <select id="getOrderDetails" parameterType="long" resultMap="orderMap">
+    select a.order_id, a.user_id, a.popup_store_id, a.status, a.amount, a.created_at, a.order_toss_id, a.order_card_type,a.method,a.qr_img_url,b.title, b.place_detail
+    from tb_order a
+    join tb_popup_store b on a.popup_store_id = b.popup_store_id
+    where order_id=#{orderId}
   </select>
 
 </mapper>

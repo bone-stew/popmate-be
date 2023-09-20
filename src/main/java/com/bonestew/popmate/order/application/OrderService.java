@@ -1,5 +1,6 @@
 package com.bonestew.popmate.order.application;
 
+import static com.bonestew.popmate.popupstore.config.FolderType.ORDERS;
 import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.domain.OrderItem;
@@ -8,7 +9,10 @@ import com.bonestew.popmate.order.domain.StockCheckItem;
 import com.bonestew.popmate.order.exception.StockNotFoundException;
 import com.bonestew.popmate.order.persistence.OrderDao;
 import com.bonestew.popmate.order.presentation.dto.StockCheckRequest;
+import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
+import com.bonestew.popmate.reservation.application.QrService;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final OrderDao orderDao;
+    private final QrService qrService;
+    private final FileService fileService;
 
     // 전체 상품 정보 가져오는 곳
     public List<PopupStoreItem> getItems(Long popupStoreId) {
@@ -32,7 +38,7 @@ public class OrderService {
 
 
     @Transactional
-    public String insertItems(List<AndroidOrderItem> orderItems, Long userId, String orderTossId, String cardType, String url, String easyPay,
+    public Long insertItems(List<AndroidOrderItem> orderItems, Long userId, String orderTossId, String cardType, String url, String easyPay,
                               String method) {
         Long storeId = orderItems.get(0).getPopupStoreId();
         int totalAmount = 0;
@@ -42,7 +48,8 @@ public class OrderService {
             }
             Long orderId = orderDao.selectSequence();
             // 주문 테이블에 insert하는 곳
-            orderDao.insertOrderTable(orderId, userId, storeId, totalAmount, orderTossId, cardType, url,easyPay, method);
+            String orderQrCode = gnerateOrderQrCode(userId,orderId);
+            orderDao.insertOrderTable(orderId, userId, storeId, totalAmount, orderTossId, cardType, url,easyPay, method, orderQrCode);
             //재고 가져와서 스토어 아이템 업데이트
             //주문 아이템 테이블에 insert
             for (AndroidOrderItem androidOrderItem : orderItems) {
@@ -59,10 +66,18 @@ public class OrderService {
                 orderDao.insertOrderItemTable(orderId, itemId, androidOrderItem.getTotalQuantity(), totalItemAmount);
                 orderDao.updateStoreItemTable(itemId, storeId, updateStock);
             }
+            return orderId;
         } catch (StockNotFoundException e) {
             throw e;
         }
-        return "주문 성공하였습니다.";
+    }
+
+    private String gnerateOrderQrCode(Long userId, Long orderId) {
+        InputStream inputStream = qrService.generateOrderQRCode(userId,orderId);
+        String directory = String.format(ORDERS.getFolderName(),
+            userId, orderId);
+
+        return fileService.uploadInputStream(inputStream, directory);
     }
 
     public List<Order> getOrders(Long userId) {
@@ -122,5 +137,17 @@ public class OrderService {
 
     public List<Order> getTodayOrders(Long popupStoreId, String sort) {
         return orderDao.getTodayOrders(popupStoreId, sort);
+    }
+
+
+    public Order getOrderDetails(Long orderId) {
+        Order order = orderDao.getOrderDetails(orderId);
+        List<OrderItem> orderItems = orderDao.getOrderItems(order.getOrderId());
+        for(OrderItem orderItem : orderItems){
+            PopupStoreItem popupStoreItem =  orderDao.getItemInfo(orderItem.getStoreItemId(), order.getPopupStore().getPopupStoreId());
+            orderItem.setPopupStoreItem(popupStoreItem);
+        }
+        order.setOrderItemList(orderItems);
+        return order;
     }
 }

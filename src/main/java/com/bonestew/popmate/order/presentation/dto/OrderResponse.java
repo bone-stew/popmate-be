@@ -1,13 +1,13 @@
 package com.bonestew.popmate.order.presentation.dto;
 
 public record OrderResponse(
-    String message
+    Long orderId
 ) {
     public static OrderResponse from(
-        String message
+        Long orderId
     ){
         return new OrderResponse(
-            message = message
+            orderId
         );
     }
 }
