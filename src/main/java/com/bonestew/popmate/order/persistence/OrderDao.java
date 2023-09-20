@@ -21,7 +21,8 @@ public interface OrderDao {
                           @Param("cardType") String orderCardType,
                           @Param("url") String url,
                           @Param("easyPay") String easyPay,
-                          @Param("method") String method);
+                          @Param("method") String method,
+                          @Param("orderQrCode") String orderQrCode);
 
     Optional<Integer> findStock(@Param("storeId") Long storeId,
                                 @Param("itemId") Long itemId);
@@ -51,4 +52,6 @@ public interface OrderDao {
     List<Order> getBackOfficeOrders(Long popupStoreId);
 
     List<OrderItem> getBackOfficeOrderItems(Long orderId);
+
+    Order getOrderDetails(@Param("orderId") Long orderId);
 }

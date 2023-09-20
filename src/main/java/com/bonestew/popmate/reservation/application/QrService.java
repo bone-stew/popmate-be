@@ -44,6 +44,23 @@ public class QrService {
         }
     }
 
+    public InputStream generateOrderQRCode(Long userId, Long orderId) {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("serviceName", SERVICE_NAME);
+        dataMap.put("userId", userId);
+        dataMap.put("orderId", orderId);
+        String content = buildQRContent(dataMap);
+
+        try {
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, 400, 400);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+            return new ByteArrayInputStream(outputStream.toByteArray());
+        } catch (WriterException | IOException e) {
+            throw new QrCodeGenerationException();
+        }
+    }
+
     /**
      * QR 코드에 포함할 데이터 생성
      *

@@ -7,9 +7,9 @@ import com.bonestew.popmate.order.domain.AndroidOrderItem;
 import com.bonestew.popmate.order.domain.Order;
 import com.bonestew.popmate.order.domain.OrderPlaceDetail;
 import com.bonestew.popmate.order.domain.StockCheckItem;
-import com.bonestew.popmate.order.presentation.dto.BackOrderListItemResponse;
 import com.bonestew.popmate.order.presentation.dto.BackOrderListItemsResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderItemRequest;
+import com.bonestew.popmate.order.presentation.dto.OrderListDetailsResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderListItemsResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderPlaceDetailResponse;
 import com.bonestew.popmate.order.presentation.dto.OrderResponse;
@@ -48,9 +48,9 @@ public class OrderController {
     @PostMapping("/orders/new")
     public ApiResponse<OrderResponse> orderPopupStoreItems(@RequestBody OrderItemRequest popupStore, @AuthenticationPrincipal PopmateUser popmateUser){
         List<AndroidOrderItem> orderItems = popupStore.getPopupStore();
-        String insertCheck = orderService.insertItems(orderItems, popmateUser.getUserId(), popupStore.getOrderId(), popupStore.getCardType(),popupStore.getUrl(),popupStore.getEasyPay(),popupStore.getMethod());
+        Long orderId = orderService.insertItems(orderItems, 42L, popupStore.getOrderId(), popupStore.getCardType(),popupStore.getUrl(),popupStore.getEasyPay(),popupStore.getMethod());
         return ApiResponse.success(
-            OrderResponse.from(insertCheck)
+            OrderResponse.from(orderId)
         );
     }
 
@@ -83,9 +83,16 @@ public class OrderController {
     @GetMapping("/orders/backoffice/orderList/{popupStoreId}")
     public ApiResponse<BackOrderListItemsResponse> getBackOfficeOrderLists(@PathVariable("popupStoreId") Long popupStoreId){
         List<Order> orders = orderService.getBackOfficeOrderLists(popupStoreId);
-        System.out.println(orders.toString());
         return ApiResponse.success(
             BackOrderListItemsResponse.from(orders)
+        );
+    }
+
+    @GetMapping("/orders/details/{orderId}")
+    public ApiResponse<OrderListDetailsResponse> getOrderDetails(@PathVariable("orderId") Long orderId){
+        Order order = orderService.getOrderDetails(orderId);
+        return ApiResponse.success(
+            OrderListDetailsResponse.from(order)
         );
     }
 }
