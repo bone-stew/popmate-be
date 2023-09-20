@@ -140,6 +140,23 @@
     order by popup_store_item_id
   </select>
 
+  <select id="getTodayOrders" resultMap="orderMap">
+    SELECT *
+    FROM TB_ORDER A
+    JOIN TB_USER B on A.user_id = B.user_id
+    WHERE popup_store_id = #{popupStoreId}
+    AND TO_CHAR(A.created_at, 'YYYY-MM-DD') = TO_CHAR(sysdate, 'YYYY-MM-DD')
+    <!-- 결제 시간으로부터 픽업시간 순 -->
+    <if test="sort == 'pickupTime'">
+      ORDER BY A.created_at
+    </if>
+    <!-- 주문상태 순 -->
+    <if test="sort == 'orderStatus'">
+      <![CDATA[AND status <> -1 ]]>
+      ORDER BY A.status
+    </if>
+  </select>
+
   <select id="getOrderDetails" parameterType="long" resultMap="orderMap">
     select a.order_id, a.user_id, a.popup_store_id, a.status, a.amount, a.created_at, a.order_toss_id, a.order_card_type,a.method,a.qr_img_url,b.title, b.place_detail
     from tb_order a

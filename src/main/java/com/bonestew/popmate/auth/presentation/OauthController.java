@@ -1,6 +1,7 @@
 package com.bonestew.popmate.auth.presentation;
 
 import com.bonestew.popmate.auth.application.OauthService;
+import com.bonestew.popmate.auth.application.dto.FreeTokenRequest;
 import com.bonestew.popmate.auth.application.dto.JwtAuthenticationResponse;
 import com.bonestew.popmate.auth.presentation.dto.BackOfficeLoginRequest;
 import com.bonestew.popmate.auth.presentation.dto.GoogleLoginRequest;
@@ -37,7 +38,7 @@ public class OauthController {
         );
     }
 
-    // 백오피스 로그인
+    // 관리자 로그인
     @PostMapping("/office")
     public ApiResponse<JwtAuthenticationResponse> loginOffice(@RequestBody BackOfficeLoginRequest backOfficeLoginRequest){
         String accessToken = oauthService.loginBackOffice(backOfficeLoginRequest);
@@ -46,9 +47,16 @@ public class OauthController {
         );
     }
 
-//    @GetMapping("/resource")
-//    public ApiResponse<JwtAuthenticationResponse> fdf(){
-//
-//        return null;
-//    }
+    /**
+     * 토큰을 개발용으로 편하게 가져올 수 있는 API
+     *
+     * @return 토큰
+     */
+    @PostMapping("/free")
+    public ApiResponse<JwtAuthenticationResponse> createFreeToken(@RequestBody FreeTokenRequest freeTokenRequest) {
+        String accessToken = oauthService.getFreeToken(freeTokenRequest);
+        return ApiResponse.success(
+            new JwtAuthenticationResponse(accessToken)
+        );
+    }
 }

@@ -135,6 +135,10 @@ public class OrderService {
         return orderList;
     }
 
+    public List<Order> getTodayOrders(Long popupStoreId, String sort) {
+        return orderDao.getTodayOrders(popupStoreId, sort);
+    }
+
 
     public Order getOrderDetails(Long orderId) {
         Order order = orderDao.getOrderDetails(orderId);
