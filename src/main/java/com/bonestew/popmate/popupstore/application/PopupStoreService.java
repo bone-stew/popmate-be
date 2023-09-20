@@ -168,7 +168,7 @@ public class PopupStoreService {
                 PopupStoreImg storeImg = new PopupStoreImg();
                 storeImg.setPopupStore(popupStore);
                 storeImg.setImgUrl(url);
-            popupStoreDao.insertPopupStoreImg(storeImg);
+                popupStoreDao.insertPopupStoreImg(storeImg);
             }
         }
         if (!popupStoreCreateRequest.getPopupStoreItemList().isEmpty()) {
@@ -196,21 +196,21 @@ public class PopupStoreService {
         return popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
     }
 
-    public void updatePopupStore( PopupStoreUpdateRequest popupStoreUpdateRequest) {
+    public void updatePopupStore(PopupStoreUpdateRequest popupStoreUpdateRequest) {
         List<String> storeImgList = popupStoreUpdateRequest.getStoreImageList();
         PopupStore popupStore = popupStoreUpdateRequest.getPopupStore();
         popupStoreUpdateRequest.getPopupStore().setBannerImgUrl(storeImgList.get(0));
         storeImgList.remove(0);
-        if (!storeImgList.isEmpty()){
+        if (!storeImgList.isEmpty()) {
             popupStoreDao.deleteStoreImageById(popupStore.getPopupStoreId());
-            for (String url: storeImgList) {
+            for (String url : storeImgList) {
                 PopupStoreImg storeImg = new PopupStoreImg();
                 storeImg.setPopupStore(popupStore);
                 storeImg.setImgUrl(url);
                 popupStoreDao.insertPopupStoreImg(storeImg);
             }
         }
-            popupStoreDao.deleteStoreItemsById(popupStore.getPopupStoreId());
+        popupStoreDao.deleteStoreItemsById(popupStore.getPopupStoreId());
         if (!popupStoreUpdateRequest.getPopupStoreItemList().isEmpty()) {
             for (int i = 0; i < popupStoreUpdateRequest.getPopupStoreItemList().size(); i++) {
                 PopupStoreItem popupStoreItem = popupStoreUpdateRequest.getPopupStoreItemList().get(i);
@@ -218,7 +218,7 @@ public class PopupStoreService {
                 popupStoreDao.insertPopupStoreItem(popupStoreItem);
             }
         }
-        if(!popupStoreUpdateRequest.getPopupStoreSnsList().isEmpty()){
+        if (!popupStoreUpdateRequest.getPopupStoreSnsList().isEmpty()) {
             popupStoreDao.deleteStoreSnsById(popupStore.getPopupStoreId());
             for (PopupStoreSns popupStoreSns : popupStoreUpdateRequest.getPopupStoreSnsList()) {
                 popupStoreSns.setPopupStore(popupStore);

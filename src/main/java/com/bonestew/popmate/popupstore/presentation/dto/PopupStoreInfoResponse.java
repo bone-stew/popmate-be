@@ -52,11 +52,14 @@ public record PopupStoreInfoResponse(
                     snsIdSet.add(snsId);
                 }
             }
-            PopupStoreImg img = info.getPopupStoreImg();
-            Long imgId = img.getPopupStoreImgId();
-            if (!imgIdSet.contains(imgId)) {
-                popupStoreImgResponses.add(img);
-                imgIdSet.add(imgId);
+            if (info.getPopupStoreImg() != null) {
+
+                PopupStoreImg img = info.getPopupStoreImg();
+                Long imgId = img.getPopupStoreImgId();
+                if (!imgIdSet.contains(imgId)) {
+                    popupStoreImgResponses.add(img);
+                    imgIdSet.add(imgId);
+                }
             }
             PopupStoreItem item = info.getPopupStoreItem();
             if (item != null) {
