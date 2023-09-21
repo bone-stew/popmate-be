@@ -62,4 +62,6 @@ public class PopmateUser implements UserDetails {
     public Long getUserId() {
         return this.userId;
     }
+
+    public String getNickname() {return this.nickname; }
 }
