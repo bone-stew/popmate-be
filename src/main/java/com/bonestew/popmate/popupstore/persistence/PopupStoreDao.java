@@ -44,8 +44,6 @@ public interface PopupStoreDao {
 
     List<PopupStore> selectPopupStoresByQuery(PopupStorePageDto dto);
 
-    List<PopupStore> selectPopupStoreByAuth(AuthDto dto);
-
     List<PopupStoreInfo> findPopupStoreDetailByIdForAdmin(Long popupStoreId);
 
     void updatePopupStoreInfo(PopupStore popupStore);
@@ -64,5 +62,10 @@ public interface PopupStoreDao {
     void deleteStoreItemsById(Long popupStoreId);
 
     void deleteStoreSnsById(Long popupStoreId);
+
+
+    List<PopupStore> selectPopupStoreByAuth(AuthDto dto);
+
+
 
 }

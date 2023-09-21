@@ -1,6 +1,9 @@
 package com.bonestew.popmate.popupstore.application;
 
 import com.bonestew.popmate.auth.domain.PopmateUser;
+import com.bonestew.popmate.popupstore.config.FolderType;
+import com.bonestew.popmate.popupstore.config.service.FileService;
+import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
@@ -9,6 +12,12 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreRepository;
+import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
+import com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto;
+import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
+import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.persistence.dto.*;
 import com.bonestew.popmate.popupstore.presentation.dto.MyStoreResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
@@ -35,11 +44,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class PopupStoreService {
+
+    private final FileService awsFileService;
+
 
     private final PopupStoreDao popupStoreDao;
 
@@ -173,7 +186,7 @@ public class PopupStoreService {
         }
         return popupStoreDao.selectPopupStoreByAuth(authDto).stream().map(MyStoreResponse::from).collect(Collectors.toList());
     }
-  
+
     public Long postNewPopupStore(PopupStoreCreateRequest popupStoreCreateRequest, Long userId, List<String> storeImageList,
                                   List<String> storeItemImageList) {
         User user = new User();
@@ -213,13 +226,7 @@ public class PopupStoreService {
         return storeId;
     }
 
-    public List<PopupStoreInfo> getPopupStoreDetailForAdmin(Long popupStoreId) {
-        List<PopupStoreInfo> popupStoreInfoList = popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
-        if (popupStoreInfoList.isEmpty()) {
-            throw new PopupStoreNotFoundException(popupStoreId);
-        }
-        return popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
-    }
+
 
     public void updatePopupStore(PopupStoreUpdateRequest popupStoreUpdateRequest, Long userId) {
         List<String> storeImgList = popupStoreUpdateRequest.getStoreImageList();
@@ -258,5 +265,57 @@ public class PopupStoreService {
         log.info(popupStoreUpdateRequest.getPopupStore().toString());
         popupStoreDao.updatePopupStoreInfo(popupStoreUpdateRequest.getPopupStore());
     }
+
+    public Long postNewPopupStore(List<MultipartFile> storeImageFiles, List<MultipartFile> storeItemImageFiles,
+                                  PopupStoreCreateRequest popupStoreCreateRequest, Long userId
+                                  ) {
+
+        List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
+        List<String> storeItemImageList = new ArrayList<>();
+        if (storeItemImageFiles != null) {
+            storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
+        }
+        User user = new User();
+        user.setUserId(userId);
+        popupStoreCreateRequest.getPopupStore().setUser(user);
+        popupStoreCreateRequest.getPopupStore().setBannerImgUrl(storeImageList.get(0));
+        storeImageList.remove(0);
+        popupStoreDao.insertPopupStore(popupStoreCreateRequest.getPopupStore());
+        Long storeId = popupStoreCreateRequest.getPopupStore().getPopupStoreId();
+        PopupStore popupStore = new PopupStore();
+        popupStore.setPopupStoreId(storeId);
+        if (!storeImageList.isEmpty()) {
+            for (String url : storeImageList) {
+                PopupStoreImg storeImg = new PopupStoreImg();
+                storeImg.setPopupStore(popupStore);
+                storeImg.setImgUrl(url);
+                popupStoreDao.insertPopupStoreImg(storeImg);
+            }
+        }
+        if (!popupStoreCreateRequest.getPopupStoreItemList().isEmpty()) {
+            for (int i = 0; i < popupStoreCreateRequest.getPopupStoreItemList().size(); i++) {
+                PopupStoreItem popupStoreItem = popupStoreCreateRequest.getPopupStoreItemList().get(i);
+                popupStoreItem.setImgUrl(storeItemImageList.get(i));
+                popupStoreItem.setPopupStore(popupStore);
+                popupStoreDao.insertPopupStoreItem(popupStoreItem);
+            }
+        }
+        if (!popupStoreCreateRequest.getPopupStoreSnsList().isEmpty()) {
+            for (PopupStoreSns popupStoreSns : popupStoreCreateRequest.getPopupStoreSnsList()) {
+                popupStoreSns.setPopupStore(popupStore);
+                popupStoreDao.insertPopupStoreSns(popupStoreSns);
+            }
+        }
+        return storeId;
+    }
+
+    public List<PopupStoreInfo> getPopupStoreDetailForAdmin(Long popupStoreId) {
+        List<PopupStoreInfo> popupStoreInfoList = popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
+        if (popupStoreInfoList.isEmpty()) {
+            throw new PopupStoreNotFoundException(popupStoreId);
+        }
+        return popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
+    }
+
 
 }

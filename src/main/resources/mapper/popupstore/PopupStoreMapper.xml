@@ -277,6 +277,48 @@
   </select>
 
 
+  <update id="updatePopupStoreInfo" parameterType="PopupStore" >
+    UPDATE tb_popup_store
+    <set>
+      <if test="title != null">title = #{title},</if>
+      <if test="department != null">department_id = #{department.departmentId},</if>
+      <if test="organizer != null">organizer = #{organizer},</if>
+      <if test="placeDetail != null">place_detail = #{placeDetail},</if>
+      <if test="description != null">description = #{description},</if>
+      <if test="eventDescription != null">event_description = #{eventDescription},</if>
+      <if test="bannerImgUrl != null">banner_img_url = #{bannerImgUrl},</if>
+      <if test="entryFee != null">entry_fee = #{entryFee},</if>
+      <if test="maxCapacity != null">max_capacity = #{maxCapacity},</if>
+      <if test="reservationEnabled != null">reservation_enabled = #{reservationEnabled},</if>
+      <if test="reservationInterval != null">reservation_interval = #{reservationInterval},</if>
+      <if test="intervalCapacity != null">interval_capacity = #{intervalCapacity},</if>
+      <if test="teamSizeLimit != null">team_size_limit = #{teamSizeLimit},</if>
+      <if test="openDate != null">open_date = #{openDate},</if>
+      <if test="closeDate != null">close_date = #{closeDate},</if>
+      <if test="openTime != null">open_time = #{openTime},</if>
+      <if test="closeTime != null">close_time = #{closeTime},</if>
+      <if test="views != null">views = #{views},</if>
+    </set>
+    WHERE popup_store_id = #{popupStoreId}
+  </update>
+
+  <delete id="deleteStoreImageById" parameterType="long">
+    DELETE FROM tb_popup_store_img
+    WHERE popup_store_id = #{popupStoreId}
+  </delete>
+
+  <delete id="deleteStoreItemsById" parameterType="long">
+    DELETE FROM tb_popup_store_item
+    WHERE popup_store_id = #{popupStoreId}
+  </delete>
+
+  <delete id="deleteStoreSnsById" parameterType="long">
+    DELETE FROM tb_popup_store_sns
+    WHERE popup_store_id = #{popupStoreId}
+  </delete>
+
+
+
   <insert id="insertPopupStore" parameterType="PopupStore">
     <selectKey keyColumn="popup_store_id" keyProperty="popupStoreId" resultType="Long" order="AFTER">
       select TB_POPUP_STORE_SEQ.CURRVAL from dual
@@ -342,44 +384,7 @@
       (#{popupStore.popupStoreId}, #{platform}, #{url})
   </insert>
 
-  <update id="updatePopupStoreInfo" parameterType="PopupStore" >
-    UPDATE tb_popup_store
-    <set>
-      <if test="title != null">title = #{title},</if>
-      <if test="department != null">department_id = #{department.departmentId},</if>
-      <if test="organizer != null">organizer = #{organizer},</if>
-      <if test="placeDetail != null">place_detail = #{placeDetail},</if>
-      <if test="description != null">description = #{description},</if>
-      <if test="eventDescription != null">event_description = #{eventDescription},</if>
-      <if test="bannerImgUrl != null">banner_img_url = #{bannerImgUrl},</if>
-      <if test="entryFee != null">entry_fee = #{entryFee},</if>
-      <if test="maxCapacity != null">max_capacity = #{maxCapacity},</if>
-      <if test="reservationEnabled != null">reservation_enabled = #{reservationEnabled},</if>
-      <if test="reservationInterval != null">reservation_interval = #{reservationInterval},</if>
-      <if test="intervalCapacity != null">interval_capacity = #{intervalCapacity},</if>
-      <if test="teamSizeLimit != null">team_size_limit = #{teamSizeLimit},</if>
-      <if test="openDate != null">open_date = #{openDate},</if>
-      <if test="closeDate != null">close_date = #{closeDate},</if>
-      <if test="openTime != null">open_time = #{openTime},</if>
-      <if test="closeTime != null">close_time = #{closeTime},</if>
-      <if test="views != null">views = #{views},</if>
-    </set>
-    WHERE popup_store_id = #{popupStoreId}
-  </update>
 
-  <delete id="deleteStoreImageById" parameterType="long">
-    DELETE FROM tb_popup_store_img
-    WHERE popup_store_id = #{popupStoreId}
-  </delete>
 
-  <delete id="deleteStoreItemsById" parameterType="long">
-    DELETE FROM tb_popup_store_item
-    WHERE popup_store_id = #{popupStoreId}
-  </delete>
-
-  <delete id="deleteStoreSnsById" parameterType="long">
-    DELETE FROM tb_popup_store_sns
-    WHERE popup_store_id = #{popupStoreId}
-  </delete>
 
 </mapper>
