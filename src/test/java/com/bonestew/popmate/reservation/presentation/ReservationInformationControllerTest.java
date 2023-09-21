@@ -221,6 +221,8 @@ class ReservationInformationControllerTest {
                         .type(JsonFieldType.NUMBER),
                     fieldWithPath("data.entryGuestCount").description("입장한 손님 수")
                         .type(JsonFieldType.NUMBER),
+                    fieldWithPath("data.isEntering").description("입장 진행 여부")
+                        .type(JsonFieldType.BOOLEAN),
                     fieldWithPath("data.upComingReservations").description("다가오는 예약 목록")
                         .type(JsonFieldType.ARRAY),
                     fieldWithPath("data.upComingReservations[].reservationId").description("예약 ID")
