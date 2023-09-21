@@ -150,13 +150,13 @@
     select popup_store_id, title, banner_img_url
     from tb_popup_store
     where popup_store_id in (
-    select distinct tr.popup_store_id
-    from tb_reservation tr
-    join tb_user_reservation tur
-    on tr.reservation_id = tur.reservation_id
-    where tur.user_id = #{userId}
-    and tur.status = 2
-    and tur.created_at = trunc(sysdate))
+      select distinct tr.popup_store_id
+      from tb_reservation tr
+             join tb_user_reservation tur
+                  on tr.reservation_id = tur.reservation_id
+      where tur.user_id = #{userId}
+        and tur.status = 1
+        and trunc(tur.created_at) = trunc(sysdate))
   </select>
 
   <select id="selectPopupStoresToRecommend" resultType="PopupStore">
@@ -193,15 +193,22 @@
     where ps.popup_store_id = #{popupStoreId}
   </select>
 
-  <select id="findUserReservationById" parameterType="long" resultType="UserReservationStatus">
-    select ur.status
-    from tb_user_reservation ur
-           join tb_reservation r
-                on ur.reservation_id = r.reservation_id
-    where ur.user_id = #{userId} and r.popup_store_id = #{popupStoreId}
-      and ur.created_at = trunc(sysdate)
-    order by ur.created_at desc
-      fetch first row only
+  <select id="userReservationExistsById" parameterType="long" resultType="Boolean">
+    SELECT CASE
+             WHEN EXISTS (
+               SELECT 1
+               FROM tb_user_reservation ur
+                      JOIN tb_reservation r ON ur.reservation_id = r.reservation_id
+                      JOIN tb_popup_store ps ON r.popup_store_id = ps.popup_store_id
+               WHERE ps.popup_store_id = 1
+                 AND ur.user_id = 81
+                 AND ur.status = 1
+                 AND trunc(ur.created_at) = trunc(sysdate)
+               )
+               THEN 1
+             ELSE 0
+             END AS result
+    FROM dual
   </select>
 
   <select id="selectPopupStoreSnss" parameterType="long" resultType="PopupStoreSns">

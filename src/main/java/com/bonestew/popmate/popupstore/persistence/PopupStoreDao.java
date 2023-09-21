@@ -36,7 +36,7 @@ public interface PopupStoreDao {
 
     List<PopupStoreDetailDto> findPopupStoreDetailById(PopupStoreQueryDto popupStoreQueryDto);
 
-    Optional<UserReservationStatus> findUserReservationById(PopupStoreQueryDto popupStoreQueryDto);
+    Boolean userReservationExistsById(PopupStoreQueryDto popupStoreQueryDto);
 
     int batchUpdatePopupStoreViews(List<PopupStoreUpdateDto> updates);
 
@@ -49,7 +49,6 @@ public interface PopupStoreDao {
     void updatePopupStoreInfo(PopupStore popupStore);
 
     void insertPopupStore(PopupStore popupStore);
-//    PopupStore insertPopupStore(PopupStoreCreateDto popupStoreCreateDto);
 
     void insertPopupStoreImg(PopupStoreImg popupStoreImg);
 
