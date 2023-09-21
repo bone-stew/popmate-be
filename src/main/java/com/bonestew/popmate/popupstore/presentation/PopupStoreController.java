@@ -129,21 +129,13 @@ public class PopupStoreController {
                                               @RequestPart("storeImageFiles") List<MultipartFile> storeImageFiles,
                                               @RequestPart(value = "storeItemImageFiles", required = false) List<MultipartFile> storeItemImageFiles,
                                               @AuthenticationPrincipal PopmateUser popmateUser) {
-//        log.info("PopupStoreCreateRequest {}", popupStoreCreateRequest.toString());
         Long userId;
         if (popmateUser == null) {
             userId = null;
         } else {
             userId = popmateUser.getUserId();
         }
-        List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
-        List<String> storeItemImageList = new ArrayList<>();
-        if (storeItemImageFiles != null) {
-            storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
-        }
-//        popupStoreCreateRequest.setPopupStoreImageList(storeImageList);
-//        popupStoreCreateRequest.setPopupStoreItemImageList(storeItemImageList);
-        Long storeId = popupStoreService.postNewPopupStore(popupStoreCreateRequest, userId, storeImageList, storeItemImageList);
+        Long storeId = popupStoreService.postNewPopupStore(storeImageFiles, storeItemImageFiles, popupStoreCreateRequest, userId);
         return ApiResponse.success(storeId);
     }
 

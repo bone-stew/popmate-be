@@ -1,5 +1,8 @@
 package com.bonestew.popmate.popupstore.application;
 
+import com.bonestew.popmate.auth.domain.PopmateUser;
+import com.bonestew.popmate.popupstore.config.FolderType;
+import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
@@ -29,15 +32,18 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class PopupStoreService {
+
+    private final FileService awsFileService;
+
 
     private final PopupStoreDao popupStoreDao;
 
@@ -161,16 +167,20 @@ public class PopupStoreService {
         log.info("sorted: {}", pageable.getSort());
         return popupStoreDao.selectPopupStoresByQuery(dto);
     }
-    public Long postNewPopupStore(PopupStoreCreateRequest popupStoreCreateRequest, Long userId, List<String> storeImageList,
-                                  List<String> storeItemImageList) {
+    public Long postNewPopupStore(List<MultipartFile> storeImageFiles, List<MultipartFile> storeItemImageFiles,
+                                  PopupStoreCreateRequest popupStoreCreateRequest, Long userId
+                                  ) {
+
+        List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
+        List<String> storeItemImageList = new ArrayList<>();
+        if (storeItemImageFiles != null) {
+            storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
+        }
         User user = new User();
         user.setUserId(userId);
         popupStoreCreateRequest.getPopupStore().setUser(user);
         popupStoreCreateRequest.getPopupStore().setBannerImgUrl(storeImageList.get(0));
         storeImageList.remove(0);
-        log.info("USER ID{}", popupStoreCreateRequest.getPopupStore().getUser().getUserId());
-//        PopupStoreCreateDto popupStoreCreateDto = new PopupStoreCreateDto();
-//        popupStoreCreateDto.setPopupStore(popupStoreCreateRequest.getPopupStore());
         popupStoreDao.insertPopupStore(popupStoreCreateRequest.getPopupStore());
         Long storeId = popupStoreCreateRequest.getPopupStore().getPopupStoreId();
         PopupStore popupStore = new PopupStore();
