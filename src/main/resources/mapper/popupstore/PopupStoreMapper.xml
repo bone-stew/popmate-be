@@ -393,5 +393,17 @@
 
 
 
+  <update id="updatePopupStoreItem">
+    UPDATE tb_popup_store_item
+    SET
+      name = #{popupStoreItem.name},
+      amount = #{popupStoreItem.amount},
+      img_url = #{popupStoreItem.imgUrl},
+      stock = #{popupStoreItem.stock},
+      order_limit = #{popupStoreItem.orderLimit}
+    WHERE
+      popup_store_id = #{popupStoreId}
+  </update>
+
 
 </mapper>
