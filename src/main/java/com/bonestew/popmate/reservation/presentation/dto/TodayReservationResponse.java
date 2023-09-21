@@ -1,6 +1,7 @@
 package com.bonestew.popmate.reservation.presentation.dto;
 
 import com.bonestew.popmate.reservation.domain.Reservation;
+import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,6 +12,7 @@ public record TodayReservationResponse(
     LocalDateTime currentReservationEndTime,
     int reservedGuestCount,
     int entryGuestCount,
+    boolean isEntering,
     List<UpComingReservationResponse> upComingReservations
 ) {
 
@@ -22,6 +24,7 @@ public record TodayReservationResponse(
             currentReservation.getVisitEndTime(),
             currentReservation.getCurrentGuestCount(),
             currentReservation.getEnteredGuestCount(),
+            currentReservation.getStatus() == ReservationStatus.ENTERING,
             reservations.stream()
                 .map(UpComingReservationResponse::from)
                 .toList());
