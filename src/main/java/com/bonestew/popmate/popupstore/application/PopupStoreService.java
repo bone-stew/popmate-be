@@ -206,12 +206,12 @@ public class PopupStoreService {
                 popupStoreDao.insertPopupStoreImg(storeImg);
             }
         }
-        popupStoreDao.deleteStoreItemsById(popupStore.getPopupStoreId());
+//        popupStoreDao.deleteStoreItemsById(popupStore.getPopupStoreId());
         if (!popupStoreUpdateRequest.getPopupStoreItemList().isEmpty()) {
             for (int i = 0; i < popupStoreUpdateRequest.getPopupStoreItemList().size(); i++) {
                 PopupStoreItem popupStoreItem = popupStoreUpdateRequest.getPopupStoreItemList().get(i);
                 popupStoreItem.setPopupStore(popupStore);
-                popupStoreDao.insertPopupStoreItem(popupStoreItem);
+                popupStoreDao.updatePopupStoreItem(popupStore.getPopupStoreId(), popupStoreItem);
             }
         }
         if (!popupStoreUpdateRequest.getPopupStoreSnsList().isEmpty()) {
