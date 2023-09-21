@@ -25,6 +25,8 @@ import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreUpdateRequest;
+import com.bonestew.popmate.reservation.application.ReservationEventService;
+import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import com.bonestew.popmate.user.domain.User;
 import java.time.LocalDate;
@@ -52,10 +54,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class PopupStoreService {
 
     private final FileService awsFileService;
-
-
+    private final ReservationEventService reservationEventService;
     private final PopupStoreDao popupStoreDao;
-
     private final PopupStoreRepository popupStoreRepository;
 
     public PopupStore getPopupStore(Long popupStoreId) {
@@ -305,6 +305,11 @@ public class PopupStoreService {
                 popupStoreSns.setPopupStore(popupStore);
                 popupStoreDao.insertPopupStoreSns(popupStoreSns);
             }
+        }
+        if (popupStoreCreateRequest.getPopupStore().getReservationEnabled()) {
+            reservationEventService.createReservation(
+                CreateReservationDto.from(popupStoreCreateRequest.getPopupStore())
+            );
         }
         return storeId;
     }
