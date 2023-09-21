@@ -173,7 +173,7 @@
     SELECT *
     FROM tb_reservation A
            LEFT JOIN tb_popup_store B on A.popup_store_id = B.popup_store_id
-    WHERE status = 2
+    WHERE status = 4
       AND A.popup_store_id = #{popupStoreId}
     ORDER BY visit_end_time DESC
       FETCH FIRST 1 ROW ONLY
