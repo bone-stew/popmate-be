@@ -4,13 +4,17 @@ import java.util.Arrays;
 
 public enum ReservationStatus {
 
-    CANCELED(-1, "예약 중단"),
-
     SCHEDULED(0, "예약 예정"),
 
     IN_PROGRESS(1, "예약 중"),
 
-    CLOSED(2, "예약 완료");
+    CLOSED(2, "예약 마감"),
+
+    ENTERING(3, "입장 중"),
+
+    ENTERED(4, "입장 완료"),
+
+    CANCELED(-1, "예약 중단");
 
     private final int code;
     private final String description;

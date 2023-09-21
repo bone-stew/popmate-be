@@ -17,7 +17,6 @@ import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
 import com.bonestew.popmate.reservation.persistence.ReservationDao;
 import com.bonestew.popmate.reservation.persistence.UserReservationDao;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -96,22 +95,24 @@ public class ReservationEventService {
     @Transactional
     @Scheduled(cron = "0 * 9-22 * * *")
     public void changeReservationStatus() {
-        List<Reservation> activeReservations = reservationDao.findAllToInProgress();
-        List<Reservation> closedReservations = reservationDao.findAllToClosed();
-
-        activeReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.IN_PROGRESS));
-        closedReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.CLOSED));
+        List<Reservation> scheduledReservations = reservationDao.findAllToInProgress();
+        List<Reservation> inProgressReservations = reservationDao.findAllToClosed();
+        List<Reservation> closedReservations = reservationDao.findAllToEntering();
+        List<Reservation> enteringReservations = reservationDao.findAllToEntered();
 
         reservationDao.updateReservationStatusToInProgress();
         reservationDao.updateReservationStatusToClosed();
+        reservationDao.updateReservationStatusToEntering();
+        reservationDao.updateReservationStatusToEntered();
+
+        scheduledReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.IN_PROGRESS));
+        inProgressReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.CLOSED));
+        closedReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.ENTERED));
+        enteringReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.ENTERING));
     }
 
-    private void logChangedReservations(Reservation reservation, ReservationStatus status) {
+    private void logChangedReservations(Reservation reservation, ReservationStatus reservationStatus) {
         String format = "Changing reservation status to {}. [Reservation ID: {}]";
-        switch (status) {
-            case IN_PROGRESS -> log.info(format, ReservationStatus.IN_PROGRESS.name(), reservation.getReservationId());
-            case CLOSED -> log.info(format, ReservationStatus.CLOSED.name(), reservation.getReservationId());
-            default -> throw new IllegalArgumentException("Unknown ReservationStatus code: " + status);
-        }
+        log.info(format, reservationStatus.name(), reservation.getReservationId());
     }
 }

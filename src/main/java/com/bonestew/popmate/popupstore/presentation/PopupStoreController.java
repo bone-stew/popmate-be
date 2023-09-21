@@ -15,11 +15,13 @@ import com.bonestew.popmate.popupstore.presentation.dto.StoreRelatedImages;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
+import com.bonestew.popmate.popupstore.presentation.dto.*;
+import com.bonestew.popmate.user.domain.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,9 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreHomeResponse;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreDetailResponse;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoresResponse;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -122,6 +122,58 @@ public class PopupStoreController {
             storeRelatedImages.setPopupStoreItemImageList(storeItemImageList);
         }
         return ApiResponse.success(storeRelatedImages);
+    }
+
+    @PostMapping(value = "/new", consumes = {"multipart/form-data"})
+    public ApiResponse<Long> createPopupStore(@RequestPart(value = "storeInfo") PopupStoreCreateRequest popupStoreCreateRequest,
+                                              @RequestPart("storeImageFiles") List<MultipartFile> storeImageFiles,
+                                              @RequestPart(value = "storeItemImageFiles", required = false) List<MultipartFile> storeItemImageFiles,
+                                              @AuthenticationPrincipal PopmateUser popmateUser) {
+//        log.info("PopupStoreCreateRequest {}", popupStoreCreateRequest.toString());
+        Long userId;
+        if (popmateUser == null) {
+            userId = null;
+        } else {
+            userId = popmateUser.getUserId();
+        }
+        List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
+        List<String> storeItemImageList = new ArrayList<>();
+        if (storeItemImageFiles != null) {
+            storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
+        }
+//        popupStoreCreateRequest.setPopupStoreImageList(storeImageList);
+//        popupStoreCreateRequest.setPopupStoreItemImageList(storeItemImageList);
+        Long storeId = popupStoreService.postNewPopupStore(popupStoreCreateRequest, userId, storeImageList, storeItemImageList);
+        return ApiResponse.success(storeId);
+    }
+
+    @GetMapping("/{popupStoreId}/edit")
+    public ApiResponse<PopupStoreInfoResponse> getPopupStoreInfoForAdmin(@PathVariable("popupStoreId") Long popupStoreId
+    ) {
+
+        List<PopupStoreInfo> popupStoreInfoList = popupStoreService.getPopupStoreDetailForAdmin(popupStoreId);
+        return ApiResponse.success(PopupStoreInfoResponse.from(popupStoreInfoList));
+    }
+
+    @PutMapping("/{popupStoreId}")
+    public ApiResponse<String> updatePopupStore(@RequestBody PopupStoreUpdateRequest popupStoreUpdateRequest,
+                                                @AuthenticationPrincipal PopmateUser popmateUser) {
+        Long userId;
+        if (popmateUser == null) {
+            userId = null;
+        } else {
+            userId = popmateUser.getUserId();
+        }
+        log.info(popupStoreUpdateRequest.toString());
+        popupStoreService.updatePopupStore(popupStoreUpdateRequest, userId);
+        return ApiResponse.success("success");
+    }
+
+    @Secured({"ROLE_MANAGER", "ROLE_STAFF"})
+    @GetMapping("/me")
+    public ApiResponse<List<MyStoreResponse>> myStore(@AuthenticationPrincipal PopmateUser user) {
+        log.info(user.getAuthorities().toString());
+        return ApiResponse.success(popupStoreService.getPopupStoresByAuth(user));
     }
 
     @PostMapping(value = "/new", consumes = {"multipart/form-data"})

@@ -4,11 +4,9 @@ import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.Wifi;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface ReservationDao {
@@ -29,6 +27,10 @@ public interface ReservationDao {
 
     List<Reservation> findAllToClosed();
 
+    List<Reservation> findAllToEntering();
+
+    List<Reservation> findAllToEntered();
+
     List<Reservation> findByVisitEndTimeGreaterThanEqualAndPopupStoreId(Long popupStoreId);
 
     List<Wifi> findWifiById(Long reservationId);
@@ -38,4 +40,8 @@ public interface ReservationDao {
     void updateReservationStatusToInProgress();
 
     void updateReservationStatusToClosed();
+
+    void updateReservationStatusToEntering();
+
+    void updateReservationStatusToEntered();
 }

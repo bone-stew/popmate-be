@@ -7,8 +7,8 @@ import java.util.List;
 public record PopupStoreHomeResponse(
         List<BannerImgResponse> banners,
         List<PopupStoreVisitedResponse> popupStoresVisitedBy,
-        List<PopupStoreResponse> popupStoresRecommend,
-        List<PopupStoreResponse> popupStoresEndingSoon
+        List<PopupStoreListItemResponse> popupStoresRecommend,
+        List<PopupStoreListItemResponse> popupStoresEndingSoon
 ) {
 
     public static PopupStoreHomeResponse of(List<Banner> bannerList,
@@ -18,9 +18,9 @@ public record PopupStoreHomeResponse(
         List<BannerImgResponse> bannerImgResponses = bannerList.stream().map(BannerImgResponse::from).toList();
         List<PopupStoreVisitedResponse> popupStoresVisitedByResponses = popupStoresVisitedByList.stream()
                 .map(PopupStoreVisitedResponse::from).toList();
-        List<PopupStoreResponse> popupStoresRecommendResponses = popupStoresRecommendList.stream().map(PopupStoreResponse::from)
+        List<PopupStoreListItemResponse> popupStoresRecommendResponses = popupStoresRecommendList.stream().map(PopupStoreListItemResponse::from)
                 .toList();
-        List<PopupStoreResponse> popupStoresEndingSoonResponses = popupStoresEndingSoonList.stream().map(PopupStoreResponse::from)
+        List<PopupStoreListItemResponse> popupStoresEndingSoonResponses = popupStoresEndingSoonList.stream().map(PopupStoreListItemResponse::from)
                 .toList();
 
         return new PopupStoreHomeResponse(
