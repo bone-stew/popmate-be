@@ -47,11 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         String jwtToken = authHeader.substring(7);
         if (StringUtils.hasText(jwtToken) && jwtService.validateToken(jwtToken)) {
-//            User user = jwtService.getUserInfo(jwtToken);
             UserDetails userDetail = userDetailsService.loadUserByUsername(String.valueOf(jwtService.getUserInfo(jwtToken).getUserId()));
-//            Role role = userDao.getRole(user.getUserId());
-//            List<Role> authority = List.of(role);
-//            PopmateUser popmateUser = new PopmateUser(user.getUserId(), user.getNickname(), authority);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetail, jwtToken, userDetail.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
