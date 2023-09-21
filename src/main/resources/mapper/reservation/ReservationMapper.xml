@@ -96,6 +96,22 @@
     ]]>
   </select>
 
+  <select id="findAllToEntering" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE status = 2
+      <![CDATA[ AND visit_start_time <= SYSDATE ]]>
+      AND visit_end_time > SYSDATE
+  </select>
+
+  <select id="findAllToEntered" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE status = 3
+      <![CDATA[ AND visit_end_time <= SYSDATE ]]>
+  </select>
+
+  <!-- 예약 진행 처리 -->
   <update id="updateReservationStatusToInProgress">
     UPDATE tb_reservation
     SET status = 1
@@ -104,11 +120,30 @@
       AND end_time > SYSDATE
   </update>
 
+  <!-- 예약 마감 처리 -->
   <update id="updateReservationStatusToClosed">
     UPDATE tb_reservation
     SET status = 2
     WHERE (status = 0 OR status = 1)
         <![CDATA[ AND end_time <= SYSDATE
+    ]]>
+  </update>
+
+  <!-- 입장 중 처리 -->
+  <update id="updateReservationStatusToEntering">
+    UPDATE tb_reservation
+    SET status = 3
+    WHERE status = 2
+      <![CDATA[ AND visit_start_time <= SYSDATE ]]>
+      AND visit_end_time > SYSDATE
+  </update>
+
+  <!-- 입장 마감 처리 -->
+  <update id="updateReservationStatusToEntered">
+    UPDATE tb_reservation
+    SET status = 4
+    WHERE (status = 3 OR status = 2)
+      <![CDATA[ AND visit_end_time <= SYSDATE
     ]]>
   </update>
 
