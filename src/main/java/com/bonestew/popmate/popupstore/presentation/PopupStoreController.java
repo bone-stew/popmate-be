@@ -15,11 +15,13 @@ import com.bonestew.popmate.popupstore.presentation.dto.StoreRelatedImages;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
+import com.bonestew.popmate.popupstore.presentation.dto.*;
+import com.bonestew.popmate.user.domain.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,9 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreHomeResponse;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreDetailResponse;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoresResponse;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -169,5 +169,11 @@ public class PopupStoreController {
         return ApiResponse.success("success");
     }
 
+    @Secured({"ROLE_MANAGER", "ROLE_STAFF"})
+    @GetMapping("/me")
+    public ApiResponse<List<MyStoreResponse>> myStore(@AuthenticationPrincipal PopmateUser user) {
+        log.info(user.getAuthorities().toString());
+        return ApiResponse.success(popupStoreService.getPopupStoresByAuth(user));
+    }
 
 }

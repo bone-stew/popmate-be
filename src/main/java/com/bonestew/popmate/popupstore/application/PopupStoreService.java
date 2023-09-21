@@ -1,5 +1,6 @@
 package com.bonestew.popmate.popupstore.application;
 
+import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
@@ -8,10 +9,8 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreRepository;
-import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
-import com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto;
-import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
-import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
+import com.bonestew.popmate.popupstore.persistence.dto.*;
+import com.bonestew.popmate.popupstore.presentation.dto.MyStoreResponse;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
@@ -26,6 +25,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.bonestew.popmate.user.domain.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -161,6 +163,17 @@ public class PopupStoreService {
         log.info("sorted: {}", pageable.getSort());
         return popupStoreDao.selectPopupStoresByQuery(dto);
     }
+
+    public List<MyStoreResponse> getPopupStoresByAuth (PopmateUser user) {
+        AuthDto authDto = new AuthDto(user.getUserId(), null);
+        if(user.getAuthorities().contains(Role.ROLE_MANAGER)) {
+            authDto = new AuthDto(user.getUserId(), Role.ROLE_MANAGER);
+        } else if (user.getAuthorities().contains(Role.ROLE_STAFF)) {
+            authDto = new AuthDto(user.getUserId(), Role.ROLE_STAFF);
+        }
+        return popupStoreDao.selectPopupStoreByAuth(authDto).stream().map(MyStoreResponse::from).collect(Collectors.toList());
+    }
+  
     public Long postNewPopupStore(PopupStoreCreateRequest popupStoreCreateRequest, Long userId, List<String> storeImageList,
                                   List<String> storeItemImageList) {
         User user = new User();
