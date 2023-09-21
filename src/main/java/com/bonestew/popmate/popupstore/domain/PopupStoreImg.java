@@ -14,6 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class PopupStoreImg {
 
+    private PopupStore popupStore;
     private Long popupStoreImgId;
     private String imgUrl;
     private LocalDateTime createdAt;

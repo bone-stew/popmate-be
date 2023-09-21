@@ -5,9 +5,12 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.bonestew.popmate.popupstore.config.FolderType;
+import com.bonestew.popmate.popupstore.exception.ImageUploadFailedException;
 import com.bonestew.popmate.popupstore.config.exception.AwsS3Exception;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,20 @@ public class AwsFileService implements FileService {
         } catch (SdkClientException | IOException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<String> uploadFiles(List<MultipartFile> multipartFileList, FolderType folderType) {
+        List<String> urlList = new ArrayList<>();
+        try {
+            for(MultipartFile file: multipartFileList){
+                Optional<String> imgUrl = upload(file, folderType);
+                urlList.add(imgUrl.get());
+            }
+        } catch (SdkClientException e) {
+            throw new ImageUploadFailedException();
+        }
+        return urlList;
     }
 
     @Override
