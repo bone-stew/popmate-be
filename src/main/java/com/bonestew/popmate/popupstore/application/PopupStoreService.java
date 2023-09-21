@@ -8,7 +8,6 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.exception.PopupStoreNotFoundException;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreRepository;
-import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreCreateDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
@@ -19,6 +18,7 @@ import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreUpdateRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
+import com.bonestew.popmate.user.domain.User;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -162,10 +161,14 @@ public class PopupStoreService {
         log.info("sorted: {}", pageable.getSort());
         return popupStoreDao.selectPopupStoresByQuery(dto);
     }
-    public Long postNewPopupStore(PopupStoreCreateRequest popupStoreCreateRequest, List<String> storeImageList,
-            List<String> storeItemImageList) {
+    public Long postNewPopupStore(PopupStoreCreateRequest popupStoreCreateRequest, Long userId, List<String> storeImageList,
+                                  List<String> storeItemImageList) {
+        User user = new User();
+        user.setUserId(userId);
+        popupStoreCreateRequest.getPopupStore().setUser(user);
         popupStoreCreateRequest.getPopupStore().setBannerImgUrl(storeImageList.get(0));
         storeImageList.remove(0);
+        log.info("USER ID{}", popupStoreCreateRequest.getPopupStore().getUser().getUserId());
 //        PopupStoreCreateDto popupStoreCreateDto = new PopupStoreCreateDto();
 //        popupStoreCreateDto.setPopupStore(popupStoreCreateRequest.getPopupStore());
         popupStoreDao.insertPopupStore(popupStoreCreateRequest.getPopupStore());
@@ -205,9 +208,14 @@ public class PopupStoreService {
         return popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
     }
 
-    public void updatePopupStore(PopupStoreUpdateRequest popupStoreUpdateRequest) {
+    public void updatePopupStore(PopupStoreUpdateRequest popupStoreUpdateRequest, Long userId) {
         List<String> storeImgList = popupStoreUpdateRequest.getStoreImageList();
+
         PopupStore popupStore = popupStoreUpdateRequest.getPopupStore();
+        User user = new User();
+        user.setUserId(userId);
+        popupStoreUpdateRequest.getPopupStore().setUser(user);
+        log.info("USER ID{}", popupStoreUpdateRequest.getPopupStore().getUser().getUserId());
         popupStoreUpdateRequest.getPopupStore().setBannerImgUrl(storeImgList.get(0));
         storeImgList.remove(0);
         if (!storeImgList.isEmpty()) {

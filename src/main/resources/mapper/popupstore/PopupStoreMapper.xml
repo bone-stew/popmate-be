@@ -71,7 +71,7 @@
   <resultMap id="popupStoreItemMap" type="PopupStoreItem">
     <result column="popup_store_item_id" property="popupStoreItemId"/>
     <result column="name" property="name"/>
-    <result column="img_url" property="imgUrl"/>
+    <result column="store_item_img_url" property="imgUrl"/>
     <result column="amount" property="amount"/>
     <result column="stock" property="stock"/>
     <result column="order_limit" property="orderLimit"/>
@@ -234,7 +234,25 @@
   </select>
 
   <select id="findPopupStoreDetailByIdForAdmin" parameterType="long" resultMap="popupStoreInfoMap">
-    select *
+<!--    select *-->
+<!--    from tb_popup_store ps left outer join tb_popup_store_sns pss-->
+<!--    on ps.popup_store_id = pss.popup_store_id-->
+<!--    left outer join tb_popup_store_img psi-->
+<!--    on ps.popup_store_id = psi.popup_store_id-->
+<!--    left outer join tb_popup_store_item psii-->
+<!--    on ps.popup_store_id = psii.popup_store_id-->
+<!--    where ps.popup_store_id = #{popupStoreId}-->
+
+    select ps.popup_store_id, ps.user_id, ps.department_id, ps.title,
+    ps.organizer, ps.place_detail, ps.open_date, ps.close_date,
+    ps.description, ps.event_description, ps.banner_img_url,
+    ps.open_time, ps.close_time, ps.max_capacity, ps.interval_capacity,
+    ps.reservation_interval, ps.reservation_enabled,
+    ps.team_size_limit, ps.created_at, ps.chat_room_id,
+    ps.views, pss.sns_id, pss.platform, pss.url, psi.popup_store_img_id,
+    psi.img_url, psii.popup_store_item_id, psii.name,
+    psii.amount, psii.img_url as store_item_img_url, psii.stock,
+    psii.order_limit
     from tb_popup_store ps left outer join tb_popup_store_sns pss
     on ps.popup_store_id = pss.popup_store_id
     left outer join tb_popup_store_img psi
@@ -242,6 +260,8 @@
     left outer join tb_popup_store_item psii
     on ps.popup_store_id = psii.popup_store_id
     where ps.popup_store_id = #{popupStoreId}
+
+
   </select>
 
 

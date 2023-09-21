@@ -59,11 +59,11 @@ public class PopupStoreController {
     ) {
         log.info("팝업스토어 목록 조회 API");
         List<PopupStore> popupStoreList = popupStoreService.getPopupStores(isOpeningSoon,
-                                                                           startDateText,
-                                                                           endDateText,
-                                                                           keyword,
-                                                                           offSetRows,
-                                                                           rowsToGet);
+                startDateText,
+                endDateText,
+                keyword,
+                offSetRows,
+                rowsToGet);
         return ApiResponse.success(PopupStoresResponse.from(popupStoreList));
     }
 
@@ -87,12 +87,12 @@ public class PopupStoreController {
         List<PopupStore> popupStoresRecommendList = popupStoreService.getPopupStoresRecommend();
         List<PopupStore> popupStoresEndingSoonList = popupStoreService.getPopupStoresEndingSoon();
         return ApiResponse.success(PopupStoreHomeResponse.of(bannerList, popupStoresVisitedByList, popupStoresRecommendList,
-                                                             popupStoresEndingSoonList));
+                popupStoresEndingSoonList));
     }
 
     @GetMapping("/{popupStoreId}")
     public ApiResponse<PopupStoreDetailResponse> getPopupStoreInfo(@PathVariable("popupStoreId") Long popupStoreId,
-            @AuthenticationPrincipal PopmateUser popmateUser) {
+                                                                   @AuthenticationPrincipal PopmateUser popmateUser) {
 
         Long userId;
         if (popmateUser == null) {
@@ -113,8 +113,6 @@ public class PopupStoreController {
             @RequestPart(value = "storeImageFiles", required = false) List<MultipartFile> storeImageFiles,
             @RequestPart(value = "storeItemImageFiles", required = false) List<MultipartFile> storeItemImageFiles) {
         StoreRelatedImages storeRelatedImages = new StoreRelatedImages();
-//        log.info("storeImageFiles {}", storeImageFiles.toString() );
-//        log.info("storeItemImageFiles {}",storeItemImageFiles.toString() );
         if (storeImageFiles != null) {
             List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
             storeRelatedImages.setPopupStoreImageList(storeImageList);
@@ -123,30 +121,21 @@ public class PopupStoreController {
             List<String> storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
             storeRelatedImages.setPopupStoreItemImageList(storeItemImageList);
         }
-
-//        Optional<String> bannerImgUrl = awsFileService.upload(multipartFile, FolderType.BANNERS);
-//        if (bannerImgUrl.isPresent()) {
-//            return ApiResponse.success(bannerImgUrl.get());
-//        }
-//        return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
         return ApiResponse.success(storeRelatedImages);
     }
 
-//    @DeleteMapping("/image")
-//    public ApiResponse<String> deleteStoreImage(@RequestParam MultipartFile multipartFile) {
-//        Optional<String> bannerImgUrl = awsFileService.upload(multipartFile, FolderType.BANNERS);
-//        if (bannerImgUrl.isPresent()) {
-//            return ApiResponse.success(bannerImgUrl.get());
-//        }
-//        return ApiResponse.failure(ResultCode.FAILURE, "파일 업로드 에러");
-//    }
-
-
     @PostMapping(value = "/new", consumes = {"multipart/form-data"})
     public ApiResponse<Long> createPopupStore(@RequestPart(value = "storeInfo") PopupStoreCreateRequest popupStoreCreateRequest,
-            @RequestPart("storeImageFiles") List<MultipartFile> storeImageFiles,
-            @RequestPart(value = "storeItemImageFiles", required = false) List<MultipartFile> storeItemImageFiles) {
-        log.info("PopupStoreCreateRequest {}", popupStoreCreateRequest.toString());
+                                              @RequestPart("storeImageFiles") List<MultipartFile> storeImageFiles,
+                                              @RequestPart(value = "storeItemImageFiles", required = false) List<MultipartFile> storeItemImageFiles,
+                                              @AuthenticationPrincipal PopmateUser popmateUser) {
+//        log.info("PopupStoreCreateRequest {}", popupStoreCreateRequest.toString());
+        Long userId;
+        if (popmateUser == null) {
+            userId = null;
+        } else {
+            userId = popmateUser.getUserId();
+        }
         List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
         List<String> storeItemImageList = new ArrayList<>();
         if (storeItemImageFiles != null) {
@@ -154,20 +143,29 @@ public class PopupStoreController {
         }
 //        popupStoreCreateRequest.setPopupStoreImageList(storeImageList);
 //        popupStoreCreateRequest.setPopupStoreItemImageList(storeItemImageList);
-        Long storeId = popupStoreService.postNewPopupStore(popupStoreCreateRequest, storeImageList, storeItemImageList);
+        Long storeId = popupStoreService.postNewPopupStore(popupStoreCreateRequest, userId, storeImageList, storeItemImageList);
         return ApiResponse.success(storeId);
     }
 
     @GetMapping("/{popupStoreId}/edit")
-    public ApiResponse<PopupStoreInfoResponse> getPopupStoreInfoForAdmin(@PathVariable("popupStoreId") Long popupStoreId) {
+    public ApiResponse<PopupStoreInfoResponse> getPopupStoreInfoForAdmin(@PathVariable("popupStoreId") Long popupStoreId
+    ) {
+
         List<PopupStoreInfo> popupStoreInfoList = popupStoreService.getPopupStoreDetailForAdmin(popupStoreId);
         return ApiResponse.success(PopupStoreInfoResponse.from(popupStoreInfoList));
     }
 
     @PutMapping("/{popupStoreId}")
-    public ApiResponse<String> updatePopupStore(@RequestBody PopupStoreUpdateRequest popupStoreUpdateRequest) {
+    public ApiResponse<String> updatePopupStore(@RequestBody PopupStoreUpdateRequest popupStoreUpdateRequest,
+                                                @AuthenticationPrincipal PopmateUser popmateUser) {
+        Long userId;
+        if (popmateUser == null) {
+            userId = null;
+        } else {
+            userId = popmateUser.getUserId();
+        }
         log.info(popupStoreUpdateRequest.toString());
-        popupStoreService.updatePopupStore(popupStoreUpdateRequest);
+        popupStoreService.updatePopupStore(popupStoreUpdateRequest, userId);
         return ApiResponse.success("success");
     }
 
