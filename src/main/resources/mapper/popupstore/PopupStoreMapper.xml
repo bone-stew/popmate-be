@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bonestew.popmate.popupstore.persistence.PopupStoreDao">
 
   <resultMap id="popupStoreMap" type="PopupStore">
@@ -75,18 +75,18 @@
 
   <select id="selectPopupStoresByQuery" resultMap="popupStoreMap" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto">
     SELECT POPUP_STORE_ID, TITLE, NAME, OPEN_DATE, CLOSE_DATE, ORGANIZER, d.CREATED_AT as CREATED_AT, COUNT(*) over () total
-      FROM TB_POPUP_STORE s
-      JOIN TB_DEPARTMENT d
-        ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
+    FROM TB_POPUP_STORE s
+    JOIN TB_DEPARTMENT d
+    ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
     <where>
       <if test="request.type == 0 or request.type == 1">
-          OR s.TITLE LIKE '%' || #{request.query} || '%'
+        OR s.TITLE LIKE '%' || #{request.query} || '%'
       </if>
       <if test="request.type == 0 or request.type == 2">
-          OR d.name LIKE '%' || #{request.query} || '%'
+        OR d.name LIKE '%' || #{request.query} || '%'
       </if>
       <if test="request.type == 0 or request.type == 3">
-          OR s.ORGANIZER LIKE '%' || #{request.query} || '%'
+        OR s.ORGANIZER LIKE '%' || #{request.query} || '%'
       </if>
     </where>
     <if test="pageable.sort.sorted">
@@ -100,11 +100,11 @@
   </select>
 
   <select id="selectPopupStores" parameterType="com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest"
-    resultMap="popupStoreMap">
+          resultMap="popupStoreMap">
     SELECT *
     FROM tb_popup_store s
     JOIN TB_DEPARTMENT d
-      ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
+    ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
     <where>
       <if test="keyword != null and keyword != ''">
         AND title LIKE '%' || #{keyword} || '%'
@@ -123,7 +123,7 @@
   </select>
 
 
-<!--  <select id="selectBanners" resultType="Banner">-->
+  <!--  <select id="selectBanners" resultType="Banner">-->
   <select id="selectBanners" resultMap="bannerMap">
     SELECT * FROM tb_banner
   </select>
@@ -132,57 +132,57 @@
     select popup_store_id, title, banner_img_url
     from tb_popup_store
     where popup_store_id in (
-    select distinct tr.popup_store_id
-    from tb_reservation tr
-    join tb_user_reservation tur
-    on tr.reservation_id = tur.reservation_id
-    where tur.user_id = #{userId}
-    and tur.status = 1
-    and tur.created_at = trunc(sysdate))
+      select distinct tr.popup_store_id
+      from tb_reservation tr
+             join tb_user_reservation tur
+                  on tr.reservation_id = tur.reservation_id
+      where tur.user_id = #{userId}
+        and tur.status = 1
+        and tur.created_at = trunc(sysdate))
   </select>
 
   <select id="selectPopupStoresToRecommend" resultType="PopupStore">
     SELECT
-    popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
+      popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
     FROM
-    tb_popup_store
+      tb_popup_store
     where sysdate &lt;= close_date
     ORDER BY views
-    FETCH FIRST 5 ROWS ONLY
+      FETCH FIRST 5 ROWS ONLY
   </select>
 
   <select id="selectPopupStoresEndingSoon" resultType="PopupStore">
     SELECT
-    popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
+      popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
     FROM
-    tb_popup_store
+      tb_popup_store
     where sysdate &lt;= close_date
     order by close_date
-    fetch FIRST 5 ROWS ONLY
+      fetch FIRST 5 ROWS ONLY
   </select>
 
   <select id="findPopupStoreDetailById" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto"
-    resultMap="popupStoreDetailMap">
+          resultMap="popupStoreDetailMap">
     select *
     from tb_popup_store ps
-    left join tb_popup_store_sns pss on
-    ps.popup_store_id = pss.popup_store_id
-    left join tb_popup_store_img psi on
-    ps.popup_store_id = psi.popup_store_id
-    left join tb_department td on
-    ps.department_id = td.department_id
+           left join tb_popup_store_sns pss on
+      ps.popup_store_id = pss.popup_store_id
+           left join tb_popup_store_img psi on
+      ps.popup_store_id = psi.popup_store_id
+           left join tb_department td on
+      ps.department_id = td.department_id
     where ps.popup_store_id = #{popupStoreId}
   </select>
 
   <select id="findUserReservationById" parameterType="long" resultType="UserReservationStatus">
     select ur.status
     from tb_user_reservation ur
-    join tb_reservation r
-    on ur.reservation_id = r.reservation_id
+           join tb_reservation r
+                on ur.reservation_id = r.reservation_id
     where ur.user_id = #{userId} and r.popup_store_id = #{popupStoreId}
-    and ur.created_at = trunc(sysdate)
+      and ur.created_at = trunc(sysdate)
     order by ur.created_at desc
-    fetch first row only
+      fetch first row only
   </select>
 
   <update id="batchUpdatePopupStoreViews" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto">
@@ -197,8 +197,19 @@
     select *
     FROM tb_popup_store
     where department_id = (select department_id from tb_popup_store where popup_store_id = #{popupStoreId})
-    and popup_store_id != #{popupStoreId}
-    and sysdate &lt;= close_date
+      and popup_store_id != #{popupStoreId}
+      and sysdate &lt;= close_date
   </select>
 
+  <select id="selectPopupStoreByAuth" parameterType="com.bonestew.popmate.popupstore.persistence.dto.AuthDto" resultType="PopupStore">
+    SELECT POPUP_STORE_ID, TITLE
+    FROM TB_POPUP_STORE
+    <where>
+      <if test="role.name().equals('ROLE_STAFF')">
+        USER_ID = #{userId}
+      </if>
+      AND sysdate between open_date and close_date
+    </where>
+    ORDER BY CREATED_AT desc
+  </select>
 </mapper>
