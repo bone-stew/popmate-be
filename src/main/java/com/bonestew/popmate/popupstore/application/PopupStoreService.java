@@ -124,9 +124,9 @@ public class PopupStoreService {
         if (userId == null) {
             popupStoreDetailDtoList.get(0).setUserReservationStatus(UserReservationStatus.CANCELED);
         } else {
-            Optional<UserReservationStatus> userReservationStatus = popupStoreDao.findUserReservationById(popupStoreQueryDto);
-            if (userReservationStatus.isPresent()) {
-                popupStoreDetailDtoList.get(0).setUserReservationStatus(userReservationStatus.get());
+            Boolean userReservationExists = popupStoreDao.userReservationExistsById(popupStoreQueryDto);
+            if (userReservationExists) {
+                popupStoreDetailDtoList.get(0).setUserReservationStatus(UserReservationStatus.VISITED);
             } else {
                 popupStoreDetailDtoList.get(0).setUserReservationStatus(UserReservationStatus.CANCELED);
             }
@@ -186,47 +186,6 @@ public class PopupStoreService {
         }
         return popupStoreDao.selectPopupStoreByAuth(authDto).stream().map(MyStoreResponse::from).collect(Collectors.toList());
     }
-
-    public Long postNewPopupStore(PopupStoreCreateRequest popupStoreCreateRequest, Long userId, List<String> storeImageList,
-                                  List<String> storeItemImageList) {
-        User user = new User();
-        user.setUserId(userId);
-        popupStoreCreateRequest.getPopupStore().setUser(user);
-        popupStoreCreateRequest.getPopupStore().setBannerImgUrl(storeImageList.get(0));
-        storeImageList.remove(0);
-        log.info("USER ID{}", popupStoreCreateRequest.getPopupStore().getUser().getUserId());
-//        PopupStoreCreateDto popupStoreCreateDto = new PopupStoreCreateDto();
-//        popupStoreCreateDto.setPopupStore(popupStoreCreateRequest.getPopupStore());
-        popupStoreDao.insertPopupStore(popupStoreCreateRequest.getPopupStore());
-        Long storeId = popupStoreCreateRequest.getPopupStore().getPopupStoreId();
-        PopupStore popupStore = new PopupStore();
-        popupStore.setPopupStoreId(storeId);
-        if (!storeImageList.isEmpty()) {
-            for (String url : storeImageList) {
-                PopupStoreImg storeImg = new PopupStoreImg();
-                storeImg.setPopupStore(popupStore);
-                storeImg.setImgUrl(url);
-                popupStoreDao.insertPopupStoreImg(storeImg);
-            }
-        }
-        if (!popupStoreCreateRequest.getPopupStoreItemList().isEmpty()) {
-            for (int i = 0; i < popupStoreCreateRequest.getPopupStoreItemList().size(); i++) {
-                PopupStoreItem popupStoreItem = popupStoreCreateRequest.getPopupStoreItemList().get(i);
-                popupStoreItem.setImgUrl(storeItemImageList.get(i));
-                popupStoreItem.setPopupStore(popupStore);
-                popupStoreDao.insertPopupStoreItem(popupStoreItem);
-            }
-        }
-        if (!popupStoreCreateRequest.getPopupStoreSnsList().isEmpty()) {
-            for (PopupStoreSns popupStoreSns : popupStoreCreateRequest.getPopupStoreSnsList()) {
-                popupStoreSns.setPopupStore(popupStore);
-                popupStoreDao.insertPopupStoreSns(popupStoreSns);
-            }
-        }
-        return storeId;
-    }
-
-
 
     public void updatePopupStore(PopupStoreUpdateRequest popupStoreUpdateRequest, Long userId) {
         List<String> storeImgList = popupStoreUpdateRequest.getStoreImageList();
