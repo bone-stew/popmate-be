@@ -277,71 +277,6 @@
   </select>
 
 
-  <insert id="insertPopupStore" parameterType="PopupStore">
-    <selectKey keyColumn="popup_store_id" keyProperty="popupStoreId" resultType="Long" order="AFTER">
-      select TB_POPUP_STORE_SEQ.CURRVAL from dual
-    </selectKey>
-    INSERT INTO tb_popup_store (
-    user_id,
-    department_id,
-    title,
-    organizer,
-    place_detail,
-    description,
-    event_description,
-    banner_img_url,
-    entry_fee,
-    max_capacity,
-    reservation_enabled,
-    reservation_interval,
-    interval_capacity,
-    team_size_limit,
-    open_date,
-    close_date,
-    open_time,
-    close_time,
-    views
-    )
-    VALUES (
-    #{user.userId},
-    #{department.departmentId},
-    #{title},
-    #{organizer},
-    #{placeDetail},
-    #{description},
-    #{eventDescription},
-    #{bannerImgUrl},
-    #{entryFee},
-    #{maxCapacity},
-    #{reservationEnabled},
-    #{reservationInterval},
-    #{intervalCapacity},
-    #{teamSizeLimit},
-    #{openDate},
-    #{closeDate},
-    #{openTime},
-    #{closeTime},
-    #{views}
-    )
-  </insert>
-
-  <insert id="insertPopupStoreImg" parameterType="PopupStoreImg">
-     insert into tb_popup_store_img (popup_store_id, img_url)
-      values (#{popupStore.popupStoreId}, #{imgUrl})
-  </insert>
-
-  <insert id="insertPopupStoreItem" parameterType="PopupStoreItem">
-    INSERT INTO tb_popup_store_item (popup_store_id, name, img_url, amount, stock, order_limit)
-    VALUES
-      (#{popupStore.popupStoreId}, #{name}, #{imgUrl}, #{amount}, #{stock}, #{orderLimit})
-  </insert>
-
-  <insert id="insertPopupStoreSns" parameterType="PopupStoreSns">
-    INSERT INTO tb_popup_store_sns (popup_store_id, platform, url)
-    VALUES
-      (#{popupStore.popupStoreId}, #{platform}, #{url})
-  </insert>
-
   <update id="updatePopupStoreInfo" parameterType="PopupStore" >
     UPDATE tb_popup_store
     <set>
@@ -382,36 +317,6 @@
     WHERE popup_store_id = #{popupStoreId}
   </delete>
 
-  <select id="findPopupStoreDetailByIdForAdmin" parameterType="long" resultMap="popupStoreInfoMap">
-<!--    select *-->
-<!--    from tb_popup_store ps left outer join tb_popup_store_sns pss-->
-<!--    on ps.popup_store_id = pss.popup_store_id-->
-<!--    left outer join tb_popup_store_img psi-->
-<!--    on ps.popup_store_id = psi.popup_store_id-->
-<!--    left outer join tb_popup_store_item psii-->
-<!--    on ps.popup_store_id = psii.popup_store_id-->
-<!--    where ps.popup_store_id = #{popupStoreId}-->
-
-    select ps.popup_store_id, ps.user_id, ps.department_id, ps.title,
-    ps.organizer, ps.place_detail, ps.open_date, ps.close_date,
-    ps.description, ps.event_description, ps.banner_img_url,
-    ps.open_time, ps.close_time, ps.max_capacity, ps.interval_capacity,
-    ps.reservation_interval, ps.reservation_enabled,
-    ps.team_size_limit, ps.created_at, ps.chat_room_id,
-    ps.views, pss.sns_id, pss.platform, pss.url, psi.popup_store_img_id,
-    psi.img_url, psii.popup_store_item_id, psii.name,
-    psii.amount, psii.img_url as store_item_img_url, psii.stock,
-    psii.order_limit
-    from tb_popup_store ps left outer join tb_popup_store_sns pss
-    on ps.popup_store_id = pss.popup_store_id
-    left outer join tb_popup_store_img psi
-    on ps.popup_store_id = psi.popup_store_id
-    left outer join tb_popup_store_item psii
-    on ps.popup_store_id = psii.popup_store_id
-    where ps.popup_store_id = #{popupStoreId}
-
-
-  </select>
 
 
   <insert id="insertPopupStore" parameterType="PopupStore">
@@ -479,44 +384,7 @@
       (#{popupStore.popupStoreId}, #{platform}, #{url})
   </insert>
 
-  <update id="updatePopupStoreInfo" parameterType="PopupStore" >
-    UPDATE tb_popup_store
-    <set>
-      <if test="title != null">title = #{title},</if>
-      <if test="department != null">department_id = #{department.departmentId},</if>
-      <if test="organizer != null">organizer = #{organizer},</if>
-      <if test="placeDetail != null">place_detail = #{placeDetail},</if>
-      <if test="description != null">description = #{description},</if>
-      <if test="eventDescription != null">event_description = #{eventDescription},</if>
-      <if test="bannerImgUrl != null">banner_img_url = #{bannerImgUrl},</if>
-      <if test="entryFee != null">entry_fee = #{entryFee},</if>
-      <if test="maxCapacity != null">max_capacity = #{maxCapacity},</if>
-      <if test="reservationEnabled != null">reservation_enabled = #{reservationEnabled},</if>
-      <if test="reservationInterval != null">reservation_interval = #{reservationInterval},</if>
-      <if test="intervalCapacity != null">interval_capacity = #{intervalCapacity},</if>
-      <if test="teamSizeLimit != null">team_size_limit = #{teamSizeLimit},</if>
-      <if test="openDate != null">open_date = #{openDate},</if>
-      <if test="closeDate != null">close_date = #{closeDate},</if>
-      <if test="openTime != null">open_time = #{openTime},</if>
-      <if test="closeTime != null">close_time = #{closeTime},</if>
-      <if test="views != null">views = #{views},</if>
-    </set>
-    WHERE popup_store_id = #{popupStoreId}
-  </update>
 
-  <delete id="deleteStoreImageById" parameterType="long">
-    DELETE FROM tb_popup_store_img
-    WHERE popup_store_id = #{popupStoreId}
-  </delete>
 
-  <delete id="deleteStoreItemsById" parameterType="long">
-    DELETE FROM tb_popup_store_item
-    WHERE popup_store_id = #{popupStoreId}
-  </delete>
-
-  <delete id="deleteStoreSnsById" parameterType="long">
-    DELETE FROM tb_popup_store_sns
-    WHERE popup_store_id = #{popupStoreId}
-  </delete>
 
 </mapper>

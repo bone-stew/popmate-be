@@ -66,23 +66,6 @@ public interface PopupStoreDao {
 
     List<PopupStore> selectPopupStoreByAuth(AuthDto dto);
 
-    List<PopupStoreInfo> findPopupStoreDetailByIdForAdmin(Long popupStoreId);
 
-    void updatePopupStoreInfo(PopupStore popupStore);
-
-    void insertPopupStore(PopupStore popupStore);
-//    PopupStore insertPopupStore(PopupStoreCreateDto popupStoreCreateDto);
-
-    void insertPopupStoreImg(PopupStoreImg popupStoreImg);
-
-    void insertPopupStoreItem(PopupStoreItem popupStoreItemList);
-
-    void insertPopupStoreSns(PopupStoreSns popupStoreSnsList);
-
-    void deleteStoreImageById(Long popupStoreId);
-
-    void deleteStoreItemsById(Long popupStoreId);
-
-    void deleteStoreSnsById(Long popupStoreId);
 
 }
