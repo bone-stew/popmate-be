@@ -14,8 +14,12 @@ import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreUpdateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.StoreRelatedImages;
 import java.util.ArrayList;
 import java.util.Optional;
+
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,8 +41,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/popup-stores")
 @Slf4j
+@RequestMapping("/api/v1/popup-stores")
 public class PopupStoreController {
 
     private final PopupStoreService popupStoreService;
@@ -53,6 +57,7 @@ public class PopupStoreController {
             @RequestParam(value = "offSetRows", required = false) Integer offSetRows,
             @RequestParam(value = "rowsToGet", required = false) Integer rowsToGet
     ) {
+        log.info("팝업스토어 목록 조회 API");
         List<PopupStore> popupStoreList = popupStoreService.getPopupStores(isOpeningSoon,
                                                                            startDateText,
                                                                            endDateText,
@@ -60,6 +65,13 @@ public class PopupStoreController {
                                                                            offSetRows,
                                                                            rowsToGet);
         return ApiResponse.success(PopupStoresResponse.from(popupStoreList));
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<PopupStoresResponse> search(PopupStoreQueryRequest request, Pageable pageable) {
+        log.info("query: {}, pageable: {}", request, pageable);
+        var list = popupStoreService.getPopupStoresByQuery(request, pageable);
+        return ApiResponse.success(PopupStoresResponse.from(list));
     }
 
     @GetMapping("/home")
@@ -94,16 +106,6 @@ public class PopupStoreController {
                 PopupStoreDetailResponse.of(popupStoreDetailDtoList, popupStoreNearByList)
         );
     }
-
-//    @PostMapping("/banner")
-//    public ApiResponse<List<String>> addBanner(@RequestParam List<MultipartFile> multipartFiles) {
-//        List<String> bannerList = new ArrayList<>();
-//        for(MultipartFile file: multipartFiles){
-//            Optional<String> bannerImgUrl = awsFileService.upload(file, FolderType.BANNERS);
-//            bannerList.add(bannerImgUrl.get());
-//        }
-//        return ApiResponse.success(bannerList);
-//    }
 
 
     @PostMapping(value = "/{storeId}/images", consumes = {"multipart/form-data"})

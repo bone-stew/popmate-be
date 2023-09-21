@@ -15,4 +15,5 @@ public class OrderPlaceDetail {
     String title;
     String placeDetail;
     String placeDescription;
+    String bannerImgUrl;
 }

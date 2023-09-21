@@ -10,10 +10,12 @@ import com.bonestew.popmate.popupstore.persistence.PopupStoreDao;
 import com.bonestew.popmate.popupstore.persistence.PopupStoreRepository;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreCreateDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
+import com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreUpdateDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreUpdateRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
@@ -27,13 +29,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class PopupStoreService {
 
     private final PopupStoreDao popupStoreDao;
@@ -148,11 +152,16 @@ public class PopupStoreService {
         }
     }
 
-
     public List<PopupStore> getPopupStoresInDepartment(Long popupStoreId) {
         return popupStoreDao.selectPopupStoresNearBy(popupStoreId);
     }
 
+    public List<PopupStore> getPopupStoresByQuery(PopupStoreQueryRequest request, Pageable pageable) {
+        log.info("pageable: {}", pageable);
+        PopupStorePageDto dto = new PopupStorePageDto(pageable, request);
+        log.info("sorted: {}", pageable.getSort());
+        return popupStoreDao.selectPopupStoresByQuery(dto);
+    }
     public Long postNewPopupStore(PopupStoreCreateRequest popupStoreCreateRequest, List<String> storeImageList,
             List<String> storeItemImageList) {
         popupStoreCreateRequest.getPopupStore().setBannerImgUrl(storeImageList.get(0));
