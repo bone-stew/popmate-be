@@ -211,7 +211,8 @@ public class PopupStoreService {
             for (int i = 0; i < popupStoreUpdateRequest.getPopupStoreItemList().size(); i++) {
                 PopupStoreItem popupStoreItem = popupStoreUpdateRequest.getPopupStoreItemList().get(i);
                 popupStoreItem.setPopupStore(popupStore);
-                popupStoreDao.updatePopupStoreItem(popupStore.getPopupStoreId(), popupStoreItem);
+                log.info("POPUPSTOREITEM {}", popupStoreItem);
+                popupStoreDao.updatePopupStoreItem(new PopupStoreItemUpdateDto(popupStore.getPopupStoreId(), popupStoreItem));
             }
         }
         if (!popupStoreUpdateRequest.getPopupStoreSnsList().isEmpty()) {

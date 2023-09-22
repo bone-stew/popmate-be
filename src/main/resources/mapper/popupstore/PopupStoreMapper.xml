@@ -393,7 +393,7 @@
 
 
 
-  <update id="updatePopupStoreItem">
+  <update id="updatePopupStoreItem" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreItemUpdateDto">
     UPDATE tb_popup_store_item
     SET
       name = #{popupStoreItem.name},
