@@ -241,15 +241,15 @@
   </select>
 
   <select id="selectPopupStoreByAuth" parameterType="com.bonestew.popmate.popupstore.persistence.dto.AuthDto" resultType="PopupStore">
-    SELECT POPUP_STORE_ID, TITLE
+    SELECT POPUP_STORE_ID, TITLE, RESERVATION_ENABLED, SALES_ENABLED
     FROM TB_POPUP_STORE
     <where>
       <if test="role.name().equals('ROLE_STAFF')">
         USER_ID = #{userId}
       </if>
-      AND sysdate between open_date and close_date
+      AND SYSDATE BETWEEN OPEN_DATE AND CLOSE_DATE
     </where>
-    ORDER BY CREATED_AT desc
+    ORDER BY CREATED_AT DESC
   </select>
 
   <select id="findPopupStoreDetailByIdForAdmin" parameterType="long" resultMap="popupStoreInfoMap">
