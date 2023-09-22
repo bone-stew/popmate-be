@@ -200,8 +200,8 @@
                FROM tb_user_reservation ur
                       JOIN tb_reservation r ON ur.reservation_id = r.reservation_id
                       JOIN tb_popup_store ps ON r.popup_store_id = ps.popup_store_id
-               WHERE ps.popup_store_id = 1
-                 AND ur.user_id = 81
+               WHERE ps.popup_store_id = #{popupStoreId}
+                 AND ur.user_id = #{userId}
                  AND ur.status = 1
                  AND trunc(ur.created_at) = trunc(sysdate)
                )
