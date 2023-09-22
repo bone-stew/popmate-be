@@ -81,6 +81,7 @@ class PopupStoreControllerTest {
                         0,
                         50,
                         true,
+                        true,
                         30,
                         5,
                         10,
