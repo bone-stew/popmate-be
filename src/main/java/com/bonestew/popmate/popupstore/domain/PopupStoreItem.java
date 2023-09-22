@@ -18,6 +18,7 @@ public class PopupStoreItem {
     private PopupStore popupStore;
     private String name;
     private String imgUrl;
+    private Boolean isOnSale;
     private int amount;
     private int stock;
     private int orderLimit;

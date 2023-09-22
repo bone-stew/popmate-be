@@ -66,5 +66,7 @@ public interface PopupStoreDao {
     List<PopupStore> selectPopupStoreByAuth(AuthDto dto);
 
 
-    void updatePopupStoreItem(PopupStoreItemUpdateDto popupStoreItemUpdateDto);
+    void updatePopupStoreItem(List<PopupStoreItem> popupStoreItemList);
+
+    void updatePopupStoreItemSalesStatus(List<PopupStoreItem> popupStoreItemsToDelete);
 }

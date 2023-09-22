@@ -20,4 +20,5 @@ public class PopupStoreUpdateRequest {
     private List<String> storeImageList;
     private List<PopupStoreSns> popupStoreSnsList;
     private List<PopupStoreItem> popupStoreItemList;
+    private List<PopupStoreItem> popupStoreItemsToDelete;
 }

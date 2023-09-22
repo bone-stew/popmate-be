@@ -29,6 +29,7 @@ public class PopupStore {
     private int entryFee;
     private int maxCapacity;
     private Boolean reservationEnabled;
+    private Boolean salesEnabled;
     private int reservationInterval;
     private int intervalCapacity;
     private int teamSizeLimit;
