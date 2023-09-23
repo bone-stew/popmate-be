@@ -3,6 +3,7 @@ package com.bonestew.popmate.reservation.presentation;
 import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
+import com.bonestew.popmate.reservation.application.dto.GuestLimitUpdateRequest;
 import com.bonestew.popmate.reservation.presentation.dto.MyReservationResponse;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.presentation.dto.ActiveReservationResponse;
@@ -16,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -99,5 +102,18 @@ public class ReservationInformationController {
         return ApiResponse.success(
             TodayReservationResponse.of(activeReservation, reservations)
         );
+    }
+
+    /**
+     * 예약 인원 수 수정 (관리자)
+     *
+     * @param reservationId      예약 식별자
+     * @param GuestLimitUpdateRequest 예약 요청 정보
+     */
+    @PatchMapping("/reservations/{reservationId}/guest-limit")
+    public ApiResponse<Void> updateReservationGuestCount(@PathVariable("reservationId") Long reservationId,
+                                                         @RequestBody GuestLimitUpdateRequest guestLimitUpdateRequest) {
+        reservationInformationService.updateGuestLimit(reservationId, guestLimitUpdateRequest);
+        return ApiResponse.success();
     }
 }
