@@ -116,4 +116,15 @@ public class ReservationInformationController {
         reservationInformationService.updateGuestLimit(reservationId, guestLimitUpdateRequest);
         return ApiResponse.success();
     }
+
+    /**
+     * 예약 중단 (관리자)
+     *
+     * @param reservationId 예약 식별자
+     */
+    @PatchMapping("/reservations/{reservationId}/cancellation")
+    public ApiResponse<Void> cancelReservation(@PathVariable("reservationId") Long reservationId) {
+        reservationInformationService.cancelReservation(reservationId);
+        return ApiResponse.success();
+    }
 }

@@ -2,6 +2,7 @@ package com.bonestew.popmate.reservation.application;
 
 import com.bonestew.popmate.reservation.application.dto.GuestLimitUpdateRequest;
 import com.bonestew.popmate.reservation.domain.Reservation;
+import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
 import com.bonestew.popmate.reservation.exception.UserReservationNotFoundException;
@@ -55,5 +56,9 @@ public class ReservationInformationService {
             throw new IllegalArgumentException("guestLimit must be greater than 0");
         }
         reservationDao.updateGuestLimit(reservationId, guestLimitUpdateRequest.guestLimit());
+    }
+
+    public void cancelReservation(Long reservationId) {
+        reservationDao.updateStatus(reservationId, ReservationStatus.CANCELED);
     }
 }
