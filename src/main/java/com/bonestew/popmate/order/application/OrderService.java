@@ -151,8 +151,9 @@ public class OrderService {
         return order;
     }
 
-    public String getChangeStatus(Long orderId, Long userId) {
-        orderDao.getChangeStatus(orderId,userId);
-        return "픽업완료되었습니다.";
+    public String getChangeStatus(Long orderId, Long userId, Long popupStoreId) {
+        int cnt = orderDao.getChangeStatus(orderId,userId,popupStoreId);
+        if(cnt>0) return "픽업완료 되었습니다.";
+        else return "이 스토어의 QR코드가 아닙니다.";
     }
 }

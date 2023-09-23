@@ -81,6 +81,7 @@ class PopupStoreControllerTest {
                         0,
                         50,
                         true,
+                        true,
                         30,
                         5,
                         10,
@@ -144,7 +145,7 @@ class PopupStoreControllerTest {
         LocalDateTime dateTime = LocalDateTime.of(2023, 8, 30, 9, 0);
 
         PopupStore popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), "테스트 팝업 스토어", "주최자 이름",
-                "장소 상세 정보", "설명", "이벤트 설명", "이미지 URL", 1000, 50, true, 30, 5, 10, LocalDateTime.of(2023, 8, 23, 10, 0),
+                "장소 상세 정보", "설명", "이벤트 설명", "이미지 URL", 1000, 50, true, true, 30, 5, 10, LocalDateTime.of(2023, 8, 23, 10, 0),
                 dateTime, dateTime, dateTime, 0L, dateTime, 0);
 
         // when

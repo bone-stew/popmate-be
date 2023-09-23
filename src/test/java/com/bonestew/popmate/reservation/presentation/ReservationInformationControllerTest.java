@@ -4,6 +4,7 @@ import static com.bonestew.popmate.helper.RestDocsHelper.customDocument;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -11,6 +12,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.bonestew.popmate.reservation.application.dto.GuestLimitUpdateRequest;
 import com.bonestew.popmate.user.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.utils.WithMockCustomUser;
@@ -21,6 +23,7 @@ import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,6 +51,9 @@ class ReservationInformationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private Long popupStoreId;
     private PopupStore popupStore;
     private LocalDateTime dateTime;
@@ -59,7 +65,7 @@ class ReservationInformationControllerTest {
         dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
         date = LocalDate.of(2023, 10, 1);
         popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), "Your Title", "Your Organizer",
-            "Your Place Detail", "Your Description", "Your Event Description", "Your Banner Image URL", 100, 200, true,
+            "Your Place Detail", "Your Description", "Your Event Description", "Your Banner Image URL", 100, 200, true, true,
             15, 5, 10, dateTime, dateTime.plusDays(14), dateTime, dateTime.plusHours(8), 0L, dateTime, 0);
     }
 
@@ -235,6 +241,37 @@ class ReservationInformationControllerTest {
                         .type(JsonFieldType.NUMBER),
                     fieldWithPath("data.upComingReservations[].status").description("예약 상태")
                         .type(JsonFieldType.STRING)
+                )
+            ));
+    }
+
+    @Test
+    void 예약_인원_수를_변경한다() throws Exception {
+        // given
+        Long reservationId = 1L;
+        int guestLimit = 10;
+        GuestLimitUpdateRequest guestLimitUpdateRequest = new GuestLimitUpdateRequest(guestLimit);
+
+        // when
+        ResultActions result = mockMvc.perform(
+            patch("/api/v1/reservations/{reservationId}/guest-limit", reservationId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(guestLimitUpdateRequest)));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(customDocument(
+                pathParameters(
+                    parameterWithName("reservationId").description("예약 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 코드")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("message").description("응답 메시지")
+                        .type(null),
+                    fieldWithPath("data").description("응답 데이터")
+                        .type(null)
                 )
             ));
     }
