@@ -2,6 +2,7 @@ package com.bonestew.popmate.reservation.persistence;
 
 import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.domain.Reservation;
+import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import com.bonestew.popmate.reservation.domain.Wifi;
 import java.time.LocalDate;
 import java.util.List;
@@ -46,4 +47,6 @@ public interface ReservationDao {
     void updateReservationStatusToEntered();
 
     void updateGuestLimit(Long reservationId, int guestLimit);
+
+    void updateStatus(Long reservationId, ReservationStatus status);
 }

@@ -194,4 +194,10 @@
     WHERE reservation_id = #{reservationId}
   </update>
 
+  <update id="updateStatus" parameterType="Reservation">
+    UPDATE tb_reservation
+    SET status = #{status}
+    WHERE reservation_id = #{reservationId}
+  </update>
+
 </mapper>

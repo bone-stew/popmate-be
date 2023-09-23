@@ -64,3 +64,12 @@ include::{snippets}/reservation-information-controller-test/예약_인원_수를
 
 === Response
 include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/response-fields.adoc[]
+
+
+== 예약을 중단한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/예약을_중단한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/예약을_중단한다/response-fields.adoc[]
