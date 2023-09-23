@@ -57,6 +57,7 @@ public interface OrderDao {
 
     Order getOrderDetails(@Param("orderId") Long orderId);
 
-    void getChangeStatus(@Param("orderId") Long orderId,
-                         @Param("userId") Long userId);
+    int getChangeStatus(@Param("orderId") Long orderId,
+                        @Param("userId") Long userId,
+                        @Param("popupStoreId") Long popupStoreId);
 }
