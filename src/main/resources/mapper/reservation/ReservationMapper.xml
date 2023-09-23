@@ -188,4 +188,10 @@
     ORDER BY visit_start_time
   </select>
 
+  <update id="updateGuestLimit" parameterType="Reservation">
+    UPDATE tb_reservation
+    SET guest_limit = #{guestLimit}
+    WHERE reservation_id = #{reservationId}
+  </update>
+
 </mapper>
