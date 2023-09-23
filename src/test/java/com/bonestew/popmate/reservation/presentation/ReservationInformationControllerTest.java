@@ -275,4 +275,32 @@ class ReservationInformationControllerTest {
                 )
             ));
     }
+
+    @Test
+    void 예약을_중단한다() throws Exception {
+        // given
+        Long reservationId = 1L;
+
+        // when
+        ResultActions result = mockMvc.perform(
+            patch("/api/v1/reservations/{reservationId}/cancellation", reservationId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(customDocument(
+                pathParameters(
+                    parameterWithName("reservationId").description("예약 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 코드")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("message").description("응답 메시지")
+                        .type(null),
+                    fieldWithPath("data").description("응답 데이터")
+                        .type(null)
+                )
+            ));
+    }
 }
