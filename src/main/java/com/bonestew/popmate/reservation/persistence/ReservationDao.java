@@ -44,4 +44,6 @@ public interface ReservationDao {
     void updateReservationStatusToEntering();
 
     void updateReservationStatusToEntered();
+
+    void updateGuestLimit(Long reservationId, int guestLimit);
 }
