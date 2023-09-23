@@ -110,7 +110,7 @@ public class ReservationInformationController {
      * @param reservationId      예약 식별자
      * @param GuestLimitUpdateRequest 예약 요청 정보
      */
-    @PatchMapping("/reservations/{reservationId}")
+    @PatchMapping("/reservations/{reservationId}/guest-limit")
     public ApiResponse<Void> updateReservationGuestCount(@PathVariable("reservationId") Long reservationId,
                                                          @RequestBody GuestLimitUpdateRequest guestLimitUpdateRequest) {
         reservationInformationService.updateGuestLimit(reservationId, guestLimitUpdateRequest);
