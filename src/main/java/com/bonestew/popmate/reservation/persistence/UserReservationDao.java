@@ -15,4 +15,6 @@ public interface UserReservationDao {
     boolean existsByUserIdAndReservationId(Long userId, Long reservationId);
 
     Optional<UserReservation> findByReservationIdAndUserId(Long reservationId, Long userId);
+
+    int changeStatus(Long reservationId);
 }

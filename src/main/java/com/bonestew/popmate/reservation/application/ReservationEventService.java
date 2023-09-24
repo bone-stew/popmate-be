@@ -115,4 +115,11 @@ public class ReservationEventService {
         String format = "Changing reservation status to {}. [Reservation ID: {}]";
         log.info(format, reservationStatus.name(), reservation.getReservationId());
     }
+
+    public String changeStatus(Long reservationId) {
+        int cnt = userReservationDao.changeStatus(reservationId);
+        System.out.println(cnt);
+        if(cnt>0) return "입장완료 되었습니다.";
+        else return "이 스토어의 QR코드가 아닙니다.";
+    }
 }
