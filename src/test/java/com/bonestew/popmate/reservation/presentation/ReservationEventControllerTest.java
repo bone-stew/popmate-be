@@ -1,10 +1,8 @@
 package com.bonestew.popmate.reservation.presentation;
 
 import static com.bonestew.popmate.helper.RestDocsHelper.customDocument;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestBody;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -12,10 +10,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bonestew.popmate.reservation.application.ReservationEventService;
-import com.bonestew.popmate.reservation.application.ReservationInformationService;
 import com.bonestew.popmate.reservation.application.dto.ProcessEntranceRequest;
 import com.bonestew.popmate.utils.WithMockCustomUser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
