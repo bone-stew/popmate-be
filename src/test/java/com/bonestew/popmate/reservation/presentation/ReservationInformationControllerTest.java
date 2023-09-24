@@ -13,6 +13,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bonestew.popmate.reservation.application.dto.GuestLimitUpdateRequest;
+import com.bonestew.popmate.user.domain.Role;
+import com.bonestew.popmate.user.domain.SocialProvider;
 import com.bonestew.popmate.user.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.utils.WithMockCustomUser;
@@ -65,7 +67,8 @@ class ReservationInformationControllerTest {
         dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
         date = LocalDate.of(2023, 10, 1);
         popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), "Your Title", "Your Organizer",
-            "Your Place Detail", "Your Description", "Your Event Description", "Your Banner Image URL", 100, 200, true, true,
+            "Your Place Detail", "Your Description", "Your Event Description", "Your Banner Image URL", 100, 200, true,
+            true,
             15, 5, 10, dateTime, dateTime.plusDays(14), dateTime, dateTime.plusHours(8), 0L, dateTime, 0);
     }
 
@@ -328,6 +331,53 @@ class ReservationInformationControllerTest {
                         .type(null),
                     fieldWithPath("data").description("응답 데이터")
                         .type(null)
+                )
+            ));
+
+    }
+
+    @Test
+    void 예약자_입장_정보를_조회한다() throws Exception {
+        // given
+        Long reservationId = 1L;
+        User user = new User(1L, "popmate@example.com", "1234", SocialProvider.GOOGLE, Role.ROLE_USER, "서명현",
+            "testNickname", LocalDateTime.now());
+        UserReservation userReservation = new UserReservation(1L, user, new Reservation(), 2, "qrImgUrl",
+            UserReservationStatus.RESERVED, dateTime);
+
+        given(reservationInformationService.getEntranceInfo(anyLong())).willReturn(List.of(userReservation));
+
+        // when
+        ResultActions result = mockMvc.perform(
+            get("/api/v1/reservations/{reservationId}/entrance-info", reservationId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(customDocument(
+                pathParameters(
+                    parameterWithName("reservationId").description("예약 ID")
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 코드")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("message").description("응답 메시지")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data[].userReservationId").description("예약자 정보 ID")
+                        .type(JsonFieldType.NUMBER),
+                    fieldWithPath("data[].userId").description("예약자 ID")
+                        .type(JsonFieldType.NUMBER),
+                    fieldWithPath("data[].userName").description("예약자 이름")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data[].email").description("예약자 이메일")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data[].guestCount").description("예약 인원 수")
+                        .type(JsonFieldType.NUMBER),
+                    fieldWithPath("data[].status").description("예약 상태")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("data[].reservationTime").description("예약 시간")
+                        .type(JsonFieldType.STRING)
                 )
             ));
     }

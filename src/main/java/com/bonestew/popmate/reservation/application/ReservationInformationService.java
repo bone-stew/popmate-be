@@ -65,4 +65,8 @@ public class ReservationInformationService {
     public void resumeReservation(Long reservationId) {
         reservationDao.updateStatus(reservationId, ReservationStatus.SCHEDULED);
     }
+
+    public List<UserReservation> getEntranceInfo(Long reservationId) {
+        return userReservationDao.findByReservationId(reservationId);
+    }
 }

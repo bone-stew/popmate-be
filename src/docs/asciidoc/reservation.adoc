@@ -82,3 +82,12 @@ include::{snippets}/reservation-information-controller-test/예약을_재개한�
 
 === Response
 include::{snippets}/reservation-information-controller-test/예약을_재개한다/response-fields.adoc[]
+
+
+== 예약자 입장 정보를 조회한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/예약자_입장_정보를_조회한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/예약자_입장_정보를_조회한다/response-fields.adoc[]
