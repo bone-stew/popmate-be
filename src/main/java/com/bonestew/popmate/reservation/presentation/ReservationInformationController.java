@@ -4,6 +4,7 @@ import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
 import com.bonestew.popmate.reservation.application.dto.GuestLimitUpdateRequest;
+import com.bonestew.popmate.reservation.application.dto.ReservationEntranceResponse;
 import com.bonestew.popmate.reservation.presentation.dto.MyReservationResponse;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.presentation.dto.ActiveReservationResponse;
@@ -137,5 +138,21 @@ public class ReservationInformationController {
     public ApiResponse<Void> resumeReservation(@PathVariable("reservationId") Long reservationId) {
         reservationInformationService.resumeReservation(reservationId);
         return ApiResponse.success();
+    }
+
+    /**
+     * 예약자 입장 정보 조회 (관리자)
+     *
+     * @param reservationId 예약 식별자
+     * @return 예약 정보
+     */
+    @GetMapping("/reservations/{reservationId}/entrance-info")
+    public ApiResponse<List<ReservationEntranceResponse>> getReservation(@PathVariable("reservationId") Long reservationId) {
+        List<UserReservation> reservations = reservationInformationService.getEntranceInfo(reservationId);
+        return ApiResponse.success(
+            reservations.stream()
+                .map(ReservationEntranceResponse::from)
+                .toList()
+        );
     }
 }

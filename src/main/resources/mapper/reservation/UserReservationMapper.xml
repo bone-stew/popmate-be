@@ -4,6 +4,14 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bonestew.popmate.reservation.persistence.UserReservationDao">
 
+  <resultMap id="userMap" type="User">
+    <result column="user_id" property="userId"/>
+    <result column="email" property="email"/>
+    <result column="name" property="name"/>
+    <result column="nickname" property="nickname"/>
+    <result column="created_at" property="createdAt"/>
+  </resultMap>
+
   <resultMap id="popupStoreMap" type="PopupStore">
     <result column="popup_store_id" property="popupStoreId"/>
     <result column="title" property="title"/>
@@ -48,6 +56,7 @@
     <result column="guest_count" property="guestCount"/>
     <result column="qr_img_url" property="qrImgUrl"/>
     <result column="created_at" property="createdAt"/>
+    <association property="user" resultMap="userMap"/>
     <collection column="reservation_id" property="reservation" resultMap="reservationMap"/>
   </resultMap>
 
@@ -85,4 +94,10 @@
     where reservation_id=#{reservationId}
   </update>
 
+  <select id="findByReservationId" parameterType="long" resultMap="userReservationMap">
+    SELECT *
+    FROM tb_user_reservation A
+           LEFT JOIN TB_USER B ON A.USER_ID = B.USER_ID
+    where A.reservation_id = #{reservationId}
+  </select>
 </mapper>

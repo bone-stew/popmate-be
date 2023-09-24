@@ -8,7 +8,7 @@ public enum UserReservationStatus {
 
     RESERVED(0, "예약 완료"),
 
-    VISITED(1, "방문 완료");
+    VISITED(1, "입장 완료");
 
     private final int code;
     private final String description;
