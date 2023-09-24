@@ -253,15 +253,6 @@
   </select>
 
   <select id="findPopupStoreDetailByIdForAdmin" parameterType="long" resultMap="popupStoreInfoMap">
-<!--    select *-->
-<!--    from tb_popup_store ps left outer join tb_popup_store_sns pss-->
-<!--    on ps.popup_store_id = pss.popup_store_id-->
-<!--    left outer join tb_popup_store_img psi-->
-<!--    on ps.popup_store_id = psi.popup_store_id-->
-<!--    left outer join tb_popup_store_item psii-->
-<!--    on ps.popup_store_id = psii.popup_store_id-->
-<!--    where ps.popup_store_id = #{popupStoreId}-->
-
     select ps.popup_store_id, ps.user_id, ps.department_id, ps.title,
     ps.organizer, ps.place_detail, ps.open_date, ps.close_date,
     ps.description, ps.event_description, ps.banner_img_url,
@@ -279,8 +270,7 @@
     left outer join tb_popup_store_item psii
     on ps.popup_store_id = psii.popup_store_id
     where ps.popup_store_id = #{popupStoreId}
-
-
+    and psii.is_on_sale = 1
   </select>
 
 
@@ -393,17 +383,43 @@
 
 
 
-  <update id="updatePopupStoreItem">
-    UPDATE tb_popup_store_item
-    SET
-      name = #{popupStoreItem.name},
-      amount = #{popupStoreItem.amount},
-      img_url = #{popupStoreItem.imgUrl},
-      stock = #{popupStoreItem.stock},
-      order_limit = #{popupStoreItem.orderLimit}
-    WHERE
-      popup_store_id = #{popupStoreId}
+<!--  <update id="updatePopupStoreItem" parameterType="PopupStoreItem">-->
+<!--    UPDATE tb_popup_store_item-->
+<!--    SET-->
+<!--      name = #{name},-->
+<!--      amount = #{amount},-->
+<!--      img_url = #{imgUrl},-->
+<!--      stock = #{stock},-->
+<!--      order_limit = #{orderLimit}-->
+<!--    WHERE-->
+<!--      popup_store_id = #{popupStore.popupStoreId}-->
+<!--  </update>-->
+
+
+
+
+  <update id="updatePopupStoreItem" parameterType="PopupStoreItem">
+    <foreach collection="list" index="index" item="item" open="DECLARE BEGIN" separator=";" close="; END;">
+      UPDATE tb_popup_store_item
+      SET
+      name = #{item.name},
+      amount = #{item.amount},
+      img_url = #{item.imgUrl},
+      stock = #{item.stock},
+      order_limit = #{item.orderLimit}
+      WHERE
+      popup_store_item_id = #{item.popupStoreItemId}
+    </foreach>
   </update>
 
+  <update id="updatePopupStoreItemSalesStatus" parameterType="PopupStoreItem">
+    <foreach collection="list" index="index" item="item" open="DECLARE BEGIN" separator=";" close="; END;">
+      UPDATE tb_popup_store_item
+      SET
+      is_on_sale = 0
+      WHERE
+      popup_store_item_id = #{item.popupStoreItemId}
+    </foreach>
+  </update>
 
 </mapper>
