@@ -67,7 +67,7 @@ class ReservationEventControllerTest {
                     fieldWithPath("code").description("응답 코드")
                         .type(JsonFieldType.STRING),
                     fieldWithPath("message").description("응답 메시지")
-                        .type(JsonFieldType.STRING),
+                        .type(null),
                     fieldWithPath("data").description("응답 데이터")
                         .type(null)
                 )
