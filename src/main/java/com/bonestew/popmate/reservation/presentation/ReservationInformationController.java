@@ -147,7 +147,7 @@ public class ReservationInformationController {
      * @return 예약 정보
      */
     @GetMapping("/reservations/{reservationId}/entrance-info")
-    public ApiResponse<List<ReservationEntranceResponse>> getReservation(@PathVariable("reservationId") Long reservationId) {
+    public ApiResponse<List<ReservationEntranceResponse>> getEntranceInfo(@PathVariable("reservationId") Long reservationId) {
         List<UserReservation> reservations = reservationInformationService.getEntranceInfo(reservationId);
         return ApiResponse.success(
             reservations.stream()
