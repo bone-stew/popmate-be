@@ -73,3 +73,12 @@ include::{snippets}/reservation-information-controller-test/예약을_중단한�
 
 === Response
 include::{snippets}/reservation-information-controller-test/예약을_중단한다/response-fields.adoc[]
+
+
+== 예약을 재개한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/예약을_재개한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/예약을_재개한다/response-fields.adoc[]
