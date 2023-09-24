@@ -54,7 +54,7 @@ public class ReservationEventController {
     }
 
     @PatchMapping("/{reservationId}/entry")
-    public ApiResponse<String> changeStatus(@PathVariable("reservationId") Long reservationId){
+    public ApiResponse<String> changeStatus(@PathVariable("reservationId") Long reservationId) {
         String message = reservationEventService.changeStatus(reservationId);
         return ApiResponse.success(
             message
