@@ -61,4 +61,8 @@ public class ReservationInformationService {
     public void cancelReservation(Long reservationId) {
         reservationDao.updateStatus(reservationId, ReservationStatus.CANCELED);
     }
+
+    public void resumeReservation(Long reservationId) {
+        reservationDao.updateStatus(reservationId, ReservationStatus.SCHEDULED);
+    }
 }
