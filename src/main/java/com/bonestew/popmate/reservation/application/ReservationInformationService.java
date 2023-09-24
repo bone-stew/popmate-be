@@ -35,7 +35,7 @@ public class ReservationInformationService {
 
     public UserReservation getMyReservation(Long reservationId, Long userId) {
         return userReservationDao.findByReservationIdAndUserId(reservationId, userId)
-            .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
+            .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
     }
 
     public Reservation getCurrentlyEnteredReservation(Long popupStoreId) {

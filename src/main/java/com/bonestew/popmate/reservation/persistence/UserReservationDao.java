@@ -1,6 +1,7 @@
 package com.bonestew.popmate.reservation.persistence;
 
 import com.bonestew.popmate.reservation.domain.UserReservation;
+import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,5 +19,5 @@ public interface UserReservationDao {
 
     List<UserReservation> findByReservationId(Long reservationId);
 
-    int changeStatus(Long reservationId);
+    void updateStatus(Long userReservationId, UserReservationStatus status);
 }
