@@ -61,6 +61,7 @@ include::{snippets}/reservation-information-controller-test/오늘의_예약_목
 === Request
 include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/path-parameters.adoc[]
 include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/request-body.adoc[]
+// include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/request-fields.adoc[]
 
 === Response
 include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/response-fields.adoc[]
@@ -91,3 +92,13 @@ include::{snippets}/reservation-information-controller-test/예약자_입장_정
 
 === Response
 include::{snippets}/reservation-information-controller-test/예약자_입장_정보를_조회한다/response-fields.adoc[]
+
+
+== 예약자를 입장 처리한다
+
+=== Request
+include::{snippets}/reservation-event-controller-test/예약자를_입장_처리한다/path-parameters.adoc[]
+include::{snippets}/reservation-event-controller-test/예약자를_입장_처리한다/request-body.adoc[]
+
+=== Response
+include::{snippets}/reservation-event-controller-test/예약자를_입장_처리한다/response-fields.adoc[]

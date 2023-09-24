@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -267,6 +268,10 @@ class ReservationInformationControllerTest {
             .andDo(customDocument(
                 pathParameters(
                     parameterWithName("reservationId").description("예약 ID")
+                ),
+                requestFields(
+                    fieldWithPath("guestLimit").description("예약 인원 수")
+                        .type(JsonFieldType.NUMBER)
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 코드")
