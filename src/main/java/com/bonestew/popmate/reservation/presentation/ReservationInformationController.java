@@ -127,4 +127,15 @@ public class ReservationInformationController {
         reservationInformationService.cancelReservation(reservationId);
         return ApiResponse.success();
     }
+
+    /**
+     * 예약 재개 (관리자)
+     *
+     * @param reservationId 예약 식별자
+     */
+    @PatchMapping("/reservations/{reservationId}/resume")
+    public ApiResponse<Void> resumeReservation(@PathVariable("reservationId") Long reservationId) {
+        reservationInformationService.resumeReservation(reservationId);
+        return ApiResponse.success();
+    }
 }
