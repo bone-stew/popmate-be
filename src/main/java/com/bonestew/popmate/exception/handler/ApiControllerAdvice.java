@@ -1,6 +1,7 @@
 package com.bonestew.popmate.exception.handler;
 
 import com.bonestew.popmate.dto.ApiResponse;
+import com.bonestew.popmate.exception.AccessDeniedException;
 import com.bonestew.popmate.exception.BadRequestException;
 import com.bonestew.popmate.exception.NotFoundException;
 import com.bonestew.popmate.exception.PopMateException;
@@ -41,6 +42,13 @@ public class ApiControllerAdvice {
     public <T> ApiResponse<T> handleReservationException(ReservationException e) {
         log.info("handleReservationException: {}", e.getMessage());
         return ApiResponse.failure(ResultCode.CONFLICT, e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public <T> ApiResponse<T> handleAccessDeniedException(AccessDeniedException e) {
+        log.info("handleAccessDeniedException: {}", e.getMessage());
+        return ApiResponse.failure(ResultCode.FORBIDDEN, e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
