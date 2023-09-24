@@ -4,8 +4,11 @@ import static com.bonestew.popmate.popupstore.config.FolderType.RESERVATIONS;
 
 import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
+import com.bonestew.popmate.reservation.application.dto.ProcessEntranceRequest;
 import com.bonestew.popmate.reservation.application.dto.WifiRequest;
 import com.bonestew.popmate.reservation.domain.ReservationStatus;
+import com.bonestew.popmate.reservation.domain.UserReservationStatus;
+import com.bonestew.popmate.reservation.exception.UserReservationNotFoundException;
 import com.bonestew.popmate.reservation.exception.WifiCheckException;
 import com.bonestew.popmate.user.application.UserService;
 import com.bonestew.popmate.user.domain.User;
@@ -105,7 +108,8 @@ public class ReservationEventService {
         reservationDao.updateReservationStatusToEntering();
         reservationDao.updateReservationStatusToEntered();
 
-        scheduledReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.IN_PROGRESS));
+        scheduledReservations.forEach(
+            reservation -> logChangedReservations(reservation, ReservationStatus.IN_PROGRESS));
         inProgressReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.CLOSED));
         closedReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.ENTERED));
         enteringReservations.forEach(reservation -> logChangedReservations(reservation, ReservationStatus.ENTERING));
@@ -116,12 +120,20 @@ public class ReservationEventService {
         log.info(format, reservationStatus.name(), reservation.getReservationId());
     }
 
-    public String changeStatus(Long reservationId) {
-        int cnt = userReservationDao.changeStatus(reservationId);
-        if (cnt > 0) {
-            return "입장완료 되었습니다.";
-        } else {
-            return "이 스토어의 QR코드가 아닙니다.";
-        }
+    /**
+     * 예약자 입장 처리
+     *
+     * @param reservationId
+     * @param userId
+     */
+    public void processEntrance(Long reservationId, ProcessEntranceRequest processEntranceRequest) {
+        Long userId = processEntranceRequest.reservationUserId();
+        UserReservation userReservation = userReservationDao.findByReservationIdAndUserId(reservationId, userId)
+            .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
+
+        userReservation.validateEntry();
+        userReservationDao.updateStatus(userReservation.getUserReservationId(), UserReservationStatus.VISITED);
+
+        log.info("Entrance successful for user ID: {}, reservation ID: {}", userId, reservationId);
     }
 }

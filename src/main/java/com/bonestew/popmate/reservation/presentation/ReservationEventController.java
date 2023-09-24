@@ -4,6 +4,7 @@ import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationEventService;
 import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
+import com.bonestew.popmate.reservation.application.dto.ProcessEntranceRequest;
 import com.bonestew.popmate.reservation.application.dto.ReservationRequest;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -44,20 +45,25 @@ public class ReservationEventController {
     @GetMapping("/test")
     public void createReservation() {
         CreateReservationDto sampleReservationDto = new CreateReservationDto(
-            15,
-            LocalDateTime.of(2023, 9, 11, 10, 0),
-            LocalDateTime.of(2023, 9, 22, 20, 0),
-            21L,
+            20,
+            LocalDateTime.of(2023, 9, 25, 10, 0),
+            LocalDateTime.of(2023, 9, 25, 20, 0),
+            8L,
             50,
             6);
         reservationEventService.createReservation(sampleReservationDto);
     }
 
-    @PatchMapping("/{reservationId}/entry")
-    public ApiResponse<String> changeStatus(@PathVariable("reservationId") Long reservationId) {
-        String message = reservationEventService.changeStatus(reservationId);
-        return ApiResponse.success(
-            message
-        );
+    /**
+     * 예약자 입장 처리
+     *
+     * @param reservationId
+     * @return 예약자 입장 처리 결과
+     */
+    @PatchMapping("/{reservationId}/entrance")
+    public ApiResponse<Void> processEntrance(@PathVariable("reservationId") Long reservationId,
+                                             @RequestBody ProcessEntranceRequest processEntranceRequest) {
+        reservationEventService.processEntrance(reservationId, processEntranceRequest);
+        return ApiResponse.success();
     }
 }
