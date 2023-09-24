@@ -80,4 +80,9 @@
       AND reservation_id = #{reservationId}
   </select>
 
+  <update id="changeStatus" parameterType="long">
+    UPDATE tb_user_reservation set status=1
+    where reservation_id=#{reservationId}
+  </update>
+
 </mapper>
