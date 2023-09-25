@@ -9,6 +9,7 @@ import com.bonestew.popmate.chat.presentation.dto.MessagesResponse;
 import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -72,5 +73,15 @@ public class ChatController {
     @GetMapping("/thumbnail/{roomId}")
     public  ApiResponse<MessagesResponse> thumbnail(@PathVariable Long roomId) {
         return ApiResponse.success(MessagesResponse.of(chatService.loadChatThumbnail(roomId)));
+    }
+
+    @PostMapping("/report")
+    public ApiResponse<String> report(@AuthenticationPrincipal PopmateUser principal, String chatId) {
+        try {
+            chatService.reportMessage(chatId, principal.getUserId());
+            return ApiResponse.success("신고가 접수되었습니다.");
+        } catch (DuplicateKeyException e) {
+            return ApiResponse.success("이미 신고가 접수되었습니다.");
+        }
     }
 }
