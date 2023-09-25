@@ -10,4 +10,8 @@
         WHERE ROOM_ID = #{id}
     </select>
 
+    <insert id="insertChatReport" parameterType="map">
+        INSERT into TB_CHAT_REPORT (REPORTER, CHAT_ID)
+        values (#{reporter}, #{chatId})
+    </insert>
 </mapper>
