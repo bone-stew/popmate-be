@@ -36,6 +36,7 @@
   <resultMap id="departmentMap" type="Department">
     <result column="department_id" property="departmentId"/>
     <result column="name" property="name"/>
+    <result column="d_name" property="name"/>
     <result column="place_description" property="placeDescription"/>
     <result column="latitude" property="latitude"/>
     <result column="longitude" property="longitude"/>
@@ -253,7 +254,7 @@
   </select>
 
   <select id="findPopupStoreDetailByIdForAdmin" parameterType="long" resultMap="popupStoreInfoMap">
-    select ps.popup_store_id, ps.user_id, ps.department_id, ps.title,
+    select ps.popup_store_id, ps.user_id, ps.department_id, d.name as d_name, ps.title,
     ps.organizer, ps.place_detail, ps.open_date, ps.close_date,
     ps.description, ps.event_description, ps.banner_img_url,
     ps.open_time, ps.close_time, ps.max_capacity, ps.interval_capacity,
@@ -263,7 +264,9 @@
     psi.img_url, psii.popup_store_item_id, psii.name,
     psii.amount, psii.img_url as store_item_img_url, psii.stock,
     psii.order_limit
-    from tb_popup_store ps left outer join tb_popup_store_sns pss
+    from tb_popup_store ps left outer join tb_department d
+    on ps.department_id = d.department_id
+    left outer join tb_popup_store_sns pss
     on ps.popup_store_id = pss.popup_store_id
     left outer join tb_popup_store_img psi
     on ps.popup_store_id = psi.popup_store_id
