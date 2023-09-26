@@ -50,4 +50,8 @@ public class Reservation {
     public void increaseCurrentGuestCount(int guestCount) {
         this.currentGuestCount += guestCount;
     }
+
+    public void decreaseCurrentGuestCount(int guestCount) {
+        this.currentGuestCount -= guestCount;
+    }
 }

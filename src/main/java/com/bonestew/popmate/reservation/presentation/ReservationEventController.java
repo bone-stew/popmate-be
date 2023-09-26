@@ -39,6 +39,31 @@ public class ReservationEventController {
     }
 
     /**
+     * 예약 취소
+     *
+     * @param reservationId
+     */
+    @PatchMapping("/{reservationId}/cancel")
+    public ApiResponse<Void> cancelReservation(@PathVariable("reservationId") Long reservationId,
+                                               @AuthenticationPrincipal PopmateUser popmateUser) {
+        reservationEventService.cancel(reservationId, popmateUser.getUserId());
+        return ApiResponse.success();
+    }
+
+    /**
+     * 입장 처리 (관리자)
+     *
+     * @param reservationId
+     * @return 예약자 입장 처리 결과
+     */
+    @PatchMapping("/{reservationId}/entrance")
+    public ApiResponse<Void> processEntrance(@PathVariable("reservationId") Long reservationId,
+                                             @RequestBody ProcessEntranceRequest processEntranceRequest) {
+        reservationEventService.processEntrance(reservationId, processEntranceRequest);
+        return ApiResponse.success();
+    }
+
+    /**
      * 추후 popupstore-api에서 호출 예정
      */
     @Deprecated
@@ -52,18 +77,5 @@ public class ReservationEventController {
             50,
             6);
         reservationEventService.createReservation(sampleReservationDto);
-    }
-
-    /**
-     * 예약자 입장 처리
-     *
-     * @param reservationId
-     * @return 예약자 입장 처리 결과
-     */
-    @PatchMapping("/{reservationId}/entrance")
-    public ApiResponse<Void> processEntrance(@PathVariable("reservationId") Long reservationId,
-                                             @RequestBody ProcessEntranceRequest processEntranceRequest) {
-        reservationEventService.processEntrance(reservationId, processEntranceRequest);
-        return ApiResponse.success();
     }
 }

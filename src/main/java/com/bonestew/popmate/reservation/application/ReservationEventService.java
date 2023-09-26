@@ -8,6 +8,8 @@ import com.bonestew.popmate.reservation.application.dto.ProcessEntranceRequest;
 import com.bonestew.popmate.reservation.application.dto.WifiRequest;
 import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
+import com.bonestew.popmate.reservation.exception.InvalidReservationCancellationException;
+import com.bonestew.popmate.reservation.exception.InvalidReservationStatusException;
 import com.bonestew.popmate.reservation.exception.UserReservationNotFoundException;
 import com.bonestew.popmate.reservation.exception.WifiCheckException;
 import com.bonestew.popmate.user.application.UserService;
@@ -121,11 +123,33 @@ public class ReservationEventService {
     }
 
     /**
+     * 예약 취소
+     *
+     * @param reservationId
+     * @param userId
+     */
+    @Transactional()
+    public void cancel(Long reservationId, Long userId) {
+        UserReservation userReservation = userReservationDao.findByReservationIdAndUserId(reservationId, userId)
+            .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
+
+        if (!userReservation.getStatus().isReserved()) {
+            throw new InvalidReservationCancellationException(userReservation.getUserReservationId());
+        }
+        userReservationDao.updateStatus(userReservation.getUserReservationId(), UserReservationStatus.CANCELED);
+        userReservation.getReservation().decreaseCurrentGuestCount(userReservation.getGuestCount());
+        reservationDao.updateGuestLimit(reservationId, userReservation.getGuestCount());
+
+        log.info("Cancel successful for user ID: {}, reservation ID: {}", userId, reservationId);
+    }
+
+    /**
      * 예약자 입장 처리
      *
      * @param reservationId
      * @param userId
      */
+    @Transactional
     public void processEntrance(Long reservationId, ProcessEntranceRequest processEntranceRequest) {
         Long userId = processEntranceRequest.reservationUserId();
         UserReservation userReservation = userReservationDao.findByReservationIdAndUserId(reservationId, userId)
