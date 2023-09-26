@@ -58,15 +58,11 @@ public interface PopupStoreDao {
 
     void deleteStoreImageById(Long popupStoreId);
 
-    void deleteStoreItemsById(Long popupStoreId);
-
-    void deleteStoreSnsById(Long popupStoreId);
-
-
     List<PopupStore> selectPopupStoreByAuth(AuthDto dto);
-
 
     void updatePopupStoreItem(List<PopupStoreItem> popupStoreItemList);
 
     void updatePopupStoreItemSalesStatus(List<PopupStoreItem> popupStoreItemsToDelete);
+
+    void upsertPopupStoreSns(PopupStoreSns popupStoreSns);
 }

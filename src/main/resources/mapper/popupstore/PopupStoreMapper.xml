@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bonestew.popmate.popupstore.persistence.PopupStoreDao">
 
   <resultMap id="popupStoreMap" type="PopupStore">
@@ -76,6 +76,7 @@
     <result column="amount" property="amount"/>
     <result column="stock" property="stock"/>
     <result column="order_limit" property="orderLimit"/>
+    <result column="is_on_sale" property="isOnSale"/>
   </resultMap>
 
   <resultMap id="popupStoreInfoMap" type="com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo">
@@ -92,7 +93,8 @@
     WHERE popup_store_id = #{popupStoreId}
   </select>
 
-  <select id="selectPopupStoresByQuery" resultMap="popupStoreMap" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto">
+  <select id="selectPopupStoresByQuery" resultMap="popupStoreMap"
+    parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto">
     SELECT POPUP_STORE_ID, TITLE, NAME, OPEN_DATE, CLOSE_DATE, ORGANIZER, d.CREATED_AT as CREATED_AT, COUNT(*) over () total
     FROM TB_POPUP_STORE s
     JOIN TB_DEPARTMENT d
@@ -119,7 +121,7 @@
   </select>
 
   <select id="selectPopupStores" parameterType="com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest"
-          resultMap="popupStoreMap">
+    resultMap="popupStoreMap">
     SELECT *
     FROM tb_popup_store s
     JOIN TB_DEPARTMENT d
@@ -151,64 +153,64 @@
     select popup_store_id, title, banner_img_url
     from tb_popup_store
     where popup_store_id in (
-      select distinct tr.popup_store_id
-      from tb_reservation tr
-             join tb_user_reservation tur
-                  on tr.reservation_id = tur.reservation_id
-      where tur.user_id = #{userId}
-        and tur.status = 1
-        and trunc(tur.created_at) = trunc(sysdate))
+    select distinct tr.popup_store_id
+    from tb_reservation tr
+    join tb_user_reservation tur
+    on tr.reservation_id = tur.reservation_id
+    where tur.user_id = #{userId}
+    and tur.status = 1
+    and trunc(tur.created_at) = trunc(sysdate))
   </select>
 
   <select id="selectPopupStoresToRecommend" resultType="PopupStore">
     SELECT
-      popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
+    popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
     FROM
-      tb_popup_store
+    tb_popup_store
     where sysdate &lt;= close_date
     AND trunc(SYSDATE) > open_date
     ORDER BY views
-      FETCH FIRST 5 ROWS ONLY
+    FETCH FIRST 5 ROWS ONLY
   </select>
 
   <select id="selectPopupStoresEndingSoon" resultType="PopupStore">
     SELECT
-      popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
+    popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
     FROM
-      tb_popup_store
+    tb_popup_store
     where sysdate &lt;= close_date
     order by close_date
-      fetch FIRST 5 ROWS ONLY
+    fetch FIRST 5 ROWS ONLY
   </select>
 
   <select id="findPopupStoreDetailById" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto"
-          resultMap="popupStoreDetailMap">
+    resultMap="popupStoreDetailMap">
     select *
     from tb_popup_store ps
-           left join tb_popup_store_sns pss on
-      ps.popup_store_id = pss.popup_store_id
-           left join tb_popup_store_img psi on
-      ps.popup_store_id = psi.popup_store_id
-           left join tb_department td on
-      ps.department_id = td.department_id
+    left join tb_popup_store_sns pss on
+    ps.popup_store_id = pss.popup_store_id
+    left join tb_popup_store_img psi on
+    ps.popup_store_id = psi.popup_store_id
+    left join tb_department td on
+    ps.department_id = td.department_id
     where ps.popup_store_id = #{popupStoreId}
   </select>
 
   <select id="userReservationExistsById" parameterType="long" resultType="Boolean">
     SELECT CASE
-             WHEN EXISTS (
-               SELECT 1
-               FROM tb_user_reservation ur
-                      JOIN tb_reservation r ON ur.reservation_id = r.reservation_id
-                      JOIN tb_popup_store ps ON r.popup_store_id = ps.popup_store_id
-               WHERE ps.popup_store_id = #{popupStoreId}
-                 AND ur.user_id = #{userId}
-                 AND ur.status = 1
-                 AND trunc(ur.created_at) = trunc(sysdate)
-               )
-               THEN 1
-             ELSE 0
-             END AS result
+    WHEN EXISTS (
+    SELECT 1
+    FROM tb_user_reservation ur
+    JOIN tb_reservation r ON ur.reservation_id = r.reservation_id
+    JOIN tb_popup_store ps ON r.popup_store_id = ps.popup_store_id
+    WHERE ps.popup_store_id = #{popupStoreId}
+    AND ur.user_id = #{userId}
+    AND ur.status = 1
+    AND trunc(ur.created_at) = trunc(sysdate)
+    )
+    THEN 1
+    ELSE 0
+    END AS result
     FROM dual
   </select>
 
@@ -237,11 +239,12 @@
     select *
     FROM tb_popup_store
     where department_id = (select department_id from tb_popup_store where popup_store_id = #{popupStoreId})
-      and popup_store_id != #{popupStoreId}
-      and sysdate &lt;= close_date
+    and popup_store_id != #{popupStoreId}
+    and sysdate &lt;= close_date
   </select>
 
-  <select id="selectPopupStoreByAuth" parameterType="com.bonestew.popmate.popupstore.persistence.dto.AuthDto" resultType="PopupStore">
+  <select id="selectPopupStoreByAuth" parameterType="com.bonestew.popmate.popupstore.persistence.dto.AuthDto"
+    resultType="PopupStore">
     SELECT POPUP_STORE_ID, TITLE, RESERVATION_ENABLED, SALES_ENABLED
     FROM TB_POPUP_STORE
     <where>
@@ -263,7 +266,7 @@
     ps.views, pss.sns_id, pss.platform, pss.url, psi.popup_store_img_id,
     psi.img_url, psii.popup_store_item_id, psii.name,
     psii.amount, psii.img_url as store_item_img_url, psii.stock,
-    psii.order_limit
+    psii.order_limit, psii.is_on_sale
     from tb_popup_store ps left outer join tb_department d
     on ps.department_id = d.department_id
     left outer join tb_popup_store_sns pss
@@ -273,11 +276,10 @@
     left outer join tb_popup_store_item psii
     on ps.popup_store_id = psii.popup_store_id
     where ps.popup_store_id = #{popupStoreId}
-    and psii.is_on_sale = 1
   </select>
 
 
-  <update id="updatePopupStoreInfo" parameterType="PopupStore" >
+  <update id="updatePopupStoreInfo" parameterType="PopupStore">
     UPDATE tb_popup_store
     <set>
       <if test="title != null">title = #{title},</if>
@@ -307,16 +309,15 @@
     WHERE popup_store_id = #{popupStoreId}
   </delete>
 
-  <delete id="deleteStoreItemsById" parameterType="long">
-    DELETE FROM tb_popup_store_item
-    WHERE popup_store_id = #{popupStoreId}
-  </delete>
+  <!--  <delete id="deleteStoreItemsById" parameterType="long">-->
+  <!--    DELETE FROM tb_popup_store_item-->
+  <!--    WHERE popup_store_id = #{popupStoreId}-->
+  <!--  </delete>-->
 
-  <delete id="deleteStoreSnsById" parameterType="long">
-    DELETE FROM tb_popup_store_sns
-    WHERE popup_store_id = #{popupStoreId}
-  </delete>
-
+  <!--  <delete id="deleteStoreSnsById" parameterType="long">-->
+  <!--    DELETE FROM tb_popup_store_sns-->
+  <!--    WHERE popup_store_id = #{popupStoreId}-->
+  <!--  </delete>-->
 
 
   <insert id="insertPopupStore" parameterType="PopupStore">
@@ -368,37 +369,48 @@
   </insert>
 
   <insert id="insertPopupStoreImg" parameterType="PopupStoreImg">
-     insert into tb_popup_store_img (popup_store_id, img_url)
-      values (#{popupStore.popupStoreId}, #{imgUrl})
+    insert into tb_popup_store_img (popup_store_id, img_url)
+    values (#{popupStore.popupStoreId}, #{imgUrl})
   </insert>
 
   <insert id="insertPopupStoreItem" parameterType="PopupStoreItem">
     INSERT INTO tb_popup_store_item (popup_store_id, name, img_url, amount, stock, order_limit)
     VALUES
-      (#{popupStore.popupStoreId}, #{name}, #{imgUrl}, #{amount}, #{stock}, #{orderLimit})
+    (#{popupStore.popupStoreId}, #{name}, #{imgUrl}, #{amount}, #{stock}, #{orderLimit})
   </insert>
 
   <insert id="insertPopupStoreSns" parameterType="PopupStoreSns">
     INSERT INTO tb_popup_store_sns (popup_store_id, platform, url)
     VALUES
-      (#{popupStore.popupStoreId}, #{platform}, #{url})
+    (#{popupStore.popupStoreId}, #{platform}, #{url})
   </insert>
 
 
-
-<!--  <update id="updatePopupStoreItem" parameterType="PopupStoreItem">-->
-<!--    UPDATE tb_popup_store_item-->
-<!--    SET-->
-<!--      name = #{name},-->
-<!--      amount = #{amount},-->
-<!--      img_url = #{imgUrl},-->
-<!--      stock = #{stock},-->
-<!--      order_limit = #{orderLimit}-->
-<!--    WHERE-->
-<!--      popup_store_id = #{popupStore.popupStoreId}-->
-<!--  </update>-->
-
-
+  <update id="upsertPopupStoreSns" parameterType="PopupStoreSns">
+    merge into tb_popup_store_sns a
+    using dual b
+    on
+      (
+        a.popup_store_id = #{popupStore.popupStoreId} and
+        a.platform = #{platform}
+      )
+    when matched then
+      update set
+        a.url = #{url}
+    when not matched then
+      insert
+      (
+        popup_store_id,
+        platform,
+        url
+      )
+      values
+      (
+        #{popupStore.popupStoreId},
+        #{platform},
+        #{url}
+      )
+  </update>
 
 
   <update id="updatePopupStoreItem" parameterType="PopupStoreItem">
