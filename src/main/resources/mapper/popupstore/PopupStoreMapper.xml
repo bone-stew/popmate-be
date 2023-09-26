@@ -27,6 +27,12 @@
     <result column="total" property="total"/>
     <association property="user" resultMap="userMap"/>
     <association property="department" resultMap="departmentMap"/>
+    <association property="category" resultMap="categoryMap"/>
+  </resultMap>
+
+  <resultMap id="categoryMap" type="Category">
+    <result column="category_id" property="categoryId"/>
+    <result column="category_name" property="categoryName"/>
   </resultMap>
 
   <resultMap id="userMap" type="User">
