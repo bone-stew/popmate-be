@@ -73,10 +73,12 @@ public class UserReservation {
             throw new ExpiredReservationException(this.getUserReservationId(), this.getReservation().getCreatedAt());
         }
 
-        // 입장 시간 이후에 입장 처리를 할 수 있다.
+        // 입장 시간 이후에 입장 처리를 할 수 있다. (시연을 위해 임시 주석 처리)
+        /*
         if (this.isAfterNow()) {
             throw new EntryNotAllowedException(this.getReservation().getVisitStartTime(),
                 this.getReservation().getVisitEndTime());
         }
+        */
     }
 }
