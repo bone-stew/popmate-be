@@ -214,17 +214,20 @@ public class PopupStoreService {
                     originalItemsThatNeedUpdating.add(popupStoreItem);
                 }
             }
+            if (!originalItemsThatNeedUpdating.isEmpty()){
             popupStoreDao.updatePopupStoreItem(originalItemsThatNeedUpdating);
+            }
         }
-        if (!popupStoreUpdateRequest.getPopupStoreItemsToDelete().isEmpty()){
+        if (popupStoreUpdateRequest.getPopupStoreItemsToDelete()!=null &&
+                !popupStoreUpdateRequest.getPopupStoreItemsToDelete().isEmpty()){
             popupStoreDao.updatePopupStoreItemSalesStatus(popupStoreUpdateRequest.getPopupStoreItemsToDelete());
         }
 
         if (!popupStoreUpdateRequest.getPopupStoreSnsList().isEmpty()) {
-            popupStoreDao.deleteStoreSnsById(popupStore.getPopupStoreId());
             for (PopupStoreSns popupStoreSns : popupStoreUpdateRequest.getPopupStoreSnsList()) {
                 popupStoreSns.setPopupStore(popupStore);
-                popupStoreDao.insertPopupStoreSns(popupStoreSns);
+
+                popupStoreDao.upsertPopupStoreSns(popupStoreSns);
             }
         }
         popupStoreDao.updatePopupStoreInfo(popupStoreUpdateRequest.getPopupStore());

@@ -64,7 +64,7 @@ public record PopupStoreInfoResponse(
             PopupStoreItem item = info.getPopupStoreItem();
             if (item != null) {
                 Long itemId = item.getPopupStoreItemId();
-                if (!itemIdSet.contains(itemId)) {
+                if (!itemIdSet.contains(itemId) && item.getIsOnSale() == true) {
                     popupStoreItemResponses.add(item);
                     itemIdSet.add(itemId);
                 }
