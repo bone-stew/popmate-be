@@ -6,12 +6,29 @@
 
     <select id="findById" resultType="ChatRoom">
         SELECT *
-        FROM TB_CHAT_ROOM
-        WHERE ROOM_ID = #{id}
+          FROM TB_CHAT_ROOM
+         WHERE ROOM_ID = #{id}
     </select>
 
-    <insert id="insertChatReport" parameterType="map">
-        INSERT into TB_CHAT_REPORT (REPORTER, CHAT_ID)
-        values (#{reporter}, #{chatId})
+    <insert id="insertChatReport" parameterType="com.bonestew.popmate.chat.persistence.dto.ReportDto">
+        INSERT INTO TB_CHAT_REPORT (REPORTER, CHAT_ID, MESSAGE, WRITER)
+        VALUES (#{reporter}, #{id}, #{message}, #{sender})
     </insert>
+
+    <select id="findReportList" resultType="ChatReport">
+        SELECT CHAT_ID, TU.EMAIL AS WRITER_EMAIL , WRITER, MESSAGE, STATUS, COUNT(*) AS REPORT_COUNT
+          FROM TB_CHAT_REPORT
+          JOIN TB_USER TU
+            ON TB_CHAT_REPORT.WRITER = TU.USER_ID
+         GROUP BY CHAT_ID, WRITER, MESSAGE, STATUS, TU.EMAIL
+    </select>
+
+    <select id="findReportListByWriterId" resultType="ChatReport">
+        SELECT CHAT_ID, TU.EMAIL AS WRITER_EMAIL , WRITER, MESSAGE, STATUS, COUNT(*) AS REPORT_COUNT
+        FROM TB_CHAT_REPORT
+        JOIN TB_USER TU
+          ON TB_CHAT_REPORT.WRITER = TU.USER_ID
+       WHERE TB_CHAT_REPORT.WRITER = #{writer}
+       GROUP BY CHAT_ID, WRITER, MESSAGE, STATUS, TU.EMAIL
+    </select>
 </mapper>

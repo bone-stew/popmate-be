@@ -3,9 +3,11 @@ package com.bonestew.popmate.chat.presentation;
 import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.chat.application.ChatService;
 import com.bonestew.popmate.chat.application.RedisPublisher;
+import com.bonestew.popmate.chat.domain.ChatReport;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.presentation.dto.MessagesResponse;
+import com.bonestew.popmate.chat.presentation.dto.ReportResponse;
 import com.bonestew.popmate.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,12 +78,22 @@ public class ChatController {
     }
 
     @PostMapping("/report")
-    public ApiResponse<String> report(@AuthenticationPrincipal PopmateUser principal, String chatId) {
+    public ApiResponse<String> report(@AuthenticationPrincipal PopmateUser principal, @RequestBody ChatMessage chat) {
         try {
-            chatService.reportMessage(chatId, principal.getUserId());
+            chatService.reportMessage(chat, principal.getUserId());
             return ApiResponse.success("신고가 접수되었습니다.");
         } catch (DuplicateKeyException e) {
             return ApiResponse.success("이미 신고가 접수되었습니다.");
         }
+    }
+
+    @GetMapping("/report")
+    public ApiResponse<List<ChatReport>> reportList() {
+        return ApiResponse.success(chatService.getReports());
+    }
+
+    @GetMapping("/report/{userId}")
+    public ApiResponse<List<ChatReport>> reportListByWriter(@PathVariable Long userId) {
+        return ApiResponse.success(chatService.getReportsByWriter(userId));
     }
 }
