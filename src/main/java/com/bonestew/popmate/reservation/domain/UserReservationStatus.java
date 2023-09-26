@@ -32,4 +32,8 @@ public enum UserReservationStatus {
     public String getDescription() {
         return description;
     }
+
+    public boolean isReserved() {
+        return this == RESERVED;
+    }
 }

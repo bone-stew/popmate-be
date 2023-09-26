@@ -102,3 +102,12 @@ include::{snippets}/reservation-event-controller-test/예약자를_입장_처리
 
 === Response
 include::{snippets}/reservation-event-controller-test/예약자를_입장_처리한다/response-fields.adoc[]
+
+
+== 예약을 취소한다
+
+=== Request
+include::{snippets}/reservation-event-controller-test/예약을_취소한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-event-controller-test/예약을_취소한다/response-fields.adoc[]
