@@ -1,6 +1,7 @@
 package com.bonestew.popmate.reservation.presentation;
 
 import static com.bonestew.popmate.helper.RestDocsHelper.customDocument;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -62,6 +63,34 @@ class ReservationEventControllerTest {
                 requestFields(
                     fieldWithPath("reservationUserId").description("예약자 ID")
                         .type(JsonFieldType.NUMBER)
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 코드")
+                        .type(JsonFieldType.STRING),
+                    fieldWithPath("message").description("응답 메시지")
+                        .type(null),
+                    fieldWithPath("data").description("응답 데이터")
+                        .type(null)
+                )
+            ));
+    }
+
+    @Test
+    void 예약을_취소한다() throws Exception {
+        // given
+        Long reservationId = 1L;
+
+        // when
+        ResultActions result = mockMvc.perform(
+            patch("/api/v1/reservations/{reservationId}/cancel", reservationId)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(customDocument(
+                pathParameters(
+                    parameterWithName("reservationId").description("예약 ID")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 코드")
