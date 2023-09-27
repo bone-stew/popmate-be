@@ -13,6 +13,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.bonestew.popmate.popupstore.domain.Category;
 import com.bonestew.popmate.reservation.application.dto.GuestLimitUpdateRequest;
 import com.bonestew.popmate.user.domain.Role;
 import com.bonestew.popmate.user.domain.SocialProvider;
@@ -67,7 +68,7 @@ class ReservationInformationControllerTest {
         popupStoreId = 1L;
         dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
         date = LocalDate.of(2023, 10, 1);
-        popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), "Your Title", "Your Organizer",
+        popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), new Category(),"Your Title", "Your Organizer",
             "Your Place Detail", "Your Description", "Your Event Description", "Your Banner Image URL", 100, 200, true,
             true,
             15, 5, 10, dateTime, dateTime.plusDays(14), dateTime, dateTime.plusHours(8), 0L, dateTime, 0);
