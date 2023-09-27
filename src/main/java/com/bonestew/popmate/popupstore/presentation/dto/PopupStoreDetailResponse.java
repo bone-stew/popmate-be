@@ -13,6 +13,7 @@ import java.util.List;
 public record PopupStoreDetailResponse(
         Long popupStoreId,
         String title,
+        String categoryName,
         String organizer,
         String placeDetail,
         String description,
@@ -60,6 +61,7 @@ public record PopupStoreDetailResponse(
         return new PopupStoreDetailResponse(
                 popupStore.getPopupStoreId(),
                 popupStore.getTitle(),
+                popupStore.getCategory().getCategoryName().getName(),
                 popupStore.getOrganizer(),
                 popupStore.getPlaceDetail(),
                 popupStore.getDescription(),

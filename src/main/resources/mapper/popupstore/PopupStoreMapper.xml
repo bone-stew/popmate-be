@@ -201,6 +201,7 @@
     ps.popup_store_id = psi.popup_store_id
     left join tb_department td on
     ps.department_id = td.department_id
+    left join tb_category c on c.category_id = ps.category_id
     where ps.popup_store_id = #{popupStoreId}
   </select>
 
@@ -243,9 +244,10 @@
     </foreach>
   </update>
 
-  <select id="selectPopupStoresNearBy" parameterType="long" resultType="PopupStore">
+  <select id="selectPopupStoresNearBy" parameterType="long" resultMap="popupStoreMap">
     select *
     FROM tb_popup_store
+    join tb_category on tb_category.category_id = tb_popup_store.category_id
     where department_id = (select department_id from tb_popup_store where popup_store_id = #{popupStoreId})
     and popup_store_id != #{popupStoreId}
     and sysdate &lt;= close_date
