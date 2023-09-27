@@ -167,25 +167,27 @@
     and trunc(tur.created_at) = trunc(sysdate))
   </select>
 
-  <select id="selectPopupStoresToRecommend" resultType="PopupStore">
+  <select id="selectPopupStoresToRecommend" resultMap="popupStoreMap">
     SELECT
-    popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
+      s.popup_store_id, s.title, s.open_date, s.close_date, s.place_detail, s.banner_img_url, organizer, c.category_name
     FROM
-    tb_popup_store
+      tb_popup_store s
+        join tb_category c on s.category_id = c.category_id
     where sysdate &lt;= close_date
-    AND trunc(SYSDATE) > open_date
-    ORDER BY views
-    FETCH FIRST 5 ROWS ONLY
+      AND trunc(SYSDATE) > open_date
+    ORDER BY s.views
+      FETCH FIRST 5 ROWS ONLY
   </select>
 
-  <select id="selectPopupStoresEndingSoon" resultType="PopupStore">
+  <select id="selectPopupStoresEndingSoon" resultMap="popupStoreMap">
     SELECT
-    popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
+      s.popup_store_id, s.title, s.open_date, s.close_date, s.place_detail, s.banner_img_url, s.organizer, c.category_name
     FROM
-    tb_popup_store
-    where sysdate &lt;= close_date
-    order by close_date
-    fetch FIRST 5 ROWS ONLY
+      tb_popup_store s
+        join tb_category c on s.category_id = c.category_id
+    where sysdate &lt;= s.close_date
+    order by s.close_date
+      fetch FIRST 5 ROWS ONLY
   </select>
 
   <select id="findPopupStoreDetailById" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto"

@@ -7,6 +7,7 @@ import java.util.List;
 public record PopupStoreListItemResponse(
         Long popupStoreId,
         String title,
+        String categoryName,
         LocalDateTime openDate,
         LocalDateTime closeDate,
         String placeDetail,
@@ -19,6 +20,7 @@ public record PopupStoreListItemResponse(
         return new PopupStoreListItemResponse(
                 popupStore.getPopupStoreId(),
                 popupStore.getTitle(),
+                popupStore.getCategory().getCategoryName().getName(),
                 popupStore.getOpenDate(),
                 popupStore.getCloseDate(),
                 popupStore.getPlaceDetail(),
