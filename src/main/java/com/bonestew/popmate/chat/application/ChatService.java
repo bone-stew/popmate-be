@@ -1,11 +1,14 @@
 package com.bonestew.popmate.chat.application;
 
+import com.bonestew.popmate.chat.domain.ChatReport;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.chat.exception.ChatRoomNotFoundException;
 import com.bonestew.popmate.chat.persistence.ChatMessageRepository;
 import com.bonestew.popmate.chat.persistence.ChatRoomDao;
 import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.persistence.ChatRoomRepository;
+import com.bonestew.popmate.chat.persistence.dto.ReportDto;
+import com.bonestew.popmate.chat.presentation.dto.ReportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -56,7 +59,19 @@ public class ChatService {
         return chatMessageRepository.findChatMessageThumbNail(roomId, PageRequest.of(0, 10));
     }
 
-    public void reportMessage(String id, Long reporter) throws DuplicateKeyException {
-        chatRoomDao.insertChatReport(reporter, id);
+    public void reportMessage(ChatMessage chat, Long reporter) throws DuplicateKeyException {
+        chatRoomDao.insertChatReport(ReportDto.from(reporter, chat));
+    }
+
+    public List<ChatReport> getReports() {
+        return chatRoomDao.findReportList();
+    }
+
+    public List<ChatReport> getReportsByWriter(Long userId) {
+        List<ChatMessage> chatMessages = chatMessageRepository.findChatMessageBySender(userId);
+        return chatMessages.stream()
+                .map(
+                        chat -> new ChatReport(null, null, chat.getId(), chat.getMessage(), null, null, null, null)
+                ).toList();
     }
 }
