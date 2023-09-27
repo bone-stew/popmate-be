@@ -7,6 +7,7 @@ import com.bonestew.popmate.chat.domain.ChatReport;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.presentation.dto.EnterResponse;
+import com.bonestew.popmate.chat.presentation.dto.BanUserRequest;
 import com.bonestew.popmate.chat.presentation.dto.MessagesResponse;
 import com.bonestew.popmate.chat.presentation.dto.ReportResponse;
 import com.bonestew.popmate.dto.ApiResponse;
@@ -101,5 +102,10 @@ public class ChatController {
     @GetMapping("/enter-verify")
     public ApiResponse<EnterResponse> enterVerify(@AuthenticationPrincipal PopmateUser principal) {
         return ApiResponse.success(chatService.isUserBanned(principal));
+
+    @PostMapping("/ban-user")
+    public ApiResponse<List<ChatReport>> banUser(@RequestBody BanUserRequest request) {
+        log.info(request.toString());
+        return ApiResponse.success(chatService.banUserAndGetNewReportList(request));
     }
 }

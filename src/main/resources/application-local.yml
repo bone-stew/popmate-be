@@ -12,6 +12,10 @@ spring:
       host: localhost
       port: 6379
       maxHeap: 128M
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 mybatis:
   type-aliases-package: com.bonestew.popmate.*.domain, com.bonestew.popmate.popupstore.presentation.dto
@@ -43,3 +47,4 @@ cloud:
         credentials:
           access-key: ENC(8dT/euQBwq4whoxobum0F/XDwhZvWjac81TSf8zeAqw=)
           secret-key: ENC(qGcB5PFi/kkOhwwerW61ZZVhYjsVk3YfZHCPZEYeuj9CEraCjujxrBt4wnz3Iq7QPF+pZJ3jnMU=)
+

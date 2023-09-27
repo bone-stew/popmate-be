@@ -20,6 +20,6 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
     @Query("{id: ?0}")
     Optional<ChatMessage> findChatMessageById(String id);
 
-    @Query("{sender: ?0}")
-    List<ChatMessage> findChatMessageBySender(Long sender);
+    @Query( value = "{sender: ?0}", sort = "{createdAt: -1}")
+    List<ChatMessage> findChatMessageBySenderOrderByCreatedAtDesc(Long sender);
 }

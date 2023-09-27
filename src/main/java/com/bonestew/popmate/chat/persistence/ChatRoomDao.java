@@ -5,6 +5,7 @@ import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.domain.ChatReport;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.chat.persistence.dto.ReportDto;
+import com.bonestew.popmate.chat.presentation.dto.BanUserRequest;
 import com.bonestew.popmate.chat.presentation.dto.ReportResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,4 +21,6 @@ public interface ChatRoomDao {
     List<ChatReport> findReportList();
     List<ChatReport> findReportListByWriterId(Long userId);
     Optional<BannedUser> findBannedUserByUserId (Long userId);
+    void insertOrUpdateBanUser(@Param("userId") Long userId, @Param("banDays") Integer banDays);
+    void updateChatReportStatus (BanUserRequest request);
 }
