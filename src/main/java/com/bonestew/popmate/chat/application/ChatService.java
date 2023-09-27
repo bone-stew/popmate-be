@@ -8,7 +8,7 @@ import com.bonestew.popmate.chat.persistence.ChatRoomDao;
 import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.persistence.ChatRoomRepository;
 import com.bonestew.popmate.chat.persistence.dto.ReportDto;
-import com.bonestew.popmate.chat.presentation.dto.ReportResponse;
+import com.bonestew.popmate.chat.presentation.dto.BanUserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -68,10 +69,21 @@ public class ChatService {
     }
 
     public List<ChatReport> getReportsByWriter(Long userId) {
-        List<ChatMessage> chatMessages = chatMessageRepository.findChatMessageBySender(userId);
-        return chatMessages.stream()
-                .map(
-                        chat -> new ChatReport(null, null, chat.getId(), chat.getMessage(), null, null, null, null)
-                ).toList();
+        List<ChatMessage> chatMessages = chatMessageRepository.findChatMessageBySenderOrderByCreatedAtDesc(userId);
+        return chatMessages.stream().map(chat -> new ChatReport(null, null, chat.getId(), chat.getMessage(), null, null, null, null)).toList();
+    }
+
+    @Transactional
+    public List<ChatReport> banUserAndGetNewReportList(BanUserRequest request) {
+        int banDays = 0;
+        switch (request.type()) {
+            case 2 -> banDays = 3;
+            case 3 -> banDays = 7;
+            case 4 -> banDays = 30;
+            case 5 -> banDays = 40000;
+        }
+        chatRoomDao.insertOrUpdateBanUser(request.userId(), banDays);
+        chatRoomDao.updateChatReportStatus(request);
+        return chatRoomDao.findReportList();
     }
 }

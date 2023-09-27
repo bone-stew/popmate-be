@@ -6,6 +6,7 @@ import com.bonestew.popmate.chat.application.RedisPublisher;
 import com.bonestew.popmate.chat.domain.ChatReport;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.chat.domain.ChatMessage;
+import com.bonestew.popmate.chat.presentation.dto.BanUserRequest;
 import com.bonestew.popmate.chat.presentation.dto.MessagesResponse;
 import com.bonestew.popmate.chat.presentation.dto.ReportResponse;
 import com.bonestew.popmate.dto.ApiResponse;
@@ -95,5 +96,11 @@ public class ChatController {
     @GetMapping("/report/{userId}")
     public ApiResponse<List<ChatReport>> reportListByWriter(@PathVariable Long userId) {
         return ApiResponse.success(chatService.getReportsByWriter(userId));
+    }
+
+    @PostMapping("/ban-user")
+    public ApiResponse<List<ChatReport>> banUser(@RequestBody BanUserRequest request) {
+        log.info(request.toString());
+        return ApiResponse.success(chatService.banUserAndGetNewReportList(request));
     }
 }
