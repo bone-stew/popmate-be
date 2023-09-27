@@ -1,5 +1,7 @@
 package com.bonestew.popmate.chat.application;
 
+import com.bonestew.popmate.auth.domain.PopmateUser;
+import com.bonestew.popmate.chat.domain.BannedUser;
 import com.bonestew.popmate.chat.domain.ChatReport;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.chat.exception.ChatRoomNotFoundException;
@@ -8,6 +10,8 @@ import com.bonestew.popmate.chat.persistence.ChatRoomDao;
 import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.persistence.ChatRoomRepository;
 import com.bonestew.popmate.chat.persistence.dto.ReportDto;
+import com.bonestew.popmate.chat.presentation.dto.EnterResponse;
+import com.bonestew.popmate.chat.presentation.dto.ReportResponse;
 import com.bonestew.popmate.chat.presentation.dto.BanUserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +23,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -85,5 +90,18 @@ public class ChatService {
         chatRoomDao.insertOrUpdateBanUser(request.userId(), banDays);
         chatRoomDao.updateChatReportStatus(request);
         return chatRoomDao.findReportList();
+    }
+
+    public EnterResponse isUserBanned(PopmateUser principal) {
+        EnterResponse enterResponse;
+        BannedUser bannedUser = chatRoomDao.findBannedUserByUserId(principal.getUserId()).orElse(null);
+        if(bannedUser == null) {
+            enterResponse = new EnterResponse(false, null);
+        } else if (bannedUser.getExpiredDate().isAfter(LocalDateTime.now())) {
+            enterResponse = new EnterResponse(true, bannedUser.getExpiredDate());
+        } else {
+            enterResponse = new EnterResponse(false, null);
+        }
+        return enterResponse;
     }
 }

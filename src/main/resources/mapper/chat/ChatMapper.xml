@@ -33,6 +33,13 @@
          GROUP BY CHAT_ID, WRITER, MESSAGE, STATUS, TU.EMAIL
          ORDER BY STATUS, REPORT_COUNT DESC
     </select>
+
+    <select id="findBannedUserByUserId" resultType="BannedUser">
+        SELECT BANNED_ID, USER_ID, EXPIRED_DATE
+          FROM TB_CHAT_BANNED_USER
+         WHERE USER_ID = #{userId}
+           AND EXPIRED_DATE > sysdate
+    </select>
     
     <update id="insertOrUpdateBanUser">
         MERGE INTO tb_chat_banned_user target
