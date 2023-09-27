@@ -30,7 +30,7 @@ public record PopupStoreDetailResponse(
         Department department,
         List<PopupStoreSns> popupStoreSnsResponses,
         List<PopupStoreImg> popupStoreImgResponses,
-        List<PopupStore> popupStoresNearBy
+        List<PopupStoreResponse> popupStoresNearBy
 ) {
 
     public static PopupStoreDetailResponse of(List<PopupStoreDetailDto> popupStoreDtoList,
@@ -58,6 +58,7 @@ public record PopupStoreDetailResponse(
                 }
             }
         }
+        List<PopupStoreResponse> popupStoresNearByResponses = popupStoresNearBy.stream().map(PopupStoreResponse::from).toList();
         return new PopupStoreDetailResponse(
                 popupStore.getPopupStoreId(),
                 popupStore.getTitle(),
@@ -78,7 +79,7 @@ public record PopupStoreDetailResponse(
                 popupStore.getDepartment(),
                 popupStoreSnsResponse,
                 popupStoreImgResponse,
-                popupStoresNearBy
+                popupStoresNearByResponses
         );
     }
 }
