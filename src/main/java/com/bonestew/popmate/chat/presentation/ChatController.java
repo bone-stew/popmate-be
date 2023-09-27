@@ -102,7 +102,8 @@ public class ChatController {
     @GetMapping("/enter-verify")
     public ApiResponse<EnterResponse> enterVerify(@AuthenticationPrincipal PopmateUser principal) {
         return ApiResponse.success(chatService.isUserBanned(principal));
-
+    }
+    
     @PostMapping("/ban-user")
     public ApiResponse<List<ChatReport>> banUser(@RequestBody BanUserRequest request) {
         log.info(request.toString());
