@@ -27,6 +27,12 @@
     <result column="total" property="total"/>
     <association property="user" resultMap="userMap"/>
     <association property="department" resultMap="departmentMap"/>
+    <association property="category" resultMap="categoryMap"/>
+  </resultMap>
+
+  <resultMap id="categoryMap" type="Category">
+    <result column="category_id" property="categoryId"/>
+    <result column="category_name" property="categoryName"/>
   </resultMap>
 
   <resultMap id="userMap" type="User">
@@ -50,7 +56,6 @@
     <association property="popupStoreSns" resultMap="popupStoreSnsMap"/>
     <association property="popupStoreImg" resultMap="popupStoreImgMap"/>
   </resultMap>
-
 
   <resultMap id="bannerMap" type="Banner">
     <result column="banner_id" property="bannerId"/>
@@ -95,10 +100,11 @@
 
   <select id="selectPopupStoresByQuery" resultMap="popupStoreMap"
     parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto">
-    SELECT POPUP_STORE_ID, TITLE, NAME, OPEN_DATE, CLOSE_DATE, ORGANIZER, d.CREATED_AT as CREATED_AT, COUNT(*) over () total
+    SELECT POPUP_STORE_ID, TITLE, NAME, OPEN_DATE, CLOSE_DATE, ORGANIZER, d.CREATED_AT as CREATED_AT, COUNT(*) over () total, c.CATEGORY_NAME
     FROM TB_POPUP_STORE s
     JOIN TB_DEPARTMENT d
     ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
+    join tb_category c on s.category_id = c.category_id
     <where>
       <if test="request.type == 0 or request.type == 1">
         OR s.TITLE LIKE '%' || #{request.query} || '%'
@@ -124,8 +130,8 @@
     resultMap="popupStoreMap">
     SELECT *
     FROM tb_popup_store s
-    JOIN TB_DEPARTMENT d
-    ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
+    JOIN TB_DEPARTMENT d ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
+    JOIN TB_CATEGORY c ON s.CATEGORY_ID = c.CATEGORY_ID
     <where>
       <if test="keyword != null and keyword != ''">
         AND title LIKE '%' || #{keyword} || '%'
@@ -162,25 +168,27 @@
     and trunc(tur.created_at) = trunc(sysdate))
   </select>
 
-  <select id="selectPopupStoresToRecommend" resultType="PopupStore">
+  <select id="selectPopupStoresToRecommend" resultMap="popupStoreMap">
     SELECT
-    popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
+      s.popup_store_id, s.title, s.open_date, s.close_date, s.place_detail, s.banner_img_url, organizer, c.category_name
     FROM
-    tb_popup_store
+      tb_popup_store s
+        join tb_category c on s.category_id = c.category_id
     where sysdate &lt;= close_date
-    AND trunc(SYSDATE) > open_date
-    ORDER BY views
-    FETCH FIRST 5 ROWS ONLY
+      AND trunc(SYSDATE) > open_date
+    ORDER BY s.views
+      FETCH FIRST 5 ROWS ONLY
   </select>
 
-  <select id="selectPopupStoresEndingSoon" resultType="PopupStore">
+  <select id="selectPopupStoresEndingSoon" resultMap="popupStoreMap">
     SELECT
-    popup_store_id, title, open_date, close_date, place_detail, banner_img_url, organizer
+      s.popup_store_id, s.title, s.open_date, s.close_date, s.place_detail, s.banner_img_url, s.organizer, c.category_name
     FROM
-    tb_popup_store
-    where sysdate &lt;= close_date
-    order by close_date
-    fetch FIRST 5 ROWS ONLY
+      tb_popup_store s
+        join tb_category c on s.category_id = c.category_id
+    where sysdate &lt;= s.close_date
+    order by s.close_date
+      fetch FIRST 5 ROWS ONLY
   </select>
 
   <select id="findPopupStoreDetailById" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreQueryDto"
@@ -193,6 +201,7 @@
     ps.popup_store_id = psi.popup_store_id
     left join tb_department td on
     ps.department_id = td.department_id
+    left join tb_category c on c.category_id = ps.category_id
     where ps.popup_store_id = #{popupStoreId}
   </select>
 
@@ -235,9 +244,10 @@
     </foreach>
   </update>
 
-  <select id="selectPopupStoresNearBy" parameterType="long" resultType="PopupStore">
+  <select id="selectPopupStoresNearBy" parameterType="long" resultMap="popupStoreMap">
     select *
     FROM tb_popup_store
+    join tb_category on tb_category.category_id = tb_popup_store.category_id
     where department_id = (select department_id from tb_popup_store where popup_store_id = #{popupStoreId})
     and popup_store_id != #{popupStoreId}
     and sysdate &lt;= close_date

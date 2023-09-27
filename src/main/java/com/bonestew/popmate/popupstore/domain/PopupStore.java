@@ -20,6 +20,7 @@ public class PopupStore {
     private User user;
     private Department department;
     private ChatRoom chatRoomId;
+    private Category category;
     private String title;
     private String organizer;
     private String placeDetail;

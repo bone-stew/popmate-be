@@ -13,6 +13,7 @@ import java.util.List;
 public record PopupStoreDetailResponse(
         Long popupStoreId,
         String title,
+        String categoryName,
         String organizer,
         String placeDetail,
         String description,
@@ -29,7 +30,7 @@ public record PopupStoreDetailResponse(
         Department department,
         List<PopupStoreSns> popupStoreSnsResponses,
         List<PopupStoreImg> popupStoreImgResponses,
-        List<PopupStore> popupStoresNearBy
+        List<PopupStoreResponse> popupStoresNearBy
 ) {
 
     public static PopupStoreDetailResponse of(List<PopupStoreDetailDto> popupStoreDtoList,
@@ -57,9 +58,11 @@ public record PopupStoreDetailResponse(
                 }
             }
         }
+        List<PopupStoreResponse> popupStoresNearByResponses = popupStoresNearBy.stream().map(PopupStoreResponse::from).toList();
         return new PopupStoreDetailResponse(
                 popupStore.getPopupStoreId(),
                 popupStore.getTitle(),
+                popupStore.getCategory().getCategoryName().getName(),
                 popupStore.getOrganizer(),
                 popupStore.getPlaceDetail(),
                 popupStore.getDescription(),
@@ -76,7 +79,7 @@ public record PopupStoreDetailResponse(
                 popupStore.getDepartment(),
                 popupStoreSnsResponse,
                 popupStoreImgResponse,
-                popupStoresNearBy
+                popupStoresNearByResponses
         );
     }
 }
