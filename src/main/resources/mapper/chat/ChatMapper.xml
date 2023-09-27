@@ -31,4 +31,11 @@
        WHERE TB_CHAT_REPORT.WRITER = #{writer}
        GROUP BY CHAT_ID, WRITER, MESSAGE, STATUS, TU.EMAIL
     </select>
+
+    <select id="findBannedUserByUserId" resultType="BannedUser">
+        SELECT BANNED_ID, USER_ID, EXPIRED_DATE
+          FROM TB_CHAT_BANNED_USER
+         WHERE USER_ID = #{userId}
+           AND EXPIRED_DATE > sysdate
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.bonestew.popmate.chat.persistence;
 
+import com.bonestew.popmate.chat.domain.BannedUser;
 import com.bonestew.popmate.chat.domain.ChatMessage;
 import com.bonestew.popmate.chat.domain.ChatReport;
 import com.bonestew.popmate.chat.domain.ChatRoom;
@@ -17,6 +18,6 @@ public interface ChatRoomDao {
     Optional<ChatRoom> findById(String roomId);
     void insertChatReport(ReportDto report);
     List<ChatReport> findReportList();
-
     List<ChatReport> findReportListByWriterId(Long userId);
+    Optional<BannedUser> findBannedUserByUserId (Long userId);
 }
