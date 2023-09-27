@@ -11,6 +11,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.bonestew.popmate.popupstore.domain.Category;
 import com.bonestew.popmate.user.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.exception.enums.ResultCode;
@@ -72,6 +73,7 @@ class PopupStoreControllerTest {
                         new User(),
                         new Department(),
                         new ChatRoom(),
+                        new Category(),
                         "팝업스토어",
                         "주최자",
                         "상세 주소",
@@ -144,7 +146,7 @@ class PopupStoreControllerTest {
         Long popupStoreId = 1L;
         LocalDateTime dateTime = LocalDateTime.of(2023, 8, 30, 9, 0);
 
-        PopupStore popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), "테스트 팝업 스토어", "주최자 이름",
+        PopupStore popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), new Category(), "테스트 팝업 스토어", "주최자 이름",
                 "장소 상세 정보", "설명", "이벤트 설명", "이미지 URL", 1000, 50, true, true, 30, 5, 10, LocalDateTime.of(2023, 8, 23, 10, 0),
                 dateTime, dateTime, dateTime, 0L, dateTime, 0);
 
