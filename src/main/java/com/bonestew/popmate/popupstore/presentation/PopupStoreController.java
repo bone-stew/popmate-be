@@ -134,15 +134,9 @@ public class PopupStoreController {
     @PostMapping(value = "/new", consumes = {"multipart/form-data"})
     public ApiResponse<Long> createPopupStore(@RequestPart(value = "storeInfo") PopupStoreCreateRequest popupStoreCreateRequest,
                                               @RequestPart("storeImageFiles") List<MultipartFile> storeImageFiles,
-                                              @RequestPart(value = "storeItemImageFiles", required = false) List<MultipartFile> storeItemImageFiles,
-                                              @AuthenticationPrincipal PopmateUser popmateUser) {
-        Long userId;
-        if (popmateUser == null) {
-            userId = null;
-        } else {
-            userId = popmateUser.getUserId();
-        }
-        Long storeId = popupStoreService.postNewPopupStore(storeImageFiles, storeItemImageFiles, popupStoreCreateRequest, userId);
+                                              @RequestPart(value = "storeItemImageFiles", required = false) List<MultipartFile> storeItemImageFiles
+                                              ) {
+        Long storeId = popupStoreService.postNewPopupStore(storeImageFiles, storeItemImageFiles, popupStoreCreateRequest);
         return ApiResponse.success(storeId);
     }
 
@@ -155,16 +149,9 @@ public class PopupStoreController {
     }
 
     @PutMapping("/{popupStoreId}")
-    public ApiResponse<String> updatePopupStore(@RequestBody PopupStoreUpdateRequest popupStoreUpdateRequest,
-                                                @AuthenticationPrincipal PopmateUser popmateUser) {
-        Long userId;
-        if (popmateUser == null) {
-            userId = null;
-        } else {
-            userId = popmateUser.getUserId();
-        }
-        log.info(popupStoreUpdateRequest.toString());
-        popupStoreService.updatePopupStore(popupStoreUpdateRequest, userId);
+    public ApiResponse<String> updatePopupStore(@RequestBody PopupStoreUpdateRequest popupStoreUpdateRequest
+                                                ) {
+        popupStoreService.updatePopupStore(popupStoreUpdateRequest);
         return ApiResponse.success("success");
     }
 

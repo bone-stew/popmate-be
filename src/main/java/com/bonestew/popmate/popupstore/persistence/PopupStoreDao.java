@@ -11,6 +11,7 @@ import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreUpdateRequest;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
+import com.bonestew.popmate.user.domain.User;
 import java.util.List;
 import java.util.Optional;
 import javax.swing.Popup;

@@ -5,6 +5,7 @@ import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
+import com.bonestew.popmate.user.domain.User;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public record PopupStoreInfoResponse(
         Long popupStoreId,
+        User user,
         String title,
         String organizer,
         String placeDetail,
@@ -72,6 +74,7 @@ public record PopupStoreInfoResponse(
         }
         return new PopupStoreInfoResponse(
                 popupStoreInfo.getPopupStore().getPopupStoreId(),
+                popupStoreInfo.getPopupStore().getUser(),
                 popupStoreInfo.getPopupStore().getTitle(),
                 popupStoreInfo.getPopupStore().getOrganizer(),
                 popupStoreInfo.getPopupStore().getPlaceDetail(),
