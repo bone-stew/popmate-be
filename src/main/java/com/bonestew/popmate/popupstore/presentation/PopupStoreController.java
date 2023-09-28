@@ -57,7 +57,6 @@ public class PopupStoreController {
             @RequestParam(value = "offSetRows", required = false) Integer offSetRows,
             @RequestParam(value = "rowsToGet", required = false) Integer rowsToGet
     ) {
-        log.info("팝업스토어 목록 조회 API");
         List<PopupStore> popupStoreList = popupStoreService.getPopupStores(isOpeningSoon,
                 startDateText,
                 endDateText,

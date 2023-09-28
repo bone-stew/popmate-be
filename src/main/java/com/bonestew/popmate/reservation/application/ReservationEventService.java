@@ -61,6 +61,7 @@ public class ReservationEventService {
         }
 
         reservation.validate(reservationRequest.guestCount());
+
         if (userReservationDao.existsByUserIdAndReservationId(userId, reservationId, UserReservationStatus.RESERVED)) {
             throw new AlreadyReservedException(userId, reservationId);
         }
