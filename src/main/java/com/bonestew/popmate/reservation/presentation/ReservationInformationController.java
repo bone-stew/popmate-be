@@ -59,7 +59,7 @@ public class ReservationInformationController {
     }
 
     /**
-     * 나의 예약 상세 조회
+     * 나의 예약 상세 조회 (추후 reservations -> userReservation 으로 변경 필요)
      *
      * @param reservationId 예약 식별자
      * @return 예약 정보

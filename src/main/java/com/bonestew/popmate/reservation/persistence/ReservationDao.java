@@ -36,8 +36,6 @@ public interface ReservationDao {
 
     List<Wifi> findWifiById(Long reservationId);
 
-    void updateCurrentGuestCount(Reservation reservation);
-
     void updateReservationStatusToInProgress();
 
     void updateReservationStatusToClosed();
@@ -46,7 +44,7 @@ public interface ReservationDao {
 
     void updateReservationStatusToEntered();
 
-    void updateGuestLimit(Long reservationId, int guestLimit);
+    void updateCurrentGuestCount(Long reservationId, int currentGuestCount);
 
     void updateStatus(Long reservationId, ReservationStatus status);
 }
