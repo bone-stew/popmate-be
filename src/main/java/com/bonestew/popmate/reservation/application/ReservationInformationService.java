@@ -4,6 +4,7 @@ import com.bonestew.popmate.reservation.application.dto.GuestLimitUpdateRequest;
 import com.bonestew.popmate.reservation.domain.Reservation;
 import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import com.bonestew.popmate.reservation.domain.UserReservation;
+import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import com.bonestew.popmate.reservation.exception.ReservationNotFoundException;
 import com.bonestew.popmate.reservation.exception.UserReservationNotFoundException;
 import com.bonestew.popmate.reservation.persistence.ReservationDao;
@@ -34,7 +35,7 @@ public class ReservationInformationService {
     }
 
     public UserReservation getMyReservation(Long reservationId, Long userId) {
-        return userReservationDao.findByReservationIdAndUserId(reservationId, userId)
+        return userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED) // 추후 userReservationId로 찾을 수 있도록 수정이 필요
             .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
     }
 
