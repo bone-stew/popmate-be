@@ -9,7 +9,6 @@ import com.bonestew.popmate.reservation.application.dto.WifiRequest;
 import com.bonestew.popmate.reservation.domain.ReservationStatus;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import com.bonestew.popmate.reservation.exception.InvalidReservationCancellationException;
-import com.bonestew.popmate.reservation.exception.InvalidReservationStatusException;
 import com.bonestew.popmate.reservation.exception.UserReservationNotFoundException;
 import com.bonestew.popmate.reservation.exception.WifiCheckException;
 import com.bonestew.popmate.user.application.UserService;
@@ -62,12 +61,12 @@ public class ReservationEventService {
         }
 
         reservation.validate(reservationRequest.guestCount());
-        if (userReservationDao.existsByUserIdAndReservationId(userId, reservationId)) {
+        if (userReservationDao.existsByUserIdAndReservationId(userId, reservationId, UserReservationStatus.RESERVED)) {
             throw new AlreadyReservedException(userId, reservationId);
         }
 
         reservation.increaseCurrentGuestCount(reservationRequest.guestCount());
-        reservationDao.updateCurrentGuestCount(reservation);
+        reservationDao.updateCurrentGuestCount(reservation.getReservationId(), reservation.getCurrentGuestCount());
 
         String reservationQrCode = generateReservationQrCode(user, reservation);
 
@@ -128,17 +127,21 @@ public class ReservationEventService {
      * @param reservationId
      * @param userId
      */
-    @Transactional()
+    @Transactional
     public void cancel(Long reservationId, Long userId) {
-        UserReservation userReservation = userReservationDao.findByReservationIdAndUserId(reservationId, userId)
+        UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED)
             .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
 
         if (!userReservation.getStatus().isReserved()) {
             throw new InvalidReservationCancellationException(userReservation.getUserReservationId());
         }
+        System.out.println("userReservation = " + userReservation);
+        System.out.println("취소할 팀원들 = " + userReservation.getGuestCount());
+        System.out.println("기존 예약 시간대 사람들 = " + userReservation.getReservation().getCurrentGuestCount());
         userReservationDao.updateStatus(userReservation.getUserReservationId(), UserReservationStatus.CANCELED);
         userReservation.getReservation().decreaseCurrentGuestCount(userReservation.getGuestCount());
-        reservationDao.updateGuestLimit(reservationId, userReservation.getGuestCount());
+        System.out.println("업데이트할 예약 시간대 사람들 = " + userReservation.getReservation().getCurrentGuestCount());
+        reservationDao.updateCurrentGuestCount(reservationId, userReservation.getReservation().getCurrentGuestCount());
 
         log.info("Cancel successful for user ID: {}, reservation ID: {}", userId, reservationId);
     }
@@ -147,12 +150,12 @@ public class ReservationEventService {
      * 예약자 입장 처리
      *
      * @param reservationId
-     * @param userId
+     * @param processEntranceRequest
      */
     @Transactional
     public void processEntrance(Long reservationId, ProcessEntranceRequest processEntranceRequest) {
         Long userId = processEntranceRequest.reservationUserId();
-        UserReservation userReservation = userReservationDao.findByReservationIdAndUserId(reservationId, userId)
+        UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED)
             .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
 
         userReservation.validateEntry();

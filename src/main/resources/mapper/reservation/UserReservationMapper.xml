@@ -60,13 +60,23 @@
     <collection column="reservation_id" property="reservation" resultMap="reservationMap"/>
   </resultMap>
 
-  <select id="findByReservationIdAndUserId" parameterType="long" resultMap="userReservationMap">
+  <select id="findByReservationIdAndUserId" resultMap="userReservationMap">
     SELECT *
     FROM tb_user_reservation A
            LEFT JOIN tb_reservation B ON A.reservation_id = B.reservation_id
            LEFT JOIN tb_popup_store C ON B.popup_store_id = C.popup_store_id
     where A.reservation_id = #{reservationId}
       AND A.user_id = #{userId}
+  </select>
+
+  <select id="findByReservationIdAndUserIdAndStatus" resultMap="userReservationMap">
+    SELECT *
+    FROM tb_user_reservation A
+           LEFT JOIN tb_reservation B ON A.reservation_id = B.reservation_id
+           LEFT JOIN tb_popup_store C ON B.popup_store_id = C.popup_store_id
+    where A.reservation_id = #{reservationId}
+      AND A.user_id = #{userId}
+      AND A.status = #{status}
   </select>
 
   <select id="getByUserId" resultMap="userReservationMap">
@@ -87,6 +97,7 @@
     FROM tb_user_reservation
     WHERE user_id = #{userId}
       AND reservation_id = #{reservationId}
+      AND status = #{status}
   </select>
 
   <select id="findByReservationId" parameterType="long" resultMap="userReservationMap">
