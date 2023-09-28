@@ -3,7 +3,6 @@ package com.bonestew.popmate.popupstore.application;
 import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.popupstore.config.FolderType;
 import com.bonestew.popmate.popupstore.config.service.FileService;
-import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.PopupStore;
 import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
@@ -20,8 +19,6 @@ import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.persistence.dto.*;
 import com.bonestew.popmate.popupstore.presentation.dto.MyStoreResponse;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreUpdateRequest;
@@ -30,11 +27,11 @@ import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import com.bonestew.popmate.user.domain.User;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,7 +39,6 @@ import com.bonestew.popmate.user.domain.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -177,9 +173,9 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoresByQuery(dto);
     }
 
-    public List<MyStoreResponse> getPopupStoresByAuth (PopmateUser user) {
+    public List<MyStoreResponse> getPopupStoresByAuth(PopmateUser user) {
         AuthDto authDto = new AuthDto(user.getUserId(), null);
-        if(user.getAuthorities().contains(Role.ROLE_MANAGER)) {
+        if (user.getAuthorities().contains(Role.ROLE_MANAGER)) {
             authDto = new AuthDto(user.getUserId(), Role.ROLE_MANAGER);
         } else if (user.getAuthorities().contains(Role.ROLE_STAFF)) {
             authDto = new AuthDto(user.getUserId(), Role.ROLE_STAFF);
@@ -188,38 +184,40 @@ public class PopupStoreService {
     }
 
     public void updatePopupStore(PopupStoreUpdateRequest popupStoreUpdateRequest, Long userId) {
-        List<String> storeImgList = popupStoreUpdateRequest.getStoreImageList();
         PopupStore popupStore = popupStoreUpdateRequest.getPopupStore();
         User user = new User();
         user.setUserId(userId);
         popupStoreUpdateRequest.getPopupStore().setUser(user);
-        popupStoreUpdateRequest.getPopupStore().setBannerImgUrl(storeImgList.get(0));
-        storeImgList.remove(0);
-        if (!storeImgList.isEmpty()) {
-            popupStoreDao.deleteStoreImageById(popupStore.getPopupStoreId());
-            for (String url : storeImgList) {
-                PopupStoreImg storeImg = new PopupStoreImg();
-                storeImg.setPopupStore(popupStore);
-                storeImg.setImgUrl(url);
-                popupStoreDao.insertPopupStoreImg(storeImg);
+        if (!popupStoreUpdateRequest.getStoreImageList().isEmpty()) {
+            List<String> storeImgList = popupStoreUpdateRequest.getStoreImageList();
+            popupStoreUpdateRequest.getPopupStore().setBannerImgUrl(storeImgList.get(0));
+            storeImgList.remove(0);
+            if (!storeImgList.isEmpty()) {
+                popupStoreDao.deleteStoreImageById(popupStore.getPopupStoreId());
+                for (String url : storeImgList) {
+                    PopupStoreImg storeImg = new PopupStoreImg();
+                    storeImg.setPopupStore(popupStore);
+                    storeImg.setImgUrl(url);
+                    popupStoreDao.insertPopupStoreImg(storeImg);
+                }
             }
         }
         if (!popupStoreUpdateRequest.getPopupStoreItemList().isEmpty()) {
             List<PopupStoreItem> originalItemsThatNeedUpdating = new ArrayList<>();
-            for (PopupStoreItem popupStoreItem : popupStoreUpdateRequest.getPopupStoreItemList()){
-                if(popupStoreItem.getPopupStoreItemId() == null){
+            for (PopupStoreItem popupStoreItem : popupStoreUpdateRequest.getPopupStoreItemList()) {
+                if (popupStoreItem.getPopupStoreItemId() == null) {
                     popupStoreItem.setPopupStore(popupStore);
                     popupStoreDao.insertPopupStoreItem(popupStoreItem);
                 } else {
                     originalItemsThatNeedUpdating.add(popupStoreItem);
                 }
             }
-            if (!originalItemsThatNeedUpdating.isEmpty()){
-            popupStoreDao.updatePopupStoreItem(originalItemsThatNeedUpdating);
+            if (!originalItemsThatNeedUpdating.isEmpty()) {
+                popupStoreDao.updatePopupStoreItem(originalItemsThatNeedUpdating);
             }
         }
-        if (popupStoreUpdateRequest.getPopupStoreItemsToDelete()!=null &&
-                !popupStoreUpdateRequest.getPopupStoreItemsToDelete().isEmpty()){
+        if (popupStoreUpdateRequest.getPopupStoreItemsToDelete() != null &&
+                !popupStoreUpdateRequest.getPopupStoreItemsToDelete().isEmpty()) {
             popupStoreDao.updatePopupStoreItemSalesStatus(popupStoreUpdateRequest.getPopupStoreItemsToDelete());
         }
 
@@ -235,7 +233,14 @@ public class PopupStoreService {
 
     public Long postNewPopupStore(List<MultipartFile> storeImageFiles, List<MultipartFile> storeItemImageFiles,
                                   PopupStoreCreateRequest popupStoreCreateRequest, Long userId
-                                  ) {
+    ) {
+        PopupStore popupStore = popupStoreCreateRequest.getPopupStore();
+        LocalDate oldOpenDate = popupStore.getOpenDate().toLocalDate();
+        LocalDate oldCloseDate = popupStore.getCloseDate().toLocalDate();
+        LocalDateTime openTime = popupStore.getOpenTime();
+        LocalDateTime closeTime = popupStore.getCloseTime();
+        popupStore.setOpenTime(LocalDateTime.of(oldOpenDate, openTime.toLocalTime()));
+        popupStore.setCloseTime(LocalDateTime.of(oldCloseDate, closeTime.toLocalTime()));
 
         List<String> storeImageList = awsFileService.uploadFiles(storeImageFiles, FolderType.STORES);
         List<String> storeItemImageList = new ArrayList<>();
@@ -249,7 +254,6 @@ public class PopupStoreService {
         storeImageList.remove(0);
         popupStoreDao.insertPopupStore(popupStoreCreateRequest.getPopupStore());
         Long storeId = popupStoreCreateRequest.getPopupStore().getPopupStoreId();
-        PopupStore popupStore = new PopupStore();
         popupStore.setPopupStoreId(storeId);
         if (!storeImageList.isEmpty()) {
             for (String url : storeImageList) {
@@ -275,7 +279,7 @@ public class PopupStoreService {
         }
         if (popupStoreCreateRequest.getPopupStore().getReservationEnabled()) {
             reservationEventService.createReservation(
-                CreateReservationDto.from(popupStoreCreateRequest.getPopupStore())
+                    CreateReservationDto.from(popupStoreCreateRequest.getPopupStore())
             );
         }
         return storeId;
