@@ -26,12 +26,14 @@ import com.bonestew.popmate.reservation.application.ReservationEventService;
 import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import com.bonestew.popmate.user.domain.User;
+import com.bonestew.popmate.user.persistence.UserDao;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -52,6 +54,7 @@ public class PopupStoreService {
     private final FileService awsFileService;
     private final ReservationEventService reservationEventService;
     private final PopupStoreDao popupStoreDao;
+    private final UserDao userDao;
     private final PopupStoreRepository popupStoreRepository;
 
     public PopupStore getPopupStore(Long popupStoreId) {
@@ -183,11 +186,11 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoreByAuth(authDto).stream().map(MyStoreResponse::from).collect(Collectors.toList());
     }
 
-    public void updatePopupStore(PopupStoreUpdateRequest popupStoreUpdateRequest, Long userId) {
+    public void updatePopupStore(PopupStoreUpdateRequest popupStoreUpdateRequest) {
         PopupStore popupStore = popupStoreUpdateRequest.getPopupStore();
-        User user = new User();
-        user.setUserId(userId);
-        popupStoreUpdateRequest.getPopupStore().setUser(user);
+//        User user = new User();
+//        user.setUserId(userId);
+//        popupStoreUpdateRequest.getPopupStore().setUser(user);
         if (!popupStoreUpdateRequest.getStoreImageList().isEmpty()) {
             List<String> storeImgList = popupStoreUpdateRequest.getStoreImageList();
             popupStoreUpdateRequest.getPopupStore().setBannerImgUrl(storeImgList.get(0));
@@ -232,7 +235,7 @@ public class PopupStoreService {
     }
 
     public Long postNewPopupStore(List<MultipartFile> storeImageFiles, List<MultipartFile> storeItemImageFiles,
-                                  PopupStoreCreateRequest popupStoreCreateRequest, Long userId
+                                  PopupStoreCreateRequest popupStoreCreateRequest
     ) {
         PopupStore popupStore = popupStoreCreateRequest.getPopupStore();
         LocalDate oldOpenDate = popupStore.getOpenDate().toLocalDate();
@@ -247,9 +250,9 @@ public class PopupStoreService {
         if (storeItemImageFiles != null) {
             storeItemImageList = awsFileService.uploadFiles(storeItemImageFiles, FolderType.ITEMS);
         }
-        User user = new User();
-        user.setUserId(userId);
-        popupStoreCreateRequest.getPopupStore().setUser(user);
+//        User user = new User();
+//        user.setUserId(userId);
+//        popupStoreCreateRequest.getPopupStore().setUser(user);
         popupStoreCreateRequest.getPopupStore().setBannerImgUrl(storeImageList.get(0));
         storeImageList.remove(0);
         popupStoreDao.insertPopupStore(popupStoreCreateRequest.getPopupStore());
@@ -290,7 +293,16 @@ public class PopupStoreService {
         if (popupStoreInfoList.isEmpty()) {
             throw new PopupStoreNotFoundException(popupStoreId);
         }
-        return popupStoreDao.findPopupStoreDetailByIdForAdmin(popupStoreId);
+        PopupStore popupStore = popupStoreInfoList.get(0).getPopupStore();
+        Optional<User> optionalUser = userDao.findById(popupStore.getUser().getUserId());
+        User cleanUser = new User();
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            cleanUser.setName(user.getName());
+            cleanUser.setUserId(user.getUserId());
+        }
+        popupStoreInfoList.get(0).getPopupStore().setUser(cleanUser);
+        return popupStoreInfoList;
     }
 
 

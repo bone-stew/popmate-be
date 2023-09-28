@@ -288,11 +288,11 @@
     where ps.popup_store_id = #{popupStoreId}
   </select>
 
-
   <update id="updatePopupStoreInfo" parameterType="PopupStore">
     UPDATE tb_popup_store
     <set>
       <if test="title != null">title = #{title},</if>
+      <if test="user != null">user_id = #{user.userId},</if>
       <if test="department != null">department_id = #{department.departmentId},</if>
       <if test="organizer != null">organizer = #{organizer},</if>
       <if test="placeDetail != null">place_detail = #{placeDetail},</if>
