@@ -176,7 +176,7 @@
         join tb_category c on s.category_id = c.category_id
     where sysdate &lt;= close_date
       AND trunc(SYSDATE) > open_date
-    ORDER BY s.views
+    ORDER BY s.views desc
       FETCH FIRST 5 ROWS ONLY
   </select>
 
