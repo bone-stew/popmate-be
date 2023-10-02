@@ -18,6 +18,7 @@ import lombok.ToString;
 public class PopupStoreUpdateRequest {
     private PopupStore popupStore;
     private List<String> storeImageList;
+    private List<String> storeImagesNotToDelete;
     private List<PopupStoreSns> popupStoreSnsList;
     private List<PopupStoreItem> popupStoreItemList;
     private List<PopupStoreItem> popupStoreItemsToDelete;

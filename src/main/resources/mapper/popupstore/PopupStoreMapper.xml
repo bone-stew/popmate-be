@@ -314,20 +314,16 @@
     WHERE popup_store_id = #{popupStoreId}
   </update>
 
-  <delete id="deleteStoreImageById" parameterType="long">
+  <delete id="deleteStoreImagesExcludingIds" parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStoreImageDeleteRequest">
     DELETE FROM tb_popup_store_img
     WHERE popup_store_id = #{popupStoreId}
+    <if test="storeImagesNotToDelete != null and storeImagesNotToDelete.size() > 0">
+      AND popup_store_img_id NOT IN
+      <foreach collection="storeImagesNotToDelete" item="imageId" separator="," open="(" close=")">
+        #{imageId}
+      </foreach>
+    </if>
   </delete>
-
-  <!--  <delete id="deleteStoreItemsById" parameterType="long">-->
-  <!--    DELETE FROM tb_popup_store_item-->
-  <!--    WHERE popup_store_id = #{popupStoreId}-->
-  <!--  </delete>-->
-
-  <!--  <delete id="deleteStoreSnsById" parameterType="long">-->
-  <!--    DELETE FROM tb_popup_store_sns-->
-  <!--    WHERE popup_store_id = #{popupStoreId}-->
-  <!--  </delete>-->
 
 
   <insert id="insertPopupStore" parameterType="PopupStore">

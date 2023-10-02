@@ -108,7 +108,7 @@ public class PopupStoreController {
 
 
     @PostMapping(value = "/{storeId}/images", consumes = {"multipart/form-data"})
-    public ApiResponse<StoreRelatedImages> addStoreImage(
+    public ApiResponse<StoreRelatedImages> uploadImages(
             @RequestPart(value = "storeImageFiles", required = false) List<MultipartFile> storeImageFiles,
             @RequestPart(value = "storeItemImageFiles", required = false) List<MultipartFile> storeItemImageFiles) {
         StoreRelatedImages storeRelatedImages = new StoreRelatedImages();

@@ -7,17 +7,11 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
 import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreInfo;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
-import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreUpdateRequest;
-import com.bonestew.popmate.reservation.domain.UserReservationStatus;
-import com.bonestew.popmate.user.domain.User;
 import java.util.List;
 import java.util.Optional;
-import javax.swing.Popup;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Mapper
@@ -57,8 +51,6 @@ public interface PopupStoreDao {
 
     void insertPopupStoreSns(PopupStoreSns popupStoreSnsList);
 
-    void deleteStoreImageById(Long popupStoreId);
-
     List<PopupStore> selectPopupStoreByAuth(AuthDto dto);
 
     void updatePopupStoreItem(List<PopupStoreItem> popupStoreItemList);
@@ -66,4 +58,6 @@ public interface PopupStoreDao {
     void updatePopupStoreItemSalesStatus(List<PopupStoreItem> popupStoreItemsToDelete);
 
     void upsertPopupStoreSns(PopupStoreSns popupStoreSns);
+
+    void deleteStoreImagesExcludingIds(PopupStoreImageDeleteRequest popupStoreImageDeleteRequest);
 }
