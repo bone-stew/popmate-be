@@ -96,6 +96,9 @@
   </select>
 
   <insert id="save" parameterType="UserReservation">
+    <selectKey keyColumn="user_reservation_id" keyProperty="userReservationId" resultType="Long" order="AFTER">
+      select TB_USER_RESERVATION_SEQ.CURRVAL from dual
+    </selectKey>
     INSERT INTO tb_user_reservation (user_id, reservation_id, status, guest_count, qr_img_url)
     VALUES (#{user.userId}, #{reservation.reservationId}, #{status}, #{guestCount}, #{qrImgUrl})
   </insert>

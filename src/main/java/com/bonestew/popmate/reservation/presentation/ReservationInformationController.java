@@ -4,7 +4,7 @@ import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.dto.ApiResponse;
 import com.bonestew.popmate.reservation.application.ReservationInformationService;
 import com.bonestew.popmate.reservation.application.dto.GuestLimitUpdateRequest;
-import com.bonestew.popmate.reservation.application.dto.ReservationEntranceResponse;
+import com.bonestew.popmate.reservation.presentation.dto.ReservationEntranceResponse;
 import com.bonestew.popmate.reservation.presentation.dto.MyReservationResponse;
 import com.bonestew.popmate.reservation.domain.UserReservation;
 import com.bonestew.popmate.reservation.presentation.dto.ActiveReservationResponse;
@@ -61,7 +61,7 @@ public class ReservationInformationController {
     /**
      * 나의 예약 상세 조회
      *
-     * @param userReservationId 사용자 예약 식별자
+     * @param userReservationId 예약지 식별자
      * @return 예약 정보
      */
     @GetMapping("/members/me/user-reservations/{userReservationId}")
@@ -90,7 +90,7 @@ public class ReservationInformationController {
     }
 
     /**
-     * 오늘의 예약 목록 조회 (관리자)
+     * 현재 입장 중인 예약 상세, 예약 목록 현황 조회 (관리자)
      *
      * @param popupStoreId 팝업스토어 식별자
      * @return 오늘의 예약 목록
@@ -140,7 +140,7 @@ public class ReservationInformationController {
     }
 
     /**
-     * 예약자 입장 정보 조회 (관리자)
+     * 예약자 목록 조회 (관리자)
      *
      * @param reservationId 예약 식별자
      * @return 예약 정보

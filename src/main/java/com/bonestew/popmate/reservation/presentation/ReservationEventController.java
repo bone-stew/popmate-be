@@ -6,6 +6,7 @@ import com.bonestew.popmate.reservation.application.ReservationEventService;
 import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.application.dto.ProcessEntranceRequest;
 import com.bonestew.popmate.reservation.application.dto.ReservationRequest;
+import com.bonestew.popmate.reservation.presentation.dto.CreateUserReservationResponse;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,13 +30,16 @@ public class ReservationEventController {
      *
      * @param reservationId      예약 식별자
      * @param reservationRequest 예약 요청 정보
+     * @return 예약 신청 결과 (예약 성공했을 경우 예약자 식별자)
      */
     @PostMapping("/{reservationId}")
-    public ApiResponse<Void> reserve(@PathVariable("reservationId") final Long reservationId,
-                                     @RequestBody final ReservationRequest reservationRequest,
-                                     @AuthenticationPrincipal PopmateUser popmateUser) {
-        reservationEventService.reserve(reservationId, popmateUser.getUserId(), reservationRequest);
-        return ApiResponse.success();
+    public ApiResponse<CreateUserReservationResponse> reserve(@PathVariable("reservationId") final Long reservationId,
+                                                              @RequestBody final ReservationRequest reservationRequest,
+                                                              @AuthenticationPrincipal PopmateUser popmateUser) {
+        return ApiResponse.success(
+            new CreateUserReservationResponse(
+                reservationEventService.reserve(reservationId, popmateUser.getUserId(), reservationRequest))
+        );
     }
 
     /**

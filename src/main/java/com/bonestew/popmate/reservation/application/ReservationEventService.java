@@ -48,7 +48,7 @@ public class ReservationEventService {
      * @param reservationRequest
      */
     @Transactional
-    public void reserve(final Long reservationId, final Long userId, final ReservationRequest reservationRequest) {
+    public Long reserve(final Long reservationId, final Long userId, final ReservationRequest reservationRequest) {
         Reservation reservation = reservationDao.findById(reservationId)
             .orElseThrow(() -> new ReservationNotFoundException(reservationId));
         User user = userService.getUserById(userId);
@@ -71,14 +71,17 @@ public class ReservationEventService {
 
         String reservationQrCode = generateReservationQrCode(user, reservation);
 
-        userReservationDao.save(UserReservation.of(
+        UserReservation userReservation = UserReservation.of(
             user, reservation, reservationQrCode, reservationRequest.guestCount()
-        ));
+        );
+        userReservationDao.save(userReservation);
 
         log.info("Reservation successful for user ID: {}, reservation ID: {}", user.getUserId(), reservationId);
+
+        return userReservation.getUserReservationId();
     }
 
-    private String generateReservationQrCode(User user, Reservation reservation) {
+    private String generateReservationQrCode(final User user, final Reservation reservation) {
         InputStream inputStream = qrService.generateQRCode(user.getUserId(), reservation.getReservationId());
         String directory = String.format(RESERVATIONS.getFolderName(),
             reservation.getPopupStore().getPopupStoreId(), reservation.getReservationId());
@@ -129,7 +132,7 @@ public class ReservationEventService {
      * @param userId
      */
     @Transactional
-    public void cancel(Long reservationId, Long userId) {
+    public void cancel(final Long reservationId, final Long userId) {
         UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED)
             .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
 

@@ -27,6 +27,15 @@ include::{snippets}/reservation-wifi-controller-test/wifi_목록을_통해_예�
 include::{snippets}/reservation-wifi-controller-test/wifi_목록을_통해_예약_가능한_위치인지_확인한다/response-fields.adoc[]
 
 
+== 선착순 예약을 신청한다
+
+=== Request
+include::{snippets}/reservation-event-controller-test/선착순_예약을_신청한다/path-parameters.adoc[]
+include::{snippets}/reservation-event-controller-test/선착순_예약을_신청한다/request-fields.adoc[]
+
+=== Response
+include::{snippets}/reservation-event-controller-test/선착순_예약을_신청한다/response-fields.adoc[]
+
 == 나의 예약 목록을 조회한다
 
 === Request
@@ -42,6 +51,15 @@ include::{snippets}/reservation-information-controller-test/나의_예약_상세
 
 === Response
 include::{snippets}/reservation-information-controller-test/나의_예약_상세를_조회한다/response-fields.adoc[]
+
+
+== 예약을 취소한다
+
+=== Request
+include::{snippets}/reservation-event-controller-test/예약을_취소한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-event-controller-test/예약을_취소한다/response-fields.adoc[]
 
 
 == 일일 예약 목록을 조회한다 (관리자)
@@ -65,7 +83,7 @@ include::{snippets}/reservation-information-controller-test/오늘의_예약_목
 include::{snippets}/reservation-information-controller-test/오늘의_예약_목록을_조회한다/response-fields.adoc[]
 
 
-== 예약 인원 수를 변경한다
+== 예약 인원 수를 변경한다 (관리자)
 
 === Request
 include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/path-parameters.adoc[]
@@ -76,7 +94,7 @@ include::{snippets}/reservation-information-controller-test/예약_인원_수를
 include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/response-fields.adoc[]
 
 
-== 예약을 중단한다
+== 예약을 중단한다 (관리자)
 
 === Request
 include::{snippets}/reservation-information-controller-test/예약을_중단한다/path-parameters.adoc[]
@@ -85,7 +103,7 @@ include::{snippets}/reservation-information-controller-test/예약을_중단한�
 include::{snippets}/reservation-information-controller-test/예약을_중단한다/response-fields.adoc[]
 
 
-== 예약을 재개한다
+== 예약을 재개한다 (관리자)
 
 === Request
 include::{snippets}/reservation-information-controller-test/예약을_재개한다/path-parameters.adoc[]
@@ -94,7 +112,7 @@ include::{snippets}/reservation-information-controller-test/예약을_재개한�
 include::{snippets}/reservation-information-controller-test/예약을_재개한다/response-fields.adoc[]
 
 
-== 예약자 입장 정보를 조회한다
+== 예약자 목록을 조회한다 (관리자)
 
 === Request
 include::{snippets}/reservation-information-controller-test/예약자_입장_정보를_조회한다/path-parameters.adoc[]
@@ -103,7 +121,7 @@ include::{snippets}/reservation-information-controller-test/예약자_입장_정
 include::{snippets}/reservation-information-controller-test/예약자_입장_정보를_조회한다/response-fields.adoc[]
 
 
-== 예약자를 입장 처리한다
+== 예약자를 입장 처리한다 (관리자)
 
 === Request
 include::{snippets}/reservation-event-controller-test/예약자를_입장_처리한다/path-parameters.adoc[]
@@ -112,11 +130,3 @@ include::{snippets}/reservation-event-controller-test/예약자를_입장_처리
 === Response
 include::{snippets}/reservation-event-controller-test/예약자를_입장_처리한다/response-fields.adoc[]
 
-
-== 예약을 취소한다
-
-=== Request
-include::{snippets}/reservation-event-controller-test/예약을_취소한다/path-parameters.adoc[]
-
-=== Response
-include::{snippets}/reservation-event-controller-test/예약을_취소한다/response-fields.adoc[]
