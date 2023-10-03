@@ -67,7 +67,7 @@ public class ReservationEventController {
     }
 
     /**
-     * 추후 popupstore-api에서 호출 예정
+     * 개발 편의를 위한 예약 데이터 생성 API (팝업스토어 생성 API 에서 사용 중인 서비스 메서드)
      */
     @Deprecated
     @GetMapping("/reservations/test")

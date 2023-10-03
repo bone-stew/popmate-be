@@ -117,7 +117,7 @@ class ReservationEventControllerTest {
                         .type(JsonFieldType.STRING),
                     fieldWithPath("message").description("응답 메시지")
                         .type(null),
-                    fieldWithPath("data.userReservationId").description("응답 데이터")
+                    fieldWithPath("data").description("응답 데이터")
                         .type(null)
                 )
             ));
