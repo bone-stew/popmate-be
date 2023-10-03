@@ -126,11 +126,11 @@ class ReservationEventControllerTest {
     @Test
     void 예약을_취소한다() throws Exception {
         // given
-        Long reservationId = 1L;
+        Long userReservationId= 1L;
 
         // when
         ResultActions result = mockMvc.perform(
-            patch("/api/v1/reservations/{reservationId}/cancel", reservationId)
+            patch("/api/v1/user-reservations/{userReservationId}/cancel", userReservationId)
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
@@ -138,7 +138,7 @@ class ReservationEventControllerTest {
             .andExpect(status().isOk())
             .andDo(customDocument(
                 pathParameters(
-                    parameterWithName("reservationId").description("예약 ID")
+                    parameterWithName("userReservationId").description("예약자 ID")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 코드")

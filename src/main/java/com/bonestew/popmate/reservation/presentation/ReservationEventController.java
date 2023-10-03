@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/reservations")
+@RequestMapping("/api/v1")
 public class ReservationEventController {
 
     private final ReservationEventService reservationEventService;
@@ -32,7 +32,7 @@ public class ReservationEventController {
      * @param reservationRequest 예약 요청 정보
      * @return 예약 신청 결과 (예약 성공했을 경우 예약자 식별자)
      */
-    @PostMapping("/{reservationId}")
+    @PostMapping("/reservations/{reservationId}")
     public ApiResponse<CreateUserReservationResponse> reserve(@PathVariable("reservationId") final Long reservationId,
                                                               @RequestBody final ReservationRequest reservationRequest,
                                                               @AuthenticationPrincipal PopmateUser popmateUser) {
@@ -45,12 +45,11 @@ public class ReservationEventController {
     /**
      * 예약 취소
      *
-     * @param reservationId
+     * @param userReservationId 예약자 식별자
      */
-    @PatchMapping("/{reservationId}/cancel")
-    public ApiResponse<Void> cancelReservation(@PathVariable("reservationId") Long reservationId,
-                                               @AuthenticationPrincipal PopmateUser popmateUser) {
-        reservationEventService.cancel(reservationId, popmateUser.getUserId());
+    @PatchMapping("/user-reservations/{userReservationId}/cancel")
+    public ApiResponse<Void> cancelReservation(@PathVariable("userReservationId") final Long userReservationId) {
+        reservationEventService.cancel(userReservationId);
         return ApiResponse.success();
     }
 
@@ -60,7 +59,7 @@ public class ReservationEventController {
      * @param reservationId
      * @return 예약자 입장 처리 결과
      */
-    @PatchMapping("/{reservationId}/entrance")
+    @PatchMapping("/reservations/{reservationId}/entrance")
     public ApiResponse<Void> processEntrance(@PathVariable("reservationId") Long reservationId,
                                              @RequestBody ProcessEntranceRequest processEntranceRequest) {
         reservationEventService.processEntrance(reservationId, processEntranceRequest);
@@ -71,7 +70,7 @@ public class ReservationEventController {
      * 추후 popupstore-api에서 호출 예정
      */
     @Deprecated
-    @GetMapping("/test")
+    @GetMapping("/reservations/test")
     public void createReservation() {
         CreateReservationDto sampleReservationDto = new CreateReservationDto(
             20,

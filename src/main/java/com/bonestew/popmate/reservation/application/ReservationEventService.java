@@ -128,22 +128,29 @@ public class ReservationEventService {
     /**
      * 예약 취소
      *
-     * @param reservationId
-     * @param userId
+     * @param userReservationId
      */
     @Transactional
-    public void cancel(final Long reservationId, final Long userId) {
-        UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED)
-            .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
+    public void cancel(final Long userReservationId) {
+        UserReservation userReservation = userReservationDao.findById(userReservationId)
+            .orElseThrow(() -> new UserReservationNotFoundException(userReservationId));
 
         if (!userReservation.getStatus().isReserved()) {
             throw new InvalidReservationCancellationException(userReservation.getUserReservationId());
         }
         userReservationDao.updateStatus(userReservation.getUserReservationId(), UserReservationStatus.CANCELED);
-        userReservation.getReservation().decreaseCurrentGuestCount(userReservation.getGuestCount());
-        reservationDao.updateCurrentGuestCount(reservationId, userReservation.getReservation().getCurrentGuestCount());
 
-        log.info("Cancel successful for user ID: {}, reservation ID: {}", userId, reservationId);
+        Reservation reservation = userReservation.getReservation();
+        reservation.decreaseCurrentGuestCount(userReservation.getGuestCount());
+        reservationDao.updateCurrentGuestCount(
+            reservation.getReservationId(),
+            reservation.getCurrentGuestCount()
+        );
+
+        log.info("Cancel successful for user ID: {}, reservationId ID: {}, userReservation ID: {}",
+            userReservation.getUser().getUserId(),
+            reservation.getReservationId(),
+            userReservationId);
     }
 
     /**
