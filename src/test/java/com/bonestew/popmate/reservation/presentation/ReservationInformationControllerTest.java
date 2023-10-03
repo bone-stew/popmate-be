@@ -68,7 +68,8 @@ class ReservationInformationControllerTest {
         popupStoreId = 1L;
         dateTime = LocalDateTime.of(2023, 10, 1, 10, 0);
         date = LocalDate.of(2023, 10, 1);
-        popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), new Category(),"Your Title", "Your Organizer",
+        popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), new Category(), "Your Title",
+            "Your Organizer",
             "Your Place Detail", "Your Description", "Your Event Description", "Your Banner Image URL", 100, 200, true,
             true,
             15, 5, 10, dateTime, dateTime.plusDays(14), dateTime, dateTime.plusHours(8), 0L, dateTime, 0);
@@ -104,6 +105,98 @@ class ReservationInformationControllerTest {
                     fieldWithPath("data.popupStoreDescription").description("팝업스토어 설명"),
                     fieldWithPath("data.popupStoreOpenTime").description("팝업스토어 오픈 시간"),
                     fieldWithPath("data.popupStoreCloseTime").description("팝업스토어 종료 시간")
+                )
+            ));
+    }
+
+    @Test
+    void 나의_예약_목록을_조회한다() throws Exception {
+        // given
+        Long userId = 1L;
+        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 50, 30, ReservationStatus.IN_PROGRESS,
+            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
+        UserReservation userReservation = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
+            UserReservationStatus.RESERVED, dateTime);
+        UserReservation userReservation2 = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
+            UserReservationStatus.VISITED, dateTime);
+        UserReservation userReservation3 = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
+            UserReservationStatus.CANCELED, dateTime);
+
+        // when
+        given(reservationInformationService.getMyReservations(userId)).willReturn(List.of(userReservation, userReservation2, userReservation3));
+
+        ResultActions result = mockMvc.perform(
+            get("/api/v1/members/me/reservations"));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(customDocument(
+                responseFields(
+                    fieldWithPath("code").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.before[].userReservationId").description("예약자 정보 ID"),
+                    fieldWithPath("data.before[].reservationId").description("예약 ID"),
+                    fieldWithPath("data.before[].reservationStatus").description("예약 상태"),
+                    fieldWithPath("data.before[].startTime").description("예약 시작 시간"),
+                    fieldWithPath("data.before[].endTime").description("예약 종료 시간"),
+                    fieldWithPath("data.before[].popupStoreId").description("팝업스토어 ID"),
+                    fieldWithPath("data.before[].popupStoreTitle").description("팝업스토어 제목"),
+                    fieldWithPath("data.before[].bannerImgUrl").description("팝업스토어 배너 이미지 URL"),
+                    fieldWithPath("data.after[].userReservationId").description("예약자 정보 ID"),
+                    fieldWithPath("data.after[].reservationId").description("예약 ID"),
+                    fieldWithPath("data.after[].reservationStatus").description("예약 상태"),
+                    fieldWithPath("data.after[].startTime").description("예약 시작 시간"),
+                    fieldWithPath("data.after[].endTime").description("예약 종료 시간"),
+                    fieldWithPath("data.after[].popupStoreId").description("팝업스토어 ID"),
+                    fieldWithPath("data.after[].popupStoreTitle").description("팝업스토어 제목"),
+                    fieldWithPath("data.after[].bannerImgUrl").description("팝업스토어 배너 이미지 URL"),
+                    fieldWithPath("data.canceled[].userReservationId").description("예약자 정보 ID"),
+                    fieldWithPath("data.canceled[].reservationId").description("예약 ID"),
+                    fieldWithPath("data.canceled[].reservationStatus").description("예약 상태"),
+                    fieldWithPath("data.canceled[].startTime").description("예약 시작 시간"),
+                    fieldWithPath("data.canceled[].endTime").description("예약 종료 시간"),
+                    fieldWithPath("data.canceled[].popupStoreId").description("팝업스토어 ID"),
+                    fieldWithPath("data.canceled[].popupStoreTitle").description("팝업스토어 제목"),
+                    fieldWithPath("data.canceled[].bannerImgUrl").description("팝업스토어 배너 이미지 URL")
+                )
+            ));
+    }
+
+    @Test
+    void 나의_예약_정보를_조회한다() throws Exception {
+        // given
+        Long reservationId = 1L;
+        Long userId = 1L;
+        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 50, 30, ReservationStatus.IN_PROGRESS,
+            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
+        UserReservation userReservation = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
+            UserReservationStatus.RESERVED, dateTime);
+
+        // when
+        given(reservationInformationService.getMyReservation(reservationId, userId)).willReturn(userReservation);
+
+        ResultActions result = mockMvc.perform(
+            get("/api/v1/members/me/reservations/{reservationId}", reservationId));
+
+        // then
+        result
+            .andExpect(status().isOk())
+            .andDo(customDocument(
+                pathParameters(
+                    parameterWithName("reservationId").description("조회할 예약 id")
+                ),
+                responseFields(
+                    fieldWithPath("code").description("응답 코드"),
+                    fieldWithPath("message").description("응답 메시지"),
+                    fieldWithPath("data.popupStoreTitle").description("팝업 스토어 제목"),
+                    fieldWithPath("data.popupStoreImageUrl").description("팝업 스토어 이미지 URL"),
+                    fieldWithPath("data.popupStorePlaceDetail").description("팝업 스토어 장소 상세 정보"),
+                    fieldWithPath("data.reservationQrImageUrl").description("예약 QR 코드 이미지 URL"),
+                    fieldWithPath("data.guestCount").description("예약 인원 수"),
+                    fieldWithPath("data.visitStartTime").description("입장 시작 시간"),
+                    fieldWithPath("data.visitEndTime").description("입장 종료 시간"),
+                    fieldWithPath("data.reservationStatus").description("예약 상태 (예: PENDING)")
                 )
             ));
     }
@@ -147,44 +240,6 @@ class ReservationInformationControllerTest {
                 )
             ));
 
-    }
-
-    @Test
-    void 나의_예약_정보을_조회한다() throws Exception {
-        // given
-        Long reservationId = 1L;
-        Long userId = 1L;
-        Reservation reservation = new Reservation(1L, popupStore, 10, 5, 50, 30, ReservationStatus.IN_PROGRESS,
-            dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
-        UserReservation userReservation = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
-            UserReservationStatus.RESERVED, dateTime);
-
-        // when
-        given(reservationInformationService.getMyReservation(reservationId, userId)).willReturn(userReservation);
-
-        ResultActions result = mockMvc.perform(
-            get("/api/v1/members/me/reservations/{reservationId}", reservationId));
-
-        // then
-        result
-            .andExpect(status().isOk())
-            .andDo(customDocument(
-                pathParameters(
-                    parameterWithName("reservationId").description("조회할 예약 id")
-                ),
-                responseFields(
-                    fieldWithPath("code").description("응답 코드"),
-                    fieldWithPath("message").description("응답 메시지"),
-                    fieldWithPath("data.popupStoreTitle").description("팝업 스토어 제목"),
-                    fieldWithPath("data.popupStoreImageUrl").description("팝업 스토어 이미지 URL"),
-                    fieldWithPath("data.popupStorePlaceDetail").description("팝업 스토어 장소 상세 정보"),
-                    fieldWithPath("data.reservationQrImageUrl").description("예약 QR 코드 이미지 URL"),
-                    fieldWithPath("data.guestCount").description("예약 인원 수"),
-                    fieldWithPath("data.visitStartTime").description("입장 시작 시간"),
-                    fieldWithPath("data.visitEndTime").description("입장 종료 시간"),
-                    fieldWithPath("data.reservationStatus").description("예약 상태 (예: PENDING)")
-                )
-            ));
     }
 
     @Test

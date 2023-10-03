@@ -46,7 +46,7 @@ public class ReservationInformationController {
     }
 
     /**
-     * 내가 예약한 목록 조회
+     * 나의 예약 목록 조회
      *
      * @return 예약 목록
      */

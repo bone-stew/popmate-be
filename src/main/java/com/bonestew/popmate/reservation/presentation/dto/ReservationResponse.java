@@ -5,6 +5,7 @@ import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import java.time.LocalDateTime;
 
 public record ReservationResponse(
+    Long userReservationId,
     Long reservationId,
     String reservationStatus,
     LocalDateTime startTime,
@@ -16,6 +17,7 @@ public record ReservationResponse(
 
     public static ReservationResponse from(UserReservation userReservation) {
         return new ReservationResponse(
+            userReservation.getUserReservationId(),
             userReservation.getReservation().getReservationId(),
             userReservation.getStatus().getDescription(),
             userReservation.getReservation().getStartTime(),
