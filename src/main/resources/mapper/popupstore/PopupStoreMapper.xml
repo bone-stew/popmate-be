@@ -19,6 +19,7 @@
     <result column="close_time" property="closeTime"/>
     <result column="max_capacity" property="maxCapacity"/>
     <result column="reservation_enabled" property="reservationEnabled"/>
+    <result column="sales_enabled" property="salesEnabled"/>
     <result column="reservation_interval" property="reservationInterval"/>
     <result column="interval_capacity" property="intervalCapacity"/>
     <result column="team_size_limit" property="teamSizeLimit"/>
@@ -273,7 +274,7 @@
     ps.open_time, ps.close_time, ps.max_capacity, ps.interval_capacity,
     ps.reservation_interval, ps.reservation_enabled,
     ps.team_size_limit, ps.created_at, ps.chat_room_id,
-    ps.views, pss.sns_id, pss.platform, pss.url, psi.popup_store_img_id,
+    ps.views, ps.sales_enabled, pss.sns_id, pss.platform, pss.url, psi.popup_store_img_id,
     psi.img_url, psii.popup_store_item_id, psii.name,
     psii.amount, psii.img_url as store_item_img_url, psii.stock,
     psii.order_limit, psii.is_on_sale
@@ -302,6 +303,7 @@
       <if test="entryFee != null">entry_fee = #{entryFee},</if>
       <if test="maxCapacity != null">max_capacity = #{maxCapacity},</if>
       <if test="reservationEnabled != null">reservation_enabled = #{reservationEnabled},</if>
+      <if test="salesEnabled != null">sales_enabled = #{salesEnabled},</if>
       <if test="reservationInterval != null">reservation_interval = #{reservationInterval},</if>
       <if test="intervalCapacity != null">interval_capacity = #{intervalCapacity},</if>
       <if test="teamSizeLimit != null">team_size_limit = #{teamSizeLimit},</if>
@@ -342,6 +344,7 @@
     entry_fee,
     max_capacity,
     reservation_enabled,
+    sales_enabled,
     reservation_interval,
     interval_capacity,
     team_size_limit,
@@ -363,6 +366,7 @@
     #{entryFee},
     #{maxCapacity},
     #{reservationEnabled},
+    #{salesEnabled},
     #{reservationInterval},
     #{intervalCapacity},
     #{teamSizeLimit},
