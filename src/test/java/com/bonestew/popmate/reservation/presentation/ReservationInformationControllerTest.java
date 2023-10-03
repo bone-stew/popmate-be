@@ -164,27 +164,26 @@ class ReservationInformationControllerTest {
     }
 
     @Test
-    void 나의_예약_정보를_조회한다() throws Exception {
+    void 나의_예약_상세를_조회한다() throws Exception {
         // given
-        Long reservationId = 1L;
-        Long userId = 1L;
+        Long userReservationId = 1L;
         Reservation reservation = new Reservation(1L, popupStore, 10, 5, 50, 30, ReservationStatus.IN_PROGRESS,
             dateTime, dateTime.plusMinutes(15), dateTime.plusMinutes(30), dateTime.plusMinutes(45), dateTime);
         UserReservation userReservation = new UserReservation(1L, new User(), reservation, 2, "qrImgUrl",
             UserReservationStatus.RESERVED, dateTime);
 
         // when
-        given(reservationInformationService.getMyReservation(reservationId, userId)).willReturn(userReservation);
+        given(reservationInformationService.getMyReservation(userReservationId)).willReturn(userReservation);
 
         ResultActions result = mockMvc.perform(
-            get("/api/v1/members/me/reservations/{reservationId}", reservationId));
+            get("/api/v1/members/me/user-reservations/{userReservationId}", userReservationId));
 
         // then
         result
             .andExpect(status().isOk())
             .andDo(customDocument(
                 pathParameters(
-                    parameterWithName("reservationId").description("조회할 예약 id")
+                    parameterWithName("userReservationId").description("조회할 사용자 예약 id")
                 ),
                 responseFields(
                     fieldWithPath("code").description("응답 코드"),

@@ -4,7 +4,7 @@ import com.bonestew.popmate.exception.NotFoundException;
 
 public class UserReservationNotFoundException extends NotFoundException {
 
-    public UserReservationNotFoundException(Long userReservationId, Long userId) {
-        super("UserReservation not found. ReservationId: " + userReservationId + ", UserId: " + userId);
+    public UserReservationNotFoundException(Long userReservationId) {
+        super("UserReservation not found. UserReservationId: " + userReservationId);
     }
 }

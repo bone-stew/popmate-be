@@ -131,17 +131,13 @@ public class ReservationEventService {
     @Transactional
     public void cancel(Long reservationId, Long userId) {
         UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED)
-            .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
+            .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
 
         if (!userReservation.getStatus().isReserved()) {
             throw new InvalidReservationCancellationException(userReservation.getUserReservationId());
         }
-        System.out.println("userReservation = " + userReservation);
-        System.out.println("취소할 팀원들 = " + userReservation.getGuestCount());
-        System.out.println("기존 예약 시간대 사람들 = " + userReservation.getReservation().getCurrentGuestCount());
         userReservationDao.updateStatus(userReservation.getUserReservationId(), UserReservationStatus.CANCELED);
         userReservation.getReservation().decreaseCurrentGuestCount(userReservation.getGuestCount());
-        System.out.println("업데이트할 예약 시간대 사람들 = " + userReservation.getReservation().getCurrentGuestCount());
         reservationDao.updateCurrentGuestCount(reservationId, userReservation.getReservation().getCurrentGuestCount());
 
         log.info("Cancel successful for user ID: {}, reservation ID: {}", userId, reservationId);
@@ -157,7 +153,7 @@ public class ReservationEventService {
     public void processEntrance(Long reservationId, ProcessEntranceRequest processEntranceRequest) {
         Long userId = processEntranceRequest.reservationUserId();
         UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED)
-            .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
+            .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
 
         userReservation.validateEntry();
         userReservationDao.updateStatus(userReservation.getUserReservationId(), UserReservationStatus.VISITED);

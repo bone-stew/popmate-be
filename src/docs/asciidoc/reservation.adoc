@@ -30,18 +30,18 @@ include::{snippets}/reservation-wifi-controller-test/wifi_목록을_통해_예�
 == 나의 예약 목록을 조회한다
 
 === Request
-include::{snippets}/reservation-information-controller-test/나의_예약_목록을_조회한다/http-request.adoc[]
+include::{snippets}/reservation-information-controller-test/나의_예약_상세를_조회한다/http-request.adoc[]
 
 === Response
-include::{snippets}/reservation-information-controller-test/나의_예약_목록을_조회한다/response-fields.adoc[]
+include::{snippets}/reservation-information-controller-test/나의_예약_상세를_조회한다/response-fields.adoc[]
 
 == 나의 예약 정보를 조회한다
 
 === Request
-include::{snippets}/reservation-information-controller-test/나의_예약_정보를_조회한다/path-parameters.adoc[]
+include::{snippets}/reservation-information-controller-test/나의_예약_상세를_조회한다/path-parameters.adoc[]
 
 === Response
-include::{snippets}/reservation-information-controller-test/나의_예약_정보를_조회한다/response-fields.adoc[]
+include::{snippets}/reservation-information-controller-test/나의_예약_상세를_조회한다/response-fields.adoc[]
 
 
 == 일일 예약 목록을 조회한다 (관리자)

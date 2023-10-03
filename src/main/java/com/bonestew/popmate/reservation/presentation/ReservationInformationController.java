@@ -59,17 +59,16 @@ public class ReservationInformationController {
     }
 
     /**
-     * 나의 예약 상세 조회 (추후 reservations -> userReservation 으로 변경 필요)
+     * 나의 예약 상세 조회
      *
-     * @param reservationId 예약 식별자
+     * @param userReservationId 사용자 예약 식별자
      * @return 예약 정보
      */
-    @GetMapping("/members/me/reservations/{reservationId}")
-    public ApiResponse<MyReservationResponse> getReservation(@PathVariable("reservationId") Long reservationId,
-                                                             @AuthenticationPrincipal PopmateUser popmateUser) {
+    @GetMapping("/members/me/user-reservations/{userReservationId}")
+    public ApiResponse<MyReservationResponse> getUserReservation(@PathVariable("userReservationId") Long userReservationId) {
         return ApiResponse.success(
             MyReservationResponse.from(
-                reservationInformationService.getMyReservation(reservationId, popmateUser.getUserId())
+                reservationInformationService.getMyReservation(userReservationId)
             ));
     }
 
