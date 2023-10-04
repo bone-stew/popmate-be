@@ -1,6 +1,5 @@
 package com.bonestew.popmate.user.persistence;
 
-import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.user.domain.Role;
 import com.bonestew.popmate.user.domain.User;
 import java.util.Optional;
@@ -20,4 +19,6 @@ public interface UserDao {
 
     Optional<User> findBackOfficeUser(@Param("email") String email,
                                       @Param("password") String password);
+
+    Long findLoginId(String email);
 }
