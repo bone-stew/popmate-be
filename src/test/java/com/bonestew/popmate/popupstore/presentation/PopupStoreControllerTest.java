@@ -12,6 +12,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bonestew.popmate.popupstore.domain.Category;
+import com.bonestew.popmate.popupstore.domain.CategoryType;
 import com.bonestew.popmate.user.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
 import com.bonestew.popmate.exception.enums.ResultCode;
@@ -55,25 +56,27 @@ class PopupStoreControllerTest {
     private ObjectMapper objectMapper;
 
 
-    @Disabled
+//    @Disabled
     @Test
     void 팝업스토어목록을_조회한다() throws Exception {
         // Given
-        PopupStoreSearchRequest searchRequest = new PopupStoreSearchRequest(
-                false,
-                LocalDate.of(2023, 8, 1),
-                LocalDate.of(2023, 12, 23),
-                "팝",
-                0,
-                1
-        );
+        PopupStoreSearchRequest searchRequest =
+                new PopupStoreSearchRequest(
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                );
         List<PopupStore> popupStoreList = List.of(
                 new PopupStore(
                         1L,
                         new User(),
-                        new Department(),
-                        new ChatRoom(),
-                        new Category(),
+                        new Department(1L, "department", "placeDescription", 12.1, 12.1, LocalDateTime.of(2023, 10, 4, 9, 0),
+                                       LocalDateTime.of(2024, 1, 1, 17, 0), LocalDateTime.now() ),
+                        new ChatRoom("1", "chatroom", LocalDateTime.now()),
+                        new Category(1L, CategoryType.POPUP_STORE),
                         "팝업스토어",
                         "주최자",
                         "상세 주소",
@@ -87,10 +90,10 @@ class PopupStoreControllerTest {
                         30,
                         5,
                         10,
-                        LocalDateTime.of(2023, 8, 23, 10, 0),
-                        LocalDateTime.of(2023, 8, 30, 9, 0),
-                        LocalDateTime.of(2023, 8, 30, 9, 0),
-                        LocalDateTime.of(2023, 8, 30, 17, 0),
+                        LocalDateTime.of(2023, 10, 4, 10, 0),
+                        LocalDateTime.of(2024, 1, 1, 9, 0),
+                        LocalDateTime.of(2023, 10, 4, 9, 0),
+                        LocalDateTime.of(2024, 1, 1, 17, 0),
                         0L,
                         LocalDateTime.now(),
                         0)
@@ -99,12 +102,12 @@ class PopupStoreControllerTest {
 
 
         // When
-        given(popupStoreService.getPopupStores(false,
-                "2023-08-01",
-                "2024-08-01",
-                "팝",
-                0,
-                0)).willReturn(popupStoreList);
+        given(popupStoreService.getPopupStores(null,
+                                               null,
+                                               null,
+                                               null,
+                                               null,
+                                               null)).willReturn(popupStoreList);
 
         ResultActions result = mockMvc.perform(
                 get("/api/v1/popup-stores")
@@ -117,12 +120,12 @@ class PopupStoreControllerTest {
                 .andExpect(status().isOk())
                 .andDo(customDocument(
                         requestFields(
-                                fieldWithPath("isOpeningSoon").type(JsonFieldType.BOOLEAN).description("오픈예정"),
-                                fieldWithPath("startDate").type(JsonFieldType.STRING).description("시작날짜"),
-                                fieldWithPath("endDate").type(JsonFieldType.STRING).description("종료날짜"),
-                                fieldWithPath("keyword").type(JsonFieldType.STRING).description("검색 키워드"),
-                                fieldWithPath("offSetRows").type(JsonFieldType.NUMBER).description("페이징 오프셋"),
-                                fieldWithPath("rowsToGet").type(JsonFieldType.NUMBER).description("반환할 데이터 수")
+                                fieldWithPath("isOpeningSoon").description("오픈예정"),
+                                fieldWithPath("startDate").description("시작날짜"),
+                                fieldWithPath("endDate").description("종료날짜"),
+                                fieldWithPath("keyword").description("검색 키워드"),
+                                fieldWithPath("offSetRows").description("페이징 오프셋"),
+                                fieldWithPath("rowsToGet").description("반환할 데이터 수")
                         ),
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
@@ -133,7 +136,12 @@ class PopupStoreControllerTest {
                                 fieldWithPath("data.popupStores[].closeDate").type(JsonFieldType.STRING).description("종료 시간"),
                                 fieldWithPath("data.popupStores[].placeDetail").type(JsonFieldType.STRING).description("상세 주소"),
                                 fieldWithPath("data.popupStores[].bannerImgUrl").type(JsonFieldType.STRING).description("배너 이미지 URL"),
-                                fieldWithPath("data.popupStores[].organizer").type(JsonFieldType.STRING).description("주최자")
+                                fieldWithPath("data.popupStores[].organizer").type(JsonFieldType.STRING).description("주최자"),
+                                fieldWithPath("data.popupStores[].departmentName").type(JsonFieldType.STRING).description("백화점 이름"),
+                                fieldWithPath("data.popupStores[].categoryName").type(JsonFieldType.STRING).description("카테고리 명"),
+                                fieldWithPath("data.popupStores[].createdAt").type(JsonFieldType.STRING).description("생성날짜"),
+                                fieldWithPath("data.popupStores[].total").type(JsonFieldType.NUMBER).description("조회수")
+
                         )
                 ));
     }
