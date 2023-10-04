@@ -33,4 +33,10 @@
     WHERE email = #{email} and password = #{password}
   </select>
 
+  <select id="findLoginId" parameterType="string" resultType="long">
+    SELECT user_id
+    FROM TB_USER
+    WHERE email = #{email}
+  </select>
+
 </mapper>
