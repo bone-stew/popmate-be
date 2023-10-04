@@ -34,9 +34,9 @@ public class ReservationInformationService {
         return userReservationDao.getByUserId(userId);
     }
 
-    public UserReservation getMyReservation(Long reservationId, Long userId) {
-        return userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED) // 추후 userReservationId로 찾을 수 있도록 수정이 필요
-            .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
+    public UserReservation getMyReservation(Long userReservationId) {
+        return userReservationDao.findById(userReservationId)
+            .orElseThrow(() -> new UserReservationNotFoundException(userReservationId));
     }
 
     public Reservation getCurrentlyEnteredReservation(Long popupStoreId) {

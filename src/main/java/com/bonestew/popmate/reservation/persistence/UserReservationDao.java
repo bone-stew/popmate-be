@@ -11,9 +11,9 @@ public interface UserReservationDao {
 
     void save(UserReservation userReservation);
 
-    boolean existsByUserIdAndReservationId(Long userId, Long reservationId, UserReservationStatus status);
+    Optional<UserReservation> findById(Long userReservationId);
 
-    Optional<UserReservation> findByReservationIdAndUserId(Long reservationId, Long userId);
+    boolean existsByUserIdAndReservationId(Long userId, Long reservationId, UserReservationStatus status);
 
     Optional<UserReservation> findByReservationIdAndUserIdAndStatus(Long reservationId,
                                                                     Long userId,

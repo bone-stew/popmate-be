@@ -48,7 +48,7 @@ public class ReservationEventService {
      * @param reservationRequest
      */
     @Transactional
-    public void reserve(final Long reservationId, final Long userId, final ReservationRequest reservationRequest) {
+    public Long reserve(final Long reservationId, final Long userId, final ReservationRequest reservationRequest) {
         Reservation reservation = reservationDao.findById(reservationId)
             .orElseThrow(() -> new ReservationNotFoundException(reservationId));
         User user = userService.getUserById(userId);
@@ -71,14 +71,17 @@ public class ReservationEventService {
 
         String reservationQrCode = generateReservationQrCode(user, reservation);
 
-        userReservationDao.save(UserReservation.of(
+        UserReservation userReservation = UserReservation.of(
             user, reservation, reservationQrCode, reservationRequest.guestCount()
-        ));
+        );
+        userReservationDao.save(userReservation);
 
         log.info("Reservation successful for user ID: {}, reservation ID: {}", user.getUserId(), reservationId);
+
+        return userReservation.getUserReservationId();
     }
 
-    private String generateReservationQrCode(User user, Reservation reservation) {
+    private String generateReservationQrCode(final User user, final Reservation reservation) {
         InputStream inputStream = qrService.generateQRCode(user.getUserId(), reservation.getReservationId());
         String directory = String.format(RESERVATIONS.getFolderName(),
             reservation.getPopupStore().getPopupStoreId(), reservation.getReservationId());
@@ -125,26 +128,29 @@ public class ReservationEventService {
     /**
      * 예약 취소
      *
-     * @param reservationId
-     * @param userId
+     * @param userReservationId
      */
     @Transactional
-    public void cancel(Long reservationId, Long userId) {
-        UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED)
-            .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
+    public void cancel(final Long userReservationId) {
+        UserReservation userReservation = userReservationDao.findById(userReservationId)
+            .orElseThrow(() -> new UserReservationNotFoundException(userReservationId));
 
         if (!userReservation.getStatus().isReserved()) {
             throw new InvalidReservationCancellationException(userReservation.getUserReservationId());
         }
-        System.out.println("userReservation = " + userReservation);
-        System.out.println("취소할 팀원들 = " + userReservation.getGuestCount());
-        System.out.println("기존 예약 시간대 사람들 = " + userReservation.getReservation().getCurrentGuestCount());
         userReservationDao.updateStatus(userReservation.getUserReservationId(), UserReservationStatus.CANCELED);
-        userReservation.getReservation().decreaseCurrentGuestCount(userReservation.getGuestCount());
-        System.out.println("업데이트할 예약 시간대 사람들 = " + userReservation.getReservation().getCurrentGuestCount());
-        reservationDao.updateCurrentGuestCount(reservationId, userReservation.getReservation().getCurrentGuestCount());
 
-        log.info("Cancel successful for user ID: {}, reservation ID: {}", userId, reservationId);
+        Reservation reservation = userReservation.getReservation();
+        reservation.decreaseCurrentGuestCount(userReservation.getGuestCount());
+        reservationDao.updateCurrentGuestCount(
+            reservation.getReservationId(),
+            reservation.getCurrentGuestCount()
+        );
+
+        log.info("Cancel successful for user ID: {}, reservationId ID: {}, userReservation ID: {}",
+            userReservation.getUser().getUserId(),
+            reservation.getReservationId(),
+            userReservationId);
     }
 
     /**
@@ -157,7 +163,7 @@ public class ReservationEventService {
     public void processEntrance(Long reservationId, ProcessEntranceRequest processEntranceRequest) {
         Long userId = processEntranceRequest.reservationUserId();
         UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED)
-            .orElseThrow(() -> new UserReservationNotFoundException(reservationId, userId));
+            .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
 
         userReservation.validateEntry();
         userReservationDao.updateStatus(userReservation.getUserReservationId(), UserReservationStatus.VISITED);

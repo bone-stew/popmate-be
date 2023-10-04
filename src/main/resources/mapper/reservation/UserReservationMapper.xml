@@ -60,6 +60,14 @@
     <collection column="reservation_id" property="reservation" resultMap="reservationMap"/>
   </resultMap>
 
+  <select id="findById" parameterType="long" resultMap="userReservationMap">
+    SELECT *
+    FROM tb_user_reservation A
+           LEFT JOIN tb_reservation B ON A.reservation_id = B.reservation_id
+           LEFT JOIN tb_popup_store C ON B.popup_store_id = C.popup_store_id
+    WHERE A.user_reservation_id = #{userReservationId}
+  </select>
+
   <select id="findByReservationIdAndUserId" resultMap="userReservationMap">
     SELECT *
     FROM tb_user_reservation A
@@ -88,6 +96,9 @@
   </select>
 
   <insert id="save" parameterType="UserReservation">
+    <selectKey keyColumn="user_reservation_id" keyProperty="userReservationId" resultType="Long" order="AFTER">
+      select TB_USER_RESERVATION_SEQ.CURRVAL from dual
+    </selectKey>
     INSERT INTO tb_user_reservation (user_id, reservation_id, status, guest_count, qr_img_url)
     VALUES (#{user.userId}, #{reservation.reservationId}, #{status}, #{guestCount}, #{qrImgUrl})
   </insert>
