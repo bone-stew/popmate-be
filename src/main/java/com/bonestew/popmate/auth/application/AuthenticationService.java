@@ -22,6 +22,7 @@ public class AuthenticationService  {
             .nickname(randomNickNameService.generate())
             .build();
         userDao.register(user);
+        user.setUserId(userDao.findLoginId(user.getEmail()));
         return jwtService.generateToken(user);
     }
 
