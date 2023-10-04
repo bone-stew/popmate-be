@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonestew.popmate.user.persistence.UserDao">
+
+  <select id="findByEmail" parameterType="String" resultType="User">
+    SELECT *
+    FROM TB_USER
+    WHERE EMAIL = #{email}
+  </select>
+
+  <insert id="register" parameterType="User">
+    INSERT INTO TB_USER (EMAIL, NAME, PROVIDER)
+    VALUES (#{email}, #{name}, #{provider})
+  </insert>
+
+  <select id="findById" parameterType="long" resultType="User">
+    SELECT *
+    FROM TB_USER
+    WHERE USER_ID = #{userId}
+  </select>
+
+  <select id="getRole" parameterType="long" resultType="String">
+    SELECT role
+    FROM TB_USER
+    WHERE USER_ID = #{userId}
+  </select>
+
+  <select id="findBackOfficeUser" parameterType="java.util.Map" resultType="User">
+    SELECT *
+    FROM TB_USER
+    WHERE email = #{email} and password = #{password}
+  </select>
+
+</mapper>

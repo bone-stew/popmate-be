@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: ENC(TZ/Ul2RllhxbSkUXDlJC0az7saWyjQ/wx+keMmlA8M27c5NyzIBffFVgbIWTuEuax/coaNFsTrRZ44GYyRi+pXGU+gZThZ1pDwILub4Y2oDxCTREWoe6JJfwk9wXoy+ur88xjbWokrg=)
+    username: ENC(9Vz24Kh30r2ewkjndLUcVg==)
+    password: ENC(rwzDnI//EAcW26so5i+AIaWWk3MHGFXg)
+  data:
+    mongodb:
+      uri: ENC(xPfHpLtise1s5m+7JsauaVfitlI09826ejdXHZzkWk8HVi53JMO8J90ub18P8CjOUVVbVWLM3Qa2WGLkChDNB4EdpJA3bT/1N3frIJjOyPksbj5uOXgLgXWwHD5lS2SZqojj2LWfhcgJSDCBeDuxs/7DbfgDD4Px)
+      database: popmate
+    redis:
+      host: localhost
+      port: 6379
+      maxHeap: 128M
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+mybatis:
+  type-aliases-package: com.bonestew.popmate.*.domain, com.bonestew.popmate.popupstore.presentation.dto
+  type-handlers-package: com.bonestew.popmate.*.persistence.typehandler
+  mapper-locations: classpath:mapper/*/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+jasypt:
+  encryptor:
+    password: ${encrypt_key}
+
+logging:
+  level:
+    com.bonestew.popmate: info
+
+token:
+  sign:
+    key: ENC(JZaWarjhEuFXmV9DQxGkoWRjOOBuCohAwm8x42OSTMldNq1/xlq+M1fugB+ItIJVG7k8n5gMZziEsgm4LIZlvQ==)
+  access-token-validity-in-seconds: 5238144
+
+cloud:
+  aws:
+    s3:
+      bucket:
+        name: ENC(hh6GEeLrLruZJzIqgdQBoNhelfwK4E1b)
+        stack.auto: false
+        region.static: ap-northeast-2
+        credentials:
+          access-key: ENC(8dT/euQBwq4whoxobum0F/XDwhZvWjac81TSf8zeAqw=)
+          secret-key: ENC(qGcB5PFi/kkOhwwerW61ZZVhYjsVk3YfZHCPZEYeuj9CEraCjujxrBt4wnz3Iq7QPF+pZJ3jnMU=)
+

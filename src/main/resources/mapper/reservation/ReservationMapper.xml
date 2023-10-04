@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonestew.popmate.reservation.persistence.ReservationDao">
+
+  <resultMap id="popupStoreMap" type="PopupStore">
+    <result column="popup_store_id" property="popupStoreId"/>
+    <result column="title" property="title"/>
+    <result column="organizer" property="organizer"/>
+    <result column="place_detail" property="placeDetail"/>
+    <result column="open_date" property="openDate"/>
+    <result column="close_date" property="closeDate"/>
+    <result column="description" property="description"/>
+    <result column="event_description" property="eventDescription"/>
+    <result column="entry_fee" property="entryFee"/>
+    <result column="banner_img_url" property="bannerImgUrl"/>
+    <result column="open_time" property="openTime"/>
+    <result column="close_time" property="closeTime"/>
+    <result column="max_capacity" property="maxCapacity"/>
+    <result column="reservation_enabled" property="reservationEnabled"/>
+    <result column="reservation_interval" property="reservationInterval"/>
+    <result column="interval_capacity" property="intervalCapacity"/>
+    <result column="team_size_limit" property="teamSizeLimit"/>
+    <result column="created_at" property="createdAt"/>
+  </resultMap>
+
+  <resultMap id="reservationMap" type="Reservation">
+    <result column="reservation_id" property="reservationId"/>
+    <result column="start_time" property="startTime"/>
+    <result column="end_time" property="endTime"/>
+    <result column="visit_start_time" property="visitStartTime"/>
+    <result column="visit_end_time" property="visitEndTime"/>
+    <result column="guest_limit" property="guestLimit"/>
+    <result column="team_size_limit" property="teamSizeLimit"/>
+    <result column="current_guest_count" property="currentGuestCount"/>
+    <result column="entered_guest_count" property="enteredGuestCount"/>
+    <result column="status" property="status"
+      typeHandler="com.bonestew.popmate.reservation.persistence.typehandler.ReservationStatusTypeHandler"/>
+    <result column="created_at" property="createdAt"/>
+    <collection column="popup_store_id" property="popupStore" resultMap="popupStoreMap"/>
+  </resultMap>
+
+  <select id="findById" parameterType="long" resultMap="reservationMap">
+    SELECT *
+    FROM tb_reservation A
+           LEFT JOIN tb_popup_store B on A.popup_store_id = B.popup_store_id
+    WHERE A.reservation_id = #{reservationId}
+  </select>
+
+  <select id="findActiveByPopupStoreId" parameterType="long" resultMap="reservationMap">
+    SELECT *
+    FROM tb_reservation A
+           LEFT JOIN tb_popup_store B on A.popup_store_id = B.popup_store_id
+    WHERE A.popup_store_id = #{popupStoreId}
+      <![CDATA[ AND start_time <= SYSDATE ]]>
+      AND end_time > SYSDATE
+  </select>
+
+  <select id="findByPopupStoreIdAndStartDate" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE popup_store_id = #{popupStoreId}
+      AND TRUNC(start_time) = #{date}
+    ORDER BY start_time
+  </select>
+
+  <select id="findWifiById" parameterType="long" resultType="Wifi">
+    SELECT w.*
+    FROM tb_reservation r
+           LEFT JOIN tb_popup_store p ON r.popup_store_id = p.popup_store_id
+           LEFT JOIN tb_wifi w ON p.department_id = w.department_id
+           LEFT JOIN tb_department d ON w.department_id = d.department_id
+    WHERE r.reservation_id = #{reservationId}
+  </select>
+
+  <update id="updateCurrentGuestCount">
+    UPDATE tb_reservation
+    SET CURRENT_GUEST_COUNT = #{currentGuestCount}
+    WHERE reservation_id = #{reservationId}
+  </update>
+
+  <select id="findAllToInProgress" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE status = 0
+      <![CDATA[ AND start_time <= SYSDATE ]]>
+      AND end_time > SYSDATE
+  </select>
+
+  <select id="findAllToClosed" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE (status = 0 OR status = 1)
+        <![CDATA[ AND end_time <= SYSDATE
+    ]]>
+  </select>
+
+  <select id="findAllToEntering" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE status = 2
+      <![CDATA[ AND visit_start_time <= SYSDATE ]]>
+      AND visit_end_time > SYSDATE
+  </select>
+
+  <select id="findAllToEntered" resultType="Reservation">
+    SELECT *
+    FROM tb_reservation
+    WHERE status = 3
+      <![CDATA[ AND visit_end_time <= SYSDATE ]]>
+  </select>
+
+  <!-- 예약 진행 처리 -->
+  <update id="updateReservationStatusToInProgress">
+    UPDATE tb_reservation
+    SET status = 1
+    WHERE status = 0
+      <![CDATA[ AND start_time <= SYSDATE ]]>
+      AND end_time > SYSDATE
+  </update>
+
+  <!-- 예약 마감 처리 -->
+  <update id="updateReservationStatusToClosed">
+    UPDATE tb_reservation
+    SET status = 2
+    WHERE (status = 0 OR status = 1)
+        <![CDATA[ AND end_time <= SYSDATE
+    ]]>
+  </update>
+
+  <!-- 입장 중 처리 -->
+  <update id="updateReservationStatusToEntering">
+    UPDATE tb_reservation
+    SET status = 3
+    WHERE status = 2
+      <![CDATA[ AND visit_start_time <= SYSDATE ]]>
+      AND visit_end_time > SYSDATE
+  </update>
+
+  <!-- 입장 마감 처리 -->
+  <update id="updateReservationStatusToEntered">
+    UPDATE tb_reservation
+    SET status = 4
+    WHERE (status = 3 OR status = 2)
+      <![CDATA[ AND visit_end_time <= SYSDATE
+    ]]>
+  </update>
+
+  <insert id="saveAll" parameterType="com.bonestew.popmate.reservation.application.dto.CreateReservationDto"
+    statementType="CALLABLE">
+    {CALL generate_reservations(
+      #{reservationInterval, mode=IN, jdbcType=INTEGER},
+      #{openDateTime, jdbcType=TIMESTAMP, mode=IN},
+      #{closeDateTime, jdbcType=TIMESTAMP, mode=IN},
+      #{popupStoreId, jdbcType=BIGINT, mode=IN},
+      #{guestLimit, mode=IN, jdbcType=INTEGER},
+      #{teamSizeLimit, mode=IN, jdbcType=INTEGER}
+      )}
+  </insert>
+
+  <select id="findByVisitStartTimeLessThanEqualAndVisitEndTimeGreaterThanEqualAndPopupStoreId" parameterType="long"
+    resultMap="reservationMap">
+    SELECT *
+    FROM tb_reservation A
+           LEFT JOIN tb_popup_store B on A.popup_store_id = B.popup_store_id
+    WHERE A.popup_store_id = #{popupStoreId}
+      <![CDATA[ AND visit_start_time <= SYSDATE ]]>
+      AND visit_end_time > SYSDATE
+  </select>
+
+  <select id="findTopByStatusAndPopupStoreIdOrderByEndTimeDesc" resultMap="reservationMap">
+    SELECT *
+    FROM tb_reservation A
+           LEFT JOIN tb_popup_store B on A.popup_store_id = B.popup_store_id
+    WHERE status = 4
+      AND A.popup_store_id = #{popupStoreId}
+    ORDER BY visit_end_time DESC
+      FETCH FIRST 1 ROW ONLY
+  </select>
+
+  <select id="findByVisitEndTimeGreaterThanEqualAndPopupStoreId" resultMap="reservationMap">
+    SELECT *
+    FROM tb_reservation
+    WHERE popup_store_id = #{popupStoreId}
+      AND TO_CHAR(visit_end_time, 'YYYYMMDD') = TO_CHAR(SYSDATE, 'YYYYMMDD')
+    <![CDATA[ AND visit_end_time >= SYSDATE ]]>
+    ORDER BY visit_start_time
+  </select>
+
+  <update id="updateStatus" parameterType="Reservation">
+    UPDATE tb_reservation
+    SET status = #{status}
+    WHERE reservation_id = #{reservationId}
+  </update>
+
+</mapper>

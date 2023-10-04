@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bonestew.popmate.chat.persistence.ChatRoomDao">
+
+    <select id="findById" resultType="ChatRoom">
+        SELECT *
+          FROM TB_CHAT_ROOM
+         WHERE ROOM_ID = #{id}
+    </select>
+
+    <insert id="insertChatReport" parameterType="com.bonestew.popmate.chat.persistence.dto.ReportDto">
+        INSERT INTO TB_CHAT_REPORT (REPORTER, CHAT_ID, MESSAGE, WRITER)
+        VALUES (#{reporter}, #{id}, #{message}, #{sender})
+    </insert>
+
+    <select id="findReportList" resultType="ChatReport">
+        SELECT CHAT_ID, TU.EMAIL AS WRITER_EMAIL , WRITER, MESSAGE, STATUS, COUNT(*) AS REPORT_COUNT
+          FROM TB_CHAT_REPORT
+          JOIN TB_USER TU
+            ON TB_CHAT_REPORT.WRITER = TU.USER_ID
+         GROUP BY CHAT_ID, WRITER, MESSAGE, STATUS, TU.EMAIL
+         ORDER BY STATUS, REPORT_COUNT DESC
+    </select>
+
+    <select id="findReportListByWriterId" resultType="ChatReport">
+        SELECT CHAT_ID, TU.EMAIL AS WRITER_EMAIL , WRITER, MESSAGE, STATUS, COUNT(*) AS REPORT_COUNT
+          FROM TB_CHAT_REPORT
+          JOIN TB_USER TU
+            ON TB_CHAT_REPORT.WRITER = TU.USER_ID
+         WHERE TB_CHAT_REPORT.WRITER = #{writer}
+         GROUP BY CHAT_ID, WRITER, MESSAGE, STATUS, TU.EMAIL
+         ORDER BY STATUS, REPORT_COUNT DESC
+    </select>
+
+    <select id="findBannedUserByUserId" resultType="BannedUser">
+        SELECT BANNED_ID, USER_ID, EXPIRED_DATE
+          FROM TB_CHAT_BANNED_USER
+         WHERE USER_ID = #{userId}
+           AND EXPIRED_DATE > sysdate
+    </select>
+    
+    <update id="insertOrUpdateBanUser">
+        MERGE INTO tb_chat_banned_user target
+        USING (SELECT #{userId} as user_id FROM dual) source
+           ON (target.user_id = source.user_id)
+         WHEN MATCHED THEN
+               UPDATE SET target.EXPIRED_DATE = sysdate + #{banDays}
+         WHEN NOT MATCHED THEN
+               INSERT (user_id, expired_date)
+               VALUES (source.user_id, sysdate + #{banDays})
+    </update>
+
+    <update id="updateChatReportStatus" parameterType="com.bonestew.popmate.chat.presentation.dto.BanUserRequest">
+        UPDATE TB_CHAT_REPORT
+           SET STATUS = #{type}
+         WHERE WRITER = #{userId}
+    </update>
+</mapper>

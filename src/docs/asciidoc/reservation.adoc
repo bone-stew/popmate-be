@@ -1,0 +1,113 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[reservation-api]]
+= RESERVATION API 문서
+
+== 진행 중인 예약을 조회한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/진행_중인_예약을_조회한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/진행_중인_예약을_조회한다/response-fields.adoc[]
+
+
+== wifi 목록을 통해 예약 가능한 위치인지 확인한다
+
+=== Request
+include::{snippets}/reservation-wifi-controller-test/wifi_목록을_통해_예약_가능한_위치인지_확인한다/request-fields.adoc[]
+
+=== Response
+include::{snippets}/reservation-wifi-controller-test/wifi_목록을_통해_예약_가능한_위치인지_확인한다/response-fields.adoc[]
+
+
+== 나의 예약 정보를 조회한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/나의_예약_정보을_조회한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/나의_예약_정보을_조회한다/response-fields.adoc[]
+
+
+== 일일 예약 목록을 조회한다 (관리자)
+
+=== Request
+include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/path-parameters.adoc[]
+
+=== Parameters
+include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/query-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/일일_예약_목록_조회한다/response-fields.adoc[]
+
+
+== 오늘의 예약 목록을 조회한다 (관리자)
+
+=== Request
+include::{snippets}/reservation-information-controller-test/오늘의_예약_목록을_조회한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/오늘의_예약_목록을_조회한다/response-fields.adoc[]
+
+
+== 예약 인원 수를 변경한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/path-parameters.adoc[]
+include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/request-body.adoc[]
+// include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/request-fields.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/예약_인원_수를_변경한다/response-fields.adoc[]
+
+
+== 예약을 중단한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/예약을_중단한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/예약을_중단한다/response-fields.adoc[]
+
+
+== 예약을 재개한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/예약을_재개한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/예약을_재개한다/response-fields.adoc[]
+
+
+== 예약자 입장 정보를 조회한다
+
+=== Request
+include::{snippets}/reservation-information-controller-test/예약자_입장_정보를_조회한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-information-controller-test/예약자_입장_정보를_조회한다/response-fields.adoc[]
+
+
+== 예약자를 입장 처리한다
+
+=== Request
+include::{snippets}/reservation-event-controller-test/예약자를_입장_처리한다/path-parameters.adoc[]
+include::{snippets}/reservation-event-controller-test/예약자를_입장_처리한다/request-body.adoc[]
+
+=== Response
+include::{snippets}/reservation-event-controller-test/예약자를_입장_처리한다/response-fields.adoc[]
+
+
+== 예약을 취소한다
+
+=== Request
+include::{snippets}/reservation-event-controller-test/예약을_취소한다/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/reservation-event-controller-test/예약을_취소한다/response-fields.adoc[]
