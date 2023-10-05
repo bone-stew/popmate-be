@@ -100,9 +100,10 @@ public class PopupStoreController {
             userId = popmateUser.getUserId();
         }
         List<PopupStoreDetailDto> popupStoreDetailDtoList = popupStoreService.getPopupStoreDetail(popupStoreId, userId);
+        Boolean canReserveToday = popupStoreService.checkReservationPossibleToday(popupStoreId);
         List<PopupStore> popupStoreNearByList = popupStoreService.getPopupStoresInDepartment(popupStoreId);
         return ApiResponse.success(
-                PopupStoreDetailResponse.of(popupStoreDetailDtoList, popupStoreNearByList)
+                PopupStoreDetailResponse.of(popupStoreDetailDtoList, popupStoreNearByList, canReserveToday)
         );
     }
 

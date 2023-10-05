@@ -114,6 +114,14 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoresEndingSoon();
     }
 
+    public Boolean checkReservationPossibleToday(Long popupStoreId) {
+        Integer canReserveToday = popupStoreDao.existsReservationToday(popupStoreId);
+        if (canReserveToday > 0){
+            return true;
+        }
+        return false;
+    }
+
     public List<PopupStoreDetailDto> getPopupStoreDetail(Long popupStoreId, Long userId) {
         PopupStoreQueryDto popupStoreQueryDto = new PopupStoreQueryDto(popupStoreId, userId);
         List<PopupStoreDetailDto> popupStoreDetailDtoList = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto);
@@ -145,9 +153,10 @@ public class PopupStoreService {
         return true;
     }
 
-    @Scheduled(fixedRate = 24 * 60 * 60 * 1000)
+    @Scheduled(cron = "0 0 9 * * *")
     @Transactional
     public void updateRedisPopupStoreViews() {
+        log.info("스케줄러 - 팝업스토어별 조회수 업데이트");
         Set<String> redisKeys = popupStoreRepository.getKeys("POST:*");
         List<PopupStoreUpdateDto> updates = new ArrayList<>();
         if (redisKeys != null) {

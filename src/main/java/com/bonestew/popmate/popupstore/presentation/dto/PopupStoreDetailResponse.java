@@ -27,6 +27,7 @@ public record PopupStoreDetailResponse(
         int status,
         Long views,
         Boolean reservationEnabled,
+        Boolean canReserveToday,
         Department department,
         List<PopupStoreSns> popupStoreSnsResponses,
         List<PopupStoreImg> popupStoreImgResponses,
@@ -34,7 +35,8 @@ public record PopupStoreDetailResponse(
 ) {
 
     public static PopupStoreDetailResponse of(List<PopupStoreDetailDto> popupStoreDtoList,
-                                              List<PopupStore> popupStoresNearBy) {
+                                              List<PopupStore> popupStoresNearBy,
+                                              Boolean canReserveToday) {
         PopupStore popupStore = popupStoreDtoList.get(0).getPopupStore();
         List<PopupStoreSns> popupStoreSnsResponse = new ArrayList<>();
         List<PopupStoreImg> popupStoreImgResponse = new ArrayList<>();
@@ -76,6 +78,7 @@ public record PopupStoreDetailResponse(
                 popupStoreDtoList.get(0).getUserReservationStatus().getCode(),
                 popupStore.getViews(),
                 popupStore.getReservationEnabled(),
+                canReserveToday,
                 popupStore.getDepartment(),
                 popupStoreSnsResponse,
                 popupStoreImgResponse,
