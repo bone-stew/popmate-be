@@ -278,7 +278,11 @@ public class PopupStoreService {
             reservationEventService.createReservation(
                     CreateReservationDto.from(popupStoreCreateRequest.getPopupStore())
             );
+            log.info("Reservation created.");
         }
+
+        log.info("Popup store created. ID: {}", storeId);
+
         return storeId;
     }
 

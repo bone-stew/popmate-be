@@ -13,15 +13,13 @@ public record CreateReservationDto(
 ) {
 
     public static CreateReservationDto from(PopupStore popupStore) {
-        CreateReservationDto createReservationDto = new CreateReservationDto(
+        return new CreateReservationDto(
             popupStore.getReservationInterval(),
-            popupStore.getOpenDate(),
-            popupStore.getCloseDate(),
+            popupStore.getOpenTime(),
+            popupStore.getCloseTime(),
             popupStore.getPopupStoreId(),
             popupStore.getMaxCapacity(),
             popupStore.getTeamSizeLimit()
         );
-        System.out.println("createReservationDto = " + createReservationDto);
-        return createReservationDto;
     }
 }
