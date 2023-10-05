@@ -114,6 +114,14 @@ public class PopupStoreService {
         return popupStoreDao.selectPopupStoresEndingSoon();
     }
 
+    public Boolean checkReservationPossibleToday(Long popupStoreId) {
+        Integer canReserveToday = popupStoreDao.existsReservationToday(popupStoreId);
+        if (canReserveToday > 0){
+            return true;
+        }
+        return false;
+    }
+
     public List<PopupStoreDetailDto> getPopupStoreDetail(Long popupStoreId, Long userId) {
         PopupStoreQueryDto popupStoreQueryDto = new PopupStoreQueryDto(popupStoreId, userId);
         List<PopupStoreDetailDto> popupStoreDetailDtoList = popupStoreDao.findPopupStoreDetailById(popupStoreQueryDto);

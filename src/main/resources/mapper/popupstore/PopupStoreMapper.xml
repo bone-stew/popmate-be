@@ -206,6 +206,14 @@
     where ps.popup_store_id = #{popupStoreId}
   </select>
 
+  <select id="existsReservationToday" parameterType="long" resultType="Integer">
+    select count(*)
+    from tb_reservation
+    where popup_store_id = #{popupStoreId}
+    and end_time > sysdate
+    and to_char(end_time, 'YYYYMMdd') = to_char(sysdate, 'YYYYMMdd')
+  </select>
+
   <select id="userReservationExistsById" parameterType="long" resultType="Boolean">
     SELECT CASE
     WHEN EXISTS (

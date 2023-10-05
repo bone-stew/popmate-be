@@ -60,4 +60,6 @@ public interface PopupStoreDao {
     void upsertPopupStoreSns(PopupStoreSns popupStoreSns);
 
     void deleteStoreImagesExcludingIds(PopupStoreImageDeleteRequest popupStoreImageDeleteRequest);
+
+    Integer existsReservationToday(Long popupStoreId);
 }
