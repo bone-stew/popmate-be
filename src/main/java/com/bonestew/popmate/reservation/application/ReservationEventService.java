@@ -162,12 +162,17 @@ public class ReservationEventService {
     @Transactional
     public void processEntrance(Long reservationId, ProcessEntranceRequest processEntranceRequest) {
         Long userId = processEntranceRequest.reservationUserId();
-        UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId, userId, UserReservationStatus.RESERVED)
+        UserReservation userReservation = userReservationDao.findByReservationIdAndUserIdAndStatus(reservationId,
+                userId, UserReservationStatus.RESERVED)
             .orElseThrow(() -> new UserReservationNotFoundException(reservationId));
 
         userReservation.validateEntry();
         userReservationDao.updateStatus(userReservation.getUserReservationId(), UserReservationStatus.VISITED);
 
         log.info("Entrance successful for user ID: {}, reservation ID: {}", userId, reservationId);
+    }
+
+    public void deleteReservationFromTomorrow(Long popupStoreId) {
+        reservationDao.deleteReservationFromTomorrow(popupStoreId);
     }
 }

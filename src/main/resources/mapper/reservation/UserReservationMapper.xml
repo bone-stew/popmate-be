@@ -92,7 +92,8 @@
     FROM tb_user_reservation A
            LEFT JOIN tb_reservation B ON A.reservation_id = B.reservation_id
            LEFT JOIN tb_popup_store C ON B.popup_store_id = C.popup_store_id
-    where A.user_id = #{userId}
+    WHERE A.user_id = #{userId}
+    ORDER BY START_TIME desc
   </select>
 
   <insert id="save" parameterType="UserReservation">

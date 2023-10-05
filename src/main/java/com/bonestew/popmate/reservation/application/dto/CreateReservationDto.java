@@ -13,15 +13,27 @@ public record CreateReservationDto(
 ) {
 
     public static CreateReservationDto from(PopupStore popupStore) {
-        CreateReservationDto createReservationDto = new CreateReservationDto(
+        return new CreateReservationDto(
             popupStore.getReservationInterval(),
-            popupStore.getOpenDate(),
-            popupStore.getCloseDate(),
+            popupStore.getOpenTime(),
+            popupStore.getCloseTime(),
             popupStore.getPopupStoreId(),
             popupStore.getMaxCapacity(),
             popupStore.getTeamSizeLimit()
         );
-        System.out.println("createReservationDto = " + createReservationDto);
-        return createReservationDto;
+    }
+
+    public static CreateReservationDto fromUpdate(PopupStore popupStore) {
+        return new CreateReservationDto(
+            popupStore.getReservationInterval(),
+            LocalDateTime.now()
+                .plusDays(1)
+                .withHour(popupStore.getOpenTime().getHour())
+                .withMinute(popupStore.getOpenTime().getMinute()),
+            popupStore.getCloseTime(),
+            popupStore.getPopupStoreId(),
+            popupStore.getMaxCapacity(),
+            popupStore.getTeamSizeLimit()
+        );
     }
 }
