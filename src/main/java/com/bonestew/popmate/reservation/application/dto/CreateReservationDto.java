@@ -22,4 +22,18 @@ public record CreateReservationDto(
             popupStore.getTeamSizeLimit()
         );
     }
+
+    public static CreateReservationDto fromUpdate(PopupStore popupStore) {
+        return new CreateReservationDto(
+            popupStore.getReservationInterval(),
+            LocalDateTime.now()
+                .plusDays(1)
+                .withHour(popupStore.getOpenTime().getHour())
+                .withMinute(popupStore.getOpenTime().getMinute()),
+            popupStore.getCloseTime(),
+            popupStore.getPopupStoreId(),
+            popupStore.getMaxCapacity(),
+            popupStore.getTeamSizeLimit()
+        );
+    }
 }

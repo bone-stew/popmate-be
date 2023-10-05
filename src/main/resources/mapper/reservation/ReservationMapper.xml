@@ -194,4 +194,10 @@
     WHERE reservation_id = #{reservationId}
   </update>
 
+  <delete id="deleteReservationFromTomorrow" parameterType="long">
+    DELETE from TB_RESERVATION
+    WHERE POPUP_STORE_ID = #{popupStoreId}
+    AND TO_CHAR(START_TIME, 'YYYYMMdd') > TO_CHAR(sysdate, 'YYYYMMdd')
+  </delete>
+
 </mapper>

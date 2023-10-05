@@ -188,6 +188,7 @@ public class PopupStoreService {
 
     public void updatePopupStore(PopupStoreUpdateRequest popupStoreUpdateRequest) {
         PopupStore popupStore = popupStoreUpdateRequest.getPopupStore();
+        Long popupStoreId = popupStore.getPopupStoreId();
         if (popupStoreUpdateRequest.getStoreImageList() != null) {
             if (!popupStoreUpdateRequest.getStoreImageList().isEmpty()) {
                 List<String> storeImgList = popupStoreUpdateRequest.getStoreImageList();
@@ -229,10 +230,38 @@ public class PopupStoreService {
             }
         }
         popupStoreDao.updatePopupStoreInfo(popupStoreUpdateRequest.getPopupStore());
+
+        // 예약 정보가 변경되었는지 확인
+        PopupStore updatePopupStore = popupStoreUpdateRequest.getPopupStore();
+        popupStoreDao.findById(updatePopupStore.getPopupStoreId())
+            .ifPresent(previousPopupStore -> {
+                // 예약이 취소되었을 때
+                if (!updatePopupStore.getReservationEnabled()) {
+                    reservationEventService.deleteReservationFromTomorrow(popupStoreId);
+                    log.info("Reservation deleted. popupStoreId: {}", popupStoreId);
+                    // 예약이 변경되었을 때
+                } else if (previousPopupStore.getReservationEnabled() && updatePopupStore.getReservationEnabled()) {
+                    reservationEventService.deleteReservationFromTomorrow(popupStoreId);
+                    reservationEventService.createReservation(
+                        CreateReservationDto.fromUpdate(
+                            popupStoreUpdateRequest.getPopupStore()
+                        )
+                    );
+                    log.info("Reservation updated. popupStoreId: {}", popupStoreId);
+                    // 예약이 생성되었을 때
+                } else if (!previousPopupStore.getReservationEnabled() && updatePopupStore.getReservationEnabled()) {
+                    reservationEventService.createReservation(
+                        CreateReservationDto.fromUpdate(
+                            popupStoreUpdateRequest.getPopupStore()
+                        )
+                    );
+                    log.info("Reservation created. popupStoreId: {}", popupStoreId);
+                }
+            });
     }
 
     public Long postNewPopupStore(List<MultipartFile> storeImageFiles, List<MultipartFile> storeItemImageFiles,
-            PopupStoreCreateRequest popupStoreCreateRequest
+                                  PopupStoreCreateRequest popupStoreCreateRequest
     ) {
         PopupStore popupStore = popupStoreCreateRequest.getPopupStore();
         LocalDate oldOpenDate = popupStore.getOpenDate().toLocalDate();
@@ -276,7 +305,7 @@ public class PopupStoreService {
         }
         if (popupStoreCreateRequest.getPopupStore().getReservationEnabled()) {
             reservationEventService.createReservation(
-                    CreateReservationDto.from(popupStoreCreateRequest.getPopupStore())
+                CreateReservationDto.from(popupStoreCreateRequest.getPopupStore())
             );
             log.info("Reservation created.");
         }
