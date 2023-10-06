@@ -101,7 +101,7 @@
 
   <select id="selectPopupStoresByQuery" resultMap="popupStoreMap"
     parameterType="com.bonestew.popmate.popupstore.persistence.dto.PopupStorePageDto">
-    SELECT POPUP_STORE_ID, TITLE, NAME, OPEN_DATE, CLOSE_DATE, ORGANIZER, d.CREATED_AT as CREATED_AT, COUNT(*) over () total, c.CATEGORY_NAME
+    SELECT POPUP_STORE_ID, TITLE, NAME, OPEN_DATE, CLOSE_DATE, ORGANIZER, s.CREATED_AT as CREATED_AT, COUNT(*) over () total, c.CATEGORY_NAME
     FROM TB_POPUP_STORE s
     JOIN TB_DEPARTMENT d
     ON s.DEPARTMENT_ID = d.DEPARTMENT_ID
