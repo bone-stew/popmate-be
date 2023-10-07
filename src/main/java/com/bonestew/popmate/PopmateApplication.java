@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 @EnableScheduling
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = "com.bonestew")
 public class PopmateApplication {
 
     public static void main(String[] args) {

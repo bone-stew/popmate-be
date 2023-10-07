@@ -6,7 +6,6 @@ import org.redisson.config.Config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 @Configuration
 public class RedissonConfig {
@@ -18,7 +17,6 @@ public class RedissonConfig {
     private int redisPort;
 
     @Bean
-    @DependsOn("embeddedRedisConfig")
     public RedissonClient redissonClient() {
         final String address = "redis://" + redisHost + ":" + redisPort;
         final Config config = new Config();
