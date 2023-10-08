@@ -15,6 +15,10 @@ import com.bonestew.popmate.auth.domain.PopmateUser;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.Category;
 import com.bonestew.popmate.popupstore.domain.CategoryType;
+import com.bonestew.popmate.popupstore.domain.PopupStoreImg;
+import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
+import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
+import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import com.bonestew.popmate.user.domain.Role;
 import com.bonestew.popmate.user.domain.User;
 import com.bonestew.popmate.chat.domain.ChatRoom;
@@ -31,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.swing.Popup;
+import net.bytebuddy.asm.Advice.Local;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -223,38 +228,195 @@ class PopupStoreControllerTest {
 
     }
 
-
-    @Disabled
     @Test
-    void 팝업스토어를_조회한다() throws Exception {
-        // given
-        Long popupStoreId = 1L;
-        LocalDateTime dateTime = LocalDateTime.of(2023, 8, 30, 9, 0);
+    void 팝업스토어_상세정보를_조회한다() throws Exception {
+        PopupStoreDetailDto popupStoreDetailDto = new PopupStoreDetailDto(
+                popupStore,
+                new Department(1L, "department", "placeDescription", 12.1, 12.1, LocalDateTime.of(2023, 10, 4, 9, 0),
+                               LocalDateTime.of(2024, 1, 1, 17, 0), LocalDateTime.now() ),
+                UserReservationStatus.RESERVED,
+                new PopupStoreSns(popupStore, 1L, "instagram", "url", LocalDateTime.now()),
+                new PopupStoreImg(popupStore, 1L, "imgurl", LocalDateTime.now())
+        );
+        List<PopupStoreDetailDto> popupStoreDetailDtoList = List.of(popupStoreDetailDto);
 
-        PopupStore popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), new Category(), "테스트 팝업 스토어", "주최자 이름",
-                "장소 상세 정보", "설명", "이벤트 설명", "이미지 URL", 1000, 50, true, true, 30, 5, 10, LocalDateTime.of(2023, 8, 23, 10, 0),
-                dateTime, dateTime, dateTime, 0L, dateTime, 0);
-
-        // when
-        given(popupStoreService.getPopupStore(popupStoreId)).willReturn(popupStore);
+        given(popupStoreService.getPopupStoreDetail(popupStore.getPopupStoreId(), user.getUserId())).willReturn(popupStoreDetailDtoList);
+        given(popupStoreService.getPopupStoresInDepartment(popupStore.getPopupStoreId())).willReturn(popupStoreList);
 
         ResultActions result = mockMvc.perform(
-                get("/api/v1/popup-stores/{popupStoreId}", popupStoreId));
-
-        // then
+                get("/api/v1/popup-stores/{popupStoreId}", popupStore.getPopupStoreId())
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(popmateUser))
+        );
         result
                 .andExpect(status().isOk())
                 .andDo(customDocument(
-                        pathParameters(
-                                parameterWithName("popupStoreId").description("조회할 팝업스토어 id")
-                        ),
                         responseFields(
-                                fieldWithPath("code").description(ResultCode.SUCCESS.name()),
-                                fieldWithPath("message").description(ResultCode.SUCCESS.getMessage()),
-                                fieldWithPath("data.id").description(1L),
-                                fieldWithPath("data.name").description("Sample Popup Store"),
-                                fieldWithPath("data.description").description("Sample Description")
+                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.popupStoreId").type(JsonFieldType.NUMBER).description("팝업스토어 아이디"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("팝업스토어 제목"),
+                                fieldWithPath("data.categoryName").type(JsonFieldType.STRING).description("팝업스토어 카테고리명"),
+                                fieldWithPath("data.organizer").type(JsonFieldType.STRING).description("팝업스토어 주최사"),
+                                fieldWithPath("data.placeDetail").type(JsonFieldType.STRING).description("팝업스토어 상세위치"),
+                                fieldWithPath("data.description").type(JsonFieldType.STRING).description("팝업스토어 상세정보"),
+                                fieldWithPath("data.eventDescription").type(JsonFieldType.STRING).description("팝업스토어 이벤트"),
+                                fieldWithPath("data.bannerImgUrl").type(JsonFieldType.STRING).description("팝업스토어 배너 이미지"),
+                                fieldWithPath("data.openDate").type(JsonFieldType.STRING).description("팝업스토어 시작일"),
+                                fieldWithPath("data.closeDate").type(JsonFieldType.STRING).description("팝업스토어 종료일"),
+                                fieldWithPath("data.openTime").type(JsonFieldType.STRING).description("팝업스토어 시작시간"),
+                                fieldWithPath("data.closeTime").type(JsonFieldType.STRING).description("팝업스토어 종료시간"),
+                                fieldWithPath("data.status").type(JsonFieldType.NUMBER).description("팝업스토어 상태"),
+                                fieldWithPath("data.entryFee").type(JsonFieldType.NUMBER).description("팝업스토어 입장료"),
+                                fieldWithPath("data.views").type(JsonFieldType.NUMBER).description("팝업스토어 조회수"),
+                                fieldWithPath("data.reservationEnabled").type(JsonFieldType.BOOLEAN).description("팝업스토어 예약시스템"),
+                                fieldWithPath("data.department.departmentId").type(JsonFieldType.NUMBER).description("백화점 아이디"),
+                                fieldWithPath("data.department.name").type(JsonFieldType.STRING).description("백화점 이름"),
+                                fieldWithPath("data.department.placeDescription").type(JsonFieldType.STRING).description("백화점 위치"),
+                                fieldWithPath("data.department.latitude").type(JsonFieldType.NUMBER).description("백화점 위도"),
+                                fieldWithPath("data.department.longitude").type(JsonFieldType.NUMBER).description("백화점 경도"),
+                                fieldWithPath("data.department.openTime").type(JsonFieldType.STRING).description("백화점 시작시간"),
+                                fieldWithPath("data.department.closeTime").type(JsonFieldType.STRING).description("백화점 종료시간"),
+                                fieldWithPath("data.department.createdAt").type(JsonFieldType.STRING).description("백화점 생성시간"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.popupStoreId").type(JsonFieldType.NUMBER).description("팝업스토어 아이디"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.user.userId").type(JsonFieldType.NULL).description("사용자 아이디"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.user.email").type(JsonFieldType.NULL).description("사용자 이메일"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.user.password").type(JsonFieldType.NULL).description("사용자 비밀번호"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.user.provider").type(JsonFieldType.NULL).description("사용자 제공 업체"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.user.role").type(JsonFieldType.NULL).description("사용자 역할"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.user.name").type(JsonFieldType.NULL).description("사용자 이름"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.user.nickname").type(JsonFieldType.NULL).description("사용자 닉네임"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.user.createdAt").type(JsonFieldType.NULL).description("사용자 생성일"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.department.departmentId").type(JsonFieldType.NUMBER).description("백화점 아이디"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.department.name").type(JsonFieldType.STRING).description("백화점 이름"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.department.placeDescription").type(JsonFieldType.STRING).description("백화점 위치"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.department.latitude").type(JsonFieldType.NUMBER).description("백화점 위도"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.department.longitude").type(JsonFieldType.NUMBER).description("백화점 경도"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.department.openTime").type(JsonFieldType.STRING).description("백화점 시작시간"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.department.closeTime").type(JsonFieldType.STRING).description("백화점 종료시간"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.department.createdAt").type(JsonFieldType.STRING).description("백화점 생성시간"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.chatRoomId.roomId").type(JsonFieldType.STRING).description("채팅 룸 아이디"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.chatRoomId.name").type(JsonFieldType.STRING).description("채팅 룸 이름"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.chatRoomId.createdAt").type(JsonFieldType.STRING).description("채팅 룸 생성일"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.category.categoryId").type(JsonFieldType.NUMBER).description("카테고리 아이디"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.category.categoryName").type(JsonFieldType.STRING).description("카테고리 이름"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.organizer").type(JsonFieldType.STRING).description("주최자"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.placeDetail").type(JsonFieldType.STRING).description("상세 위치"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.description").type(JsonFieldType.STRING).description("상세 정보"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.eventDescription").type(JsonFieldType.STRING).description("이벤트"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.bannerImgUrl").type(JsonFieldType.STRING).description("배너 이미지 URL"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.entryFee").type(JsonFieldType.NUMBER).description("입장료"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.maxCapacity").type(JsonFieldType.NUMBER).description("최대 수용 인원"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.reservationEnabled").type(JsonFieldType.BOOLEAN).description("예약 가능 여부"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.salesEnabled").type(JsonFieldType.BOOLEAN).description("판매 가능 여부"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.reservationInterval").type(JsonFieldType.NUMBER).description("예약 간격"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.intervalCapacity").type(JsonFieldType.NUMBER).description("간격당 수용 인원"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.teamSizeLimit").type(JsonFieldType.NUMBER).description("팀 크기 제한"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.openDate").type(JsonFieldType.STRING).description("시작일"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.closeDate").type(JsonFieldType.STRING).description("종료일"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.openTime").type(JsonFieldType.STRING).description("시작 시간"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.closeTime").type(JsonFieldType.STRING).description("종료 시간"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.createdAt").type(JsonFieldType.STRING).description("생성일"),
+                                fieldWithPath("data.popupStoreSnsResponses[].popupStore.total").type(JsonFieldType.NUMBER).description("총합"),
+                                fieldWithPath("data.popupStoreSnsResponses[].snsId").type(JsonFieldType.NUMBER).description("SNS 아이디"),
+                                fieldWithPath("data.popupStoreSnsResponses[].platform").type(JsonFieldType.STRING).description("플랫폼"),
+                                fieldWithPath("data.popupStoreSnsResponses[].url").type(JsonFieldType.STRING).description("URL"),
+                                fieldWithPath("data.popupStoreSnsResponses[].createdAt").type(JsonFieldType.STRING).description("SNS 생성일"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.popupStoreId").type(JsonFieldType.NUMBER).description("팝업스토어 아이디"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.user.userId").type(JsonFieldType.NULL).description("사용자 아이디"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.user.email").type(JsonFieldType.NULL).description("사용자 이메일"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.user.password").type(JsonFieldType.NULL).description("사용자 비밀번호"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.user.provider").type(JsonFieldType.NULL).description("사용자 제공 업체"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.user.role").type(JsonFieldType.NULL).description("사용자 역할"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.user.name").type(JsonFieldType.NULL).description("사용자 이름"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.user.nickname").type(JsonFieldType.NULL).description("사용자 닉네임"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.user.createdAt").type(JsonFieldType.NULL).description("사용자 생성일"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.department.departmentId").type(JsonFieldType.NUMBER).description("백화점 아이디"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.department.name").type(JsonFieldType.STRING).description("백화점 이름"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.department.placeDescription").type(JsonFieldType.STRING).description("백화점 위치"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.department.latitude").type(JsonFieldType.NUMBER).description("백화점 위도"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.department.longitude").type(JsonFieldType.NUMBER).description("백화점 경도"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.department.openTime").type(JsonFieldType.STRING).description("백화점 시작시간"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.department.closeTime").type(JsonFieldType.STRING).description("백화점 종료시간"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.department.createdAt").type(JsonFieldType.STRING).description("백화점 생성일"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.chatRoomId.roomId").type(JsonFieldType.STRING).description("채팅 룸 아이디"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.chatRoomId.name").type(JsonFieldType.STRING).description("채팅 룸 이름"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.chatRoomId.createdAt").type(JsonFieldType.STRING).description("채팅 룸 생성일"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.category.categoryId").type(JsonFieldType.NUMBER).description("카테고리 아이디"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.category.categoryName").type(JsonFieldType.STRING).description("카테고리 이름"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.organizer").type(JsonFieldType.STRING).description("주최자"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.placeDetail").type(JsonFieldType.STRING).description("상세 위치"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.description").type(JsonFieldType.STRING).description("상세 정보"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.eventDescription").type(JsonFieldType.STRING).description("이벤트"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.bannerImgUrl").type(JsonFieldType.STRING).description("배너 이미지 URL"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.entryFee").type(JsonFieldType.NUMBER).description("입장료"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.maxCapacity").type(JsonFieldType.NUMBER).description("최대 수용 인원"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.reservationEnabled").type(JsonFieldType.BOOLEAN).description("예약 가능 여부"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.salesEnabled").type(JsonFieldType.BOOLEAN).description("판매 가능 여부"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.reservationInterval").type(JsonFieldType.NUMBER).description("예약 간격"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.intervalCapacity").type(JsonFieldType.NUMBER).description("간격당 수용 인원"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.teamSizeLimit").type(JsonFieldType.NUMBER).description("팀 크기 제한"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.openDate").type(JsonFieldType.STRING).description("시작일"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.closeDate").type(JsonFieldType.STRING).description("종료일"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.openTime").type(JsonFieldType.STRING).description("시작 시간"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.closeTime").type(JsonFieldType.STRING).description("종료 시간"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.views").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.createdAt").type(JsonFieldType.STRING).description("생성일"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStore.total").type(JsonFieldType.NUMBER).description("총합"),
+                                fieldWithPath("data.popupStoreImgResponses[].popupStoreImgId").type(JsonFieldType.NUMBER).description("팝업스토어 이미지 아이디"),
+                                fieldWithPath("data.popupStoreImgResponses[].imgUrl").type(JsonFieldType.STRING).description("이미지 URL"),
+                                fieldWithPath("data.popupStoreImgResponses[].createdAt").type(JsonFieldType.STRING).description("이미지 생성일"),
+                                fieldWithPath("data.popupStoresNearBy[].popupStoreId").type(JsonFieldType.NUMBER).description("팝업스토어 아이디"),
+                                fieldWithPath("data.popupStoresNearBy[].title").type(JsonFieldType.STRING).description("제목"),
+                                fieldWithPath("data.popupStoresNearBy[].departmentName").type(JsonFieldType.STRING).description("백화점 이름"),
+                                fieldWithPath("data.popupStoresNearBy[].categoryName").type(JsonFieldType.STRING).description("카테고리 이름"),
+                                fieldWithPath("data.popupStoresNearBy[].openDate").type(JsonFieldType.STRING).description("시작일"),
+                                fieldWithPath("data.popupStoresNearBy[].closeDate").type(JsonFieldType.STRING).description("종료일"),
+                                fieldWithPath("data.popupStoresNearBy[].placeDetail").type(JsonFieldType.STRING).description("상세 위치"),
+                                fieldWithPath("data.popupStoresNearBy[].bannerImgUrl").type(JsonFieldType.STRING).description("배너 이미지 URL"),
+                                fieldWithPath("data.popupStoresNearBy[].organizer").type(JsonFieldType.STRING).description("주최자"),
+                                fieldWithPath("data.popupStoresNearBy[].createdAt").type(JsonFieldType.STRING).description("생성일"),
+                                fieldWithPath("data.popupStoresNearBy[].total").type(JsonFieldType.NUMBER).description("총합")
+
+
                         )
                 ));
+
     }
+//    @Disabled
+//    @Test
+//    void 팝업스토어를_조회한다() throws Exception {
+//        // given
+//        Long popupStoreId = 1L;
+//        LocalDateTime dateTime = LocalDateTime.of(2023, 8, 30, 9, 0);
+//
+//        PopupStore popupStore = new PopupStore(1L, new User(), new Department(), new ChatRoom(), new Category(), "테스트 팝업 스토어", "주최자 이름",
+//                "장소 상세 정보", "설명", "이벤트 설명", "이미지 URL", 1000, 50, true, true, 30, 5, 10, LocalDateTime.of(2023, 8, 23, 10, 0),
+//                dateTime, dateTime, dateTime, 0L, dateTime, 0);
+//
+//        // when
+//        given(popupStoreService.getPopupStore(popupStoreId)).willReturn(popupStore);
+//
+//        ResultActions result = mockMvc.perform(
+//                get("/api/v1/popup-stores/{popupStoreId}", popupStoreId));
+//
+//        // then
+//        result
+//                .andExpect(status().isOk())
+//                .andDo(customDocument(
+//                        pathParameters(
+//                                parameterWithName("popupStoreId").description("조회할 팝업스토어 id")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("code").description(ResultCode.SUCCESS.name()),
+//                                fieldWithPath("message").description(ResultCode.SUCCESS.getMessage()),
+//                                fieldWithPath("data.id").description(1L),
+//                                fieldWithPath("data.name").description("Sample Popup Store"),
+//                                fieldWithPath("data.description").description("Sample Description")
+//                        )
+//                ));
+//    }
 }
