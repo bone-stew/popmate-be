@@ -9,12 +9,16 @@ spring:
       uri: ENC(xPfHpLtise1s5m+7JsauaVfitlI09826ejdXHZzkWk8HVi53JMO8J90ub18P8CjOUVVbVWLM3Qa2WGLkChDNB4EdpJA3bT/1N3frIJjOyPksbj5uOXgLgXWwHD5lS2SZqojj2LWfhcgJSDCBeDuxs/7DbfgDD4Px)
       database: popmate
     redis:
-      host: localhost
+      host: ENC(D5+3COHtqCMFoObpjB4wlnRyIN0D2hIuFzbp902knwtRIhICIH3dc5pG+rUtftSyvrOpqPo2D34G1ef22JdeuQ==)
       port: 6379
       maxHeap: 128M
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 mybatis:
-  type-aliases-package: com.bonestew.popmate.*.domain
+  type-aliases-package: com.bonestew.popmate.*.domain, com.bonestew.popmate.popupstore.presentation.dto
   type-handlers-package: com.bonestew.popmate.*.persistence.typehandler
   mapper-locations: classpath:mapper/*/*.xml
   configuration:
