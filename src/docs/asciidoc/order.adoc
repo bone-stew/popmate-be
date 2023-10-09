@@ -30,7 +30,7 @@ include::{snippets}/order-controller-test/나의_주문내역_불러온다/http-
 operation::order-controller-test/나의_주문내역_불러온다[snippets='response-fields']
 
 
-== 팝업스토어 상품의 재고를체크한다
+== 팝업스토어 상품의 재고를 체크한다
 
 === Request
 include::{snippets}/order-controller-test/팝업스토어_상품의_재고를_체크한다/http-request.adoc[]
