@@ -401,10 +401,10 @@ class PopupStoreControllerTest {
     }
 
 
-    @Test
-    void 팝업스토어_관련_이미지를_업로드한다() throws Exception {
-
-    }
+//    @Test
+//    void 팝업스토어_관련_이미지를_업로드한다() throws Exception {
+//
+//    }
 
 
 }
