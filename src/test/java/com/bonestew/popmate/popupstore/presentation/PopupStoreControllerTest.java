@@ -78,6 +78,8 @@ class PopupStoreControllerTest {
     private PopmateUser popmateUser;
     private List<PopupStoreSns> popupStoreSnsList;
     private List<PopupStoreItem> popupStoreItemList;
+    private MultipartFile storeImageMultipartFile;
+    private MultipartFile storeItemImageMultipartFile;
 
     @BeforeEach
     void setUp() {
@@ -90,7 +92,7 @@ class PopupStoreControllerTest {
                 1L,
                 new User(),
                 new Department(1L, "department", "placeDescription", 12.1, 12.1, LocalDateTime.of(2023, 10, 4, 9, 0),
-                               LocalDateTime.of(2024, 1, 1, 17, 0), LocalDateTime.now()),
+                        LocalDateTime.of(2024, 1, 1, 17, 0), LocalDateTime.now()),
                 new ChatRoom("1", "chatroom", LocalDateTime.now()),
                 new Category(1L, CategoryType.POPUP_STORE),
                 "팝업스토어",
@@ -120,7 +122,25 @@ class PopupStoreControllerTest {
         popupStoreSnsList = List.of(new PopupStoreSns(popupStore, 1L, "Instagram", "ig-url", LocalDateTime.now()));
         popupStoreItemList = List.of(
                 new PopupStoreItem(1L, popupStore, "itemName", "imageURL", true, 100, 10, 1, LocalDateTime.now()));
+        File storeImageFile = new File("src/test/resources/storecreateimgs/test_store_img.png");
+        File storeItemImageFile = new File("src/test/resources/storecreateimgs/test_store_img.png");
+        try {
+            storeImageMultipartFile = createMockMultipartFile(storeImageFile, "storeImage");
+            storeItemImageMultipartFile = createMockMultipartFile(storeItemImageFile, "storeImage");
+        } catch (IOException e) {
+            System.out.println(e);
+        }
 
+    }
+
+    private MultipartFile createMockMultipartFile(File file, String fieldName) throws IOException {
+        FileInputStream input = new FileInputStream(file);
+        return new MockMultipartFile(
+                fieldName,
+                file.getName(),
+                MimeTypeUtils.IMAGE_PNG.toString(),
+                input.readAllBytes()
+        );
     }
 
     //    @Disabled
@@ -139,11 +159,11 @@ class PopupStoreControllerTest {
 
         // When
         given(popupStoreService.getPopupStores(null,
-                                               null,
-                                               null,
-                                               null,
-                                               null,
-                                               null)).willReturn(popupStoreList);
+                null,
+                null,
+                null,
+                null,
+                null)).willReturn(popupStoreList);
 
         ResultActions result = mockMvc.perform(
                 get("/api/v1/popup-stores")
@@ -259,7 +279,7 @@ class PopupStoreControllerTest {
         PopupStoreDetailDto popupStoreDetailDto = new PopupStoreDetailDto(
                 popupStore,
                 new Department(1L, "department", "placeDescription", 12.1, 12.1, LocalDateTime.of(2023, 10, 4, 9, 0),
-                               LocalDateTime.of(2024, 1, 1, 17, 0), LocalDateTime.now()),
+                        LocalDateTime.of(2024, 1, 1, 17, 0), LocalDateTime.now()),
                 UserReservationStatus.RESERVED,
                 new PopupStoreSns(popupStore, 1L, "instagram", "url", LocalDateTime.now()),
                 new PopupStoreImg(popupStore, 1L, "imgurl", LocalDateTime.now())
@@ -348,19 +368,13 @@ class PopupStoreControllerTest {
                 popupStoreItemList
         );
 
-        File storeImageFile = new File("src/test/resources/storecreateimgs/test_store_img.png");
-        File storeItemImageFile = new File("src/test/resources/storecreateimgs/test_store_img.png");
-
-        MultipartFile storeImageMultipartFile = createMockMultipartFile(storeImageFile, "storeImage");
-        MultipartFile storeItemImageMultipartFile = createMockMultipartFile(storeItemImageFile, "storeImage");
-
         String popupStoreCreateRequestJson = objectMapper.writeValueAsString(popupStoreCreateRequest);
         MockMultipartFile popupStoreCreateRequestFile = new MockMultipartFile("storeInfo", "storeInfo", "application/json",
-                                                                              popupStoreCreateRequestJson.getBytes(
-                                                                                      StandardCharsets.UTF_8));
+                popupStoreCreateRequestJson.getBytes(
+                        StandardCharsets.UTF_8));
 
         given(popupStoreService.postNewPopupStore(List.of(storeImageMultipartFile), List.of(storeItemImageMultipartFile),
-                                                  popupStoreCreateRequest)).willReturn(1L);
+                popupStoreCreateRequest)).willReturn(1L);
 
         // when
         ResultActions result = mockMvc.perform(
@@ -386,14 +400,10 @@ class PopupStoreControllerTest {
                 ));
     }
 
-    private MultipartFile createMockMultipartFile(File file, String fieldName) throws IOException {
-        FileInputStream input = new FileInputStream(file);
-        return new MockMultipartFile(
-                fieldName,
-                file.getName(),
-                MimeTypeUtils.IMAGE_PNG.toString(),
-                input.readAllBytes()
-        );
+
+    @Test
+    void 팝업스토어_관련_이미지를_업로드한다() throws Exception {
+
     }
 
 
