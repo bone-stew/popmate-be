@@ -29,8 +29,8 @@ public record PopupStoreDetailResponse(
         Boolean reservationEnabled,
         Boolean canReserveToday,
         Department department,
-        List<PopupStoreSns> popupStoreSnsResponses,
-        List<PopupStoreImg> popupStoreImgResponses,
+        List<PopupStoreSnsResponse> popupStoreSnsResponses,
+        List<PopupStoreImgResponse> popupStoreImgResponses,
         List<PopupStoreResponse> popupStoresNearBy
 ) {
 
@@ -38,8 +38,8 @@ public record PopupStoreDetailResponse(
                                               List<PopupStore> popupStoresNearBy,
                                               Boolean canReserveToday) {
         PopupStore popupStore = popupStoreDtoList.get(0).getPopupStore();
-        List<PopupStoreSns> popupStoreSnsResponse = new ArrayList<>();
-        List<PopupStoreImg> popupStoreImgResponse = new ArrayList<>();
+        List<PopupStoreSnsResponse> popupStoreSnsResponse = new ArrayList<>();
+        List<PopupStoreImgResponse> popupStoreImgResponse = new ArrayList<>();
         HashSet<Long> popupStoreSnsIds = new HashSet<>();
         HashSet<Long> popupStoreImgIds = new HashSet<>();
         for (PopupStoreDetailDto popupStoreDetailDto : popupStoreDtoList) {
@@ -48,7 +48,7 @@ public record PopupStoreDetailResponse(
                 Long snsId = sns.getSnsId();
                 if (!popupStoreSnsIds.contains(snsId)) {
                     popupStoreSnsIds.add(snsId);
-                    popupStoreSnsResponse.add(sns);
+                    popupStoreSnsResponse.add(PopupStoreSnsResponse.from(sns));
                 }
             }
             if (popupStoreDetailDto.getPopupStoreImg() != null) {
@@ -56,7 +56,7 @@ public record PopupStoreDetailResponse(
                 Long imgId = img.getPopupStoreImgId();
                 if (!popupStoreImgIds.contains(imgId)) {
                     popupStoreImgIds.add(imgId);
-                    popupStoreImgResponse.add(img);
+                    popupStoreImgResponse.add(PopupStoreImgResponse.from(img));
                 }
             }
         }

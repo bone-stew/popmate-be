@@ -56,7 +56,6 @@ public record PopupStoreInfoResponse(
                 }
             }
             if (info.getPopupStoreImg() != null) {
-
                 PopupStoreImg img = info.getPopupStoreImg();
                 Long imgId = img.getPopupStoreImgId();
                 if (!imgIdSet.contains(imgId)) {
