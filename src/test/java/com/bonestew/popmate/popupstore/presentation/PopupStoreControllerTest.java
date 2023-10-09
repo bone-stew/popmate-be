@@ -10,6 +10,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,6 +26,9 @@ import com.bonestew.popmate.popupstore.domain.PopupStoreItem;
 import com.bonestew.popmate.popupstore.domain.PopupStoreSns;
 import com.bonestew.popmate.popupstore.persistence.dto.PopupStoreDetailDto;
 import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreCreateRequest;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreQueryRequest;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreResponse;
+import com.bonestew.popmate.popupstore.presentation.dto.PopupStoresResponse;
 import com.bonestew.popmate.reservation.domain.UserReservationStatus;
 import com.bonestew.popmate.user.domain.Role;
 import com.bonestew.popmate.user.domain.User;
@@ -36,11 +40,14 @@ import com.bonestew.popmate.popupstore.presentation.dto.PopupStoreSearchRequest;
 import com.bonestew.popmate.utils.WithMockCustomUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,6 +59,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -430,11 +438,45 @@ class PopupStoreControllerTest {
                         responseFields(
                                 fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
                                 fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data.popupStoreImageList[]").type(JsonFieldType.ARRAY).description("스토어 이미지 URL 리스트"),
-                                fieldWithPath("data.popupStoreItemImageList[]").type(JsonFieldType.ARRAY).description("스토어 아이템 URL 리스트")
+                                fieldWithPath("data.popupStoreImageList[]").type(JsonFieldType.ARRAY)
+                                        .description("스토어 이미지 URL 리스트"),
+                                fieldWithPath("data.popupStoreItemImageList[]").type(JsonFieldType.ARRAY)
+                                        .description("스토어 아이템 URL 리스트")
                         )
                 ));
 
+    }
+
+    @Test
+    void 관리자용_팝업스토어_목록을_조회한다() throws Exception {
+        PopupStoreQueryRequest popupStoreQueryRequest = new PopupStoreQueryRequest(0, null);
+
+        List<PopupStore> popupStoreListEmpty = new ArrayList<>();
+        given(popupStoreService.getPopupStoresByQuery(popupStoreQueryRequest, Pageable.unpaged())).willReturn(
+                popupStoreListEmpty);
+
+        // when
+        ResultActions result = mockMvc.perform(
+                get("/api/v1/popup-stores/search")
+                        .param("page", "0")
+                        .param("type", "0")
+                        .param("query", "test"));
+
+        // then
+        result
+                .andExpect(status().isOk())
+                .andDo(customDocument(
+                        queryParameters(
+                                parameterWithName("page").description("페이징"),
+                                parameterWithName("type").description("검색 필드"),
+                                parameterWithName("query").description("검색 키워드")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.popupStores[]").type(JsonFieldType.ARRAY).description("스토어 리스트")
+                        )
+                ));
     }
 
 

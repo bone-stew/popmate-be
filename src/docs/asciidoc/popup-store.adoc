@@ -53,3 +53,11 @@ include::{snippets}/popup-store-controller-test/팝업스토어를_생성한다/
 === Response
 operation::popup-store-controller-test/팝업스토어를_생성한다[snippets='response-fields']
 
+== 관리자용 팝업스토어 목록을 조회한다
+
+=== Request
+include::{snippets}/popup-store-controller-test/관리자용_팝업스토어_목록을_조회한다/query-parameters.adoc[]
+
+=== Response
+operation::popup-store-controller-test/관리자용_팝업스토어_목록을_조회한다[snippets='response-fields']
+
