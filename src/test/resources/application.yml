@@ -9,7 +9,7 @@ spring:
       enabled: true
   data:
     redis:
-      host: 54.180.105.22
+      host: localhost
       port: 6379
       maxHeap: 128M
 
