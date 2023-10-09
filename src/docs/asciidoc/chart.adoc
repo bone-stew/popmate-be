@@ -1,0 +1,16 @@
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[chart-api]]
+= CHART API 문서
+
+== 차트 데이터를 조회한다.
+=== Request
+include::{snippets}/chart-controller-test/chart/http-request.adoc[]
+
+=== Response
+include::{snippets}/chart-controller-test/chart/response-fields.adoc[]
