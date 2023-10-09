@@ -9,7 +9,7 @@ spring:
       uri: ENC(xPfHpLtise1s5m+7JsauaVfitlI09826ejdXHZzkWk8HVi53JMO8J90ub18P8CjOUVVbVWLM3Qa2WGLkChDNB4EdpJA3bT/1N3frIJjOyPksbj5uOXgLgXWwHD5lS2SZqojj2LWfhcgJSDCBeDuxs/7DbfgDD4Px)
       database: popmate
     redis:
-      host: localhost
+      host: 54.180.105.22
       port: 6379
       maxHeap: 128M
   servlet:
