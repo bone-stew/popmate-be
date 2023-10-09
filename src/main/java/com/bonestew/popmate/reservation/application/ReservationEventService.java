@@ -2,6 +2,7 @@ package com.bonestew.popmate.reservation.application;
 
 import static com.bonestew.popmate.popupstore.config.FolderType.RESERVATIONS;
 
+import com.bonestew.popmate.annotation.DistributedLock;
 import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.reservation.application.dto.CreateReservationDto;
 import com.bonestew.popmate.reservation.application.dto.ProcessEntranceRequest;
@@ -48,6 +49,7 @@ public class ReservationEventService {
      * @param reservationRequest
      */
     @Transactional
+    @DistributedLock(key = "#reservationId")
     public Long reserve(final Long reservationId, final Long userId, final ReservationRequest reservationRequest) {
         Reservation reservation = reservationDao.findById(reservationId)
             .orElseThrow(() -> new ReservationNotFoundException(reservationId));
