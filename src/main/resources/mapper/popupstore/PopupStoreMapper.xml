@@ -144,6 +144,7 @@
         AND ((#{startDate, jdbcType=TIMESTAMP} BETWEEN open_date AND close_date)
         OR (#{startDate, jdbcType=TIMESTAMP} BETWEEN open_date AND close_date))
       </if>
+      and s.category_id = 1
     </where>
     <if test="offSetRows != 0 and rowsToGet != 0">
       OFFSET #{offSetRows} ROWS FETCH FIRST #{rowsToGet} ROWS ONLY
@@ -177,6 +178,7 @@
         join tb_category c on s.category_id = c.category_id
     where sysdate &lt;= close_date
       AND trunc(SYSDATE) > open_date
+      and s.category_id = 1
     ORDER BY s.views desc
       FETCH FIRST 5 ROWS ONLY
   </select>
@@ -188,6 +190,7 @@
       tb_popup_store s
         join tb_category c on s.category_id = c.category_id
     where sysdate &lt;= s.close_date
+    and s.category_id = 1
     order by s.close_date
       fetch FIRST 5 ROWS ONLY
   </select>
