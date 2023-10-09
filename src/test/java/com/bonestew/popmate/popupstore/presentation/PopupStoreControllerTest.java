@@ -14,6 +14,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.bonestew.popmate.auth.domain.PopmateUser;
+import com.bonestew.popmate.popupstore.config.FolderType;
+import com.bonestew.popmate.popupstore.config.service.AwsFileService;
+import com.bonestew.popmate.popupstore.config.service.FileService;
 import com.bonestew.popmate.popupstore.domain.Banner;
 import com.bonestew.popmate.popupstore.domain.Category;
 import com.bonestew.popmate.popupstore.domain.CategoryType;
@@ -38,10 +41,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -64,6 +69,9 @@ class PopupStoreControllerTest {
 
     @MockBean
     private PopupStoreService popupStoreService;
+
+    @MockBean
+    private FileService awsFileService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -401,10 +409,33 @@ class PopupStoreControllerTest {
     }
 
 
-//    @Test
-//    void 팝업스토어_관련_이미지를_업로드한다() throws Exception {
-//
-//    }
+    @Test
+    void 팝업스토어_관련_이미지를_업로드한다() throws Exception {
+        List<String> storeImageList = Arrays.asList("test");
+
+        given(awsFileService.uploadFiles(List.of(storeImageMultipartFile), FolderType.STORES)).willReturn(storeImageList);
+
+        ResultActions result = mockMvc.perform(
+                multipart("/api/v1/popup-stores/{popupStoreId}/images", popupStore.getPopupStoreId())
+                        .file("storeImageFiles", storeImageMultipartFile.getBytes())
+                        .file("storeItemImageFiles", storeItemImageMultipartFile.getBytes()));
+
+        result
+                .andExpect(status().isOk())
+                .andDo(customDocument(
+                        requestParts(
+                                partWithName("storeImageFiles").description("스토어 이미지"),
+                                partWithName("storeItemImageFiles").description("스토어 아이템 이미지")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.popupStoreImageList[]").type(JsonFieldType.ARRAY).description("스토어 이미지 URL 리스트"),
+                                fieldWithPath("data.popupStoreItemImageList[]").type(JsonFieldType.ARRAY).description("스토어 아이템 URL 리스트")
+                        )
+                ));
+
+    }
 
 
 }

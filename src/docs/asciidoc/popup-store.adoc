@@ -36,6 +36,13 @@ operation::popup-store-controller-test/팝업스토어_상세정보를_조회한
 // 여러개의 스니펫을 사용하는 경우
 // operation::popup-store-controller-test/팝업스토어를_생성한다[snippets='path-parameters,response-fields']
 
+== 팝업스토어 관련 이미지를 업로드한다
+=== Request
+include::{snippets}/popup-store-controller-test/팝업스토어_관련_이미지를_업로드한다/request-parts.adoc[]
+
+=== Response
+operation::popup-store-controller-test/팝업스토어_관련_이미지를_업로드한다[snippets='response-fields']
+
 
 
 == 팝업스토어를 생성한다
