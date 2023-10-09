@@ -7,3 +7,54 @@
 
 [[chat-api]]
 = CHAT API 문서
+
+== 채팅방을 입장한다
+
+=== Request
+include::{snippets}/chat-controller-test/enter-chat-room/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/chat-controller-test/enter-chat-room/response-fields.adoc[]
+
+== 채팅방을 조회한다
+
+=== Request
+include::{snippets}/chat-controller-test/room/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/chat-controller-test/room/response-fields.adoc[]
+
+== 채팅방 메세지 목록
+
+=== Request
+include::{snippets}/chat-controller-test/messages/path-parameters.adoc[]
+include::{snippets}/chat-controller-test/messages/query-parameters.adoc[]
+
+=== Response
+include::{snippets}/chat-controller-test/messages/response-fields.adoc[]
+
+== 채팅방 썸네일 조회 목록
+
+=== Request
+include::{snippets}/chat-controller-test/thumbnail/path-parameters.adoc[]
+
+=== Response
+include::{snippets}/chat-controller-test/thumbnail/response-fields.adoc[]
+
+== 채팅방 신고 내역 조회
+
+=== Response
+include::{snippets}/chat-controller-test/report-list/response-fields.adoc[]
+
+== 채팅방 입장 자격 조회
+
+=== Response
+include::{snippets}/chat-controller-test/enter-verify/response-fields.adoc[]
+
+== 유저 정지 처리
+
+=== Request
+include::{snippets}/chat-controller-test/ban-user/request-body.adoc[]
+
+=== Response
+include::{snippets}/chat-controller-test/ban-user/response-fields.adoc[]
