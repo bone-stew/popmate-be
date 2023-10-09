@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,18 +38,25 @@ public class ChatService {
     private final RedisMessageListenerContainer redisMessageListenerContainer;
     private final RedisSubscriber redisSubscriber;
 
+    private final SimpMessageSendingOperations simpMessageSendingOperations;
+
+    public  void sendMessage (ChatMessage message) {
+        chatMessageRepository.save(message);
+        simpMessageSendingOperations.convertAndSend("/sub/" + message.getRoomId(), message);
+    }
+
     public ChatRoom findRoomById(String roomId) {
         return chatRoomDao.findById(roomId).orElseThrow(ChatRoomNotFoundException::new);
     }
 
     public ChatRoom enterChatRoom(String roomId) {
-        ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomId);
-        if (chatRoom == null) {
-            chatRoom = chatRoomDao.findById(roomId).orElseThrow(ChatRoomNotFoundException::new);
-            redisMessageListenerContainer.addMessageListener(redisSubscriber, getTopic(roomId));
-            chatRoomRepository.registerChatRoom(chatRoom);
-        }
-        return chatRoom;
+//        ChatRoom chatRoom = chatRoomRepository.getChatRoom(roomId);
+//        if (chatRoom == null) {
+//            chatRoom = chatRoomDao.findById(roomId).orElseThrow(ChatRoomNotFoundException::new);
+//            redisMessageListenerContainer.addMessageListener(redisSubscriber, getTopic(roomId));
+////            chatRoomRepository.registerChatRoom(chatRoom);
+//        }
+        return chatRoomDao.findById(roomId).orElseThrow(ChatRoomNotFoundException::new);
     }
 
     public ChannelTopic getTopic(String roomId) {

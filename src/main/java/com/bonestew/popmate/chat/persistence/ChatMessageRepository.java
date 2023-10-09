@@ -17,9 +17,6 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
     @Query("{roomId: ?0}")
     List<ChatMessage> findChatMessageThumbNail(Long roomId, Pageable pageable);
 
-    @Query("{id: ?0}")
-    Optional<ChatMessage> findChatMessageById(String id);
-
     @Query( value = "{sender: ?0}", sort = "{createdAt: -1}")
     List<ChatMessage> findChatMessageBySenderOrderByCreatedAtDesc(Long sender);
 }

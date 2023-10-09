@@ -19,7 +19,6 @@ public interface ChatRoomDao {
     Optional<ChatRoom> findById(String roomId);
     void insertChatReport(ReportDto report);
     List<ChatReport> findReportList();
-    List<ChatReport> findReportListByWriterId(Long userId);
     Optional<BannedUser> findBannedUserByUserId (Long userId);
     void insertOrUpdateBanUser(@Param("userId") Long userId, @Param("banDays") Integer banDays);
     void updateChatReportStatus (BanUserRequest request);
