@@ -273,7 +273,7 @@
       <if test="role.name().equals('ROLE_STAFF')">
         USER_ID = #{userId}
       </if>
-      AND SYSDATE BETWEEN OPEN_DATE AND CLOSE_DATE
+      AND to_char(CLOSE_DATE, 'YYYY-MM-DD') >= to_char(SYSDATE, 'YYYY-MM-DD')
     </where>
     ORDER BY CREATED_AT DESC
   </select>
