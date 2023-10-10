@@ -33,7 +33,7 @@ include::{snippets}/chat-controller-test/messages/query-parameters.adoc[]
 === Response
 include::{snippets}/chat-controller-test/messages/response-fields.adoc[]
 
-== 채팅방 썸네일 조회 목록
+== 채팅방 썸네일 목록을 조회한다
 
 === Request
 include::{snippets}/chat-controller-test/thumbnail/path-parameters.adoc[]
@@ -41,20 +41,24 @@ include::{snippets}/chat-controller-test/thumbnail/path-parameters.adoc[]
 === Response
 include::{snippets}/chat-controller-test/thumbnail/response-fields.adoc[]
 
-== 채팅방 신고 내역 조회
+== 채팅방 신고 목록을 조회한다
+
+=== Request
+include::{snippets}/chat-controller-test/report-list/http-request.adoc[]
 
 === Response
 include::{snippets}/chat-controller-test/report-list/response-fields.adoc[]
 
-== 채팅방 입장 자격 조회
+== 채팅방 입장 자격을 조회한다
 
 === Response
 include::{snippets}/chat-controller-test/enter-verify/response-fields.adoc[]
 
-== 유저 정지 처리
+== 사용자를 정지 처리한다
 
 === Request
-include::{snippets}/chat-controller-test/ban-user/request-body.adoc[]
+include::{snippets}/chat-controller-test/ban-user/http-request.adoc[]
+include::{snippets}/chat-controller-test/ban-user/request-fields.adoc[]
 
 === Response
 include::{snippets}/chat-controller-test/ban-user/response-fields.adoc[]

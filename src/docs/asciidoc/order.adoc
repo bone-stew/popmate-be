@@ -12,22 +12,25 @@
 
 === Request
 include::{snippets}/order-controller-test/팝업스토어_상품을_주문한다/http-request.adoc[]
-=== Response
-operation::order-controller-test/팝업스토어_상품을_주문한다[snippets='response-fields']
 
-== 팝업스토어 상품을 불러온다
+=== Response
+include::{snippets}/order-controller-test/팝업스토어_상품을_주문한다/response-fields.adoc[]
+
+
+== 팝업스토어 상품 목록을 조회한다
 
 === Request
 include::{snippets}/order-controller-test/팝업스토어_상품을_불러온다/http-request.adoc[]
 === Response
-operation::order-controller-test/팝업스토어_상품을_불러온다[snippets='response-fields']
+include::{snippets}/order-controller-test/팝업스토어_상품을_불러온다/response-fields.adoc[]
 
-== 나의 주문내역 불러온다
+
+== 나의 주문 내역을 조회힌다
 
 === Request
 include::{snippets}/order-controller-test/나의_주문내역_불러온다/http-request.adoc[]
 === Response
-operation::order-controller-test/나의_주문내역_불러온다[snippets='response-fields']
+include::{snippets}/order-controller-test/나의_주문내역_불러온다/response-fields.adoc[]
 
 
 == 팝업스토어 상품의 재고를 체크한다
@@ -35,21 +38,23 @@ operation::order-controller-test/나의_주문내역_불러온다[snippets='resp
 === Request
 include::{snippets}/order-controller-test/팝업스토어_상품의_재고를_체크한다/http-request.adoc[]
 === Response
-operation::order-controller-test/팝업스토어_상품의_재고를_체크한다[snippets='response-fields']
+include::{snippets}/order-controller-test/팝업스토어_상품의_재고를_체크한다/response-fields.adoc[]
+
 
 == 팝업스토어 위치를 불러온다
 
 === Request
 include::{snippets}/order-controller-test/팝업스토어_위치를_불러온다/http-request.adoc[]
 === Response
-operation::order-controller-test/팝업스토어_위치를_불러온다[snippets='response-fields']
+include::{snippets}/order-controller-test/팝업스토어_위치를_불러온다/response-fields.adoc[]
+
 
 == 팝업스토어 주문 상세정보를 불러온다
 
 === Request
 include::{snippets}/order-controller-test/팝업스토어_주문_상세정보를_불러온다/http-request.adoc[]
 === Response
-operation::order-controller-test/팝업스토어_주문_상세정보를_불러온다[snippets='response-fields']
+include::{snippets}/order-controller-test/팝업스토어_주문_상세정보를_불러온다/response-fields.adoc[]
 
 
 == 백오피스 팝업스토어 주문목록을 불러온다
@@ -57,12 +62,12 @@ operation::order-controller-test/팝업스토어_주문_상세정보를_불러�
 === Request
 include::{snippets}/order-controller-test/백오피스_팝업스토어_주문목록을_불러온다/http-request.adoc[]
 === Response
-operation::order-controller-test/백오피스_팝업스토어_주문목록을_불러온다[snippets='response-fields']
+include::{snippets}/order-controller-test/백오피스_팝업스토어_주문목록을_불러온다/response-fields.adoc[]
 
 == 백오피스 팝업스토어 픽업QR
 
 === Request
 include::{snippets}/order-controller-test/백오피스_팝업스토어_픽업/http-request.adoc[]
 === Response
-operation::order-controller-test/백오피스_팝업스토어_픽업[snippets='response-fields']
+include::{snippets}/order-controller-test/백오피스_팝업스토어_픽업/response-fields.adoc[]
 
