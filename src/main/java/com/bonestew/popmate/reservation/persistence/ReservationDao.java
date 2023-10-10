@@ -46,6 +46,8 @@ public interface ReservationDao {
 
     void updateCurrentGuestCount(Long reservationId, int currentGuestCount);
 
+    void updateGuestLimit(Long reservationId, int guestLimit);
+
     void updateStatus(Long reservationId, ReservationStatus status);
 
     void deleteReservationFromTomorrow(Long popupStoreId);

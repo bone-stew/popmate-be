@@ -80,6 +80,12 @@
     WHERE reservation_id = #{reservationId}
   </update>
 
+  <update id="updateGuestLimit">
+    UPDATE tb_reservation
+    SET GUEST_LIMIT = #{guestLimit}
+    WHERE reservation_id = #{reservationId}
+  </update>
+
   <select id="findAllToInProgress" resultType="Reservation">
     SELECT *
     FROM tb_reservation
