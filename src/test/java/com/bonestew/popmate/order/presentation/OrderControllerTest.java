@@ -4,6 +4,7 @@ import static com.bonestew.popmate.helper.RestDocsHelper.customDocument;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -39,6 +40,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -98,8 +100,6 @@ public class OrderControllerTest {
         result
             .andExpect(status().isOk())
             .andDo(customDocument(
-                pathParameters(
-                ),
                 responseFields(
                     fieldWithPath("code").description("응답 코드"),
                     fieldWithPath("message").description("응답 메시지"),
