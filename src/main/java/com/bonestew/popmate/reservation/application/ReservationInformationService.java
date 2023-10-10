@@ -56,7 +56,7 @@ public class ReservationInformationService {
         if (guestLimitUpdateRequest.guestLimit() <= 0) {
             throw new IllegalArgumentException("guestLimit must be greater than 0");
         }
-        reservationDao.updateCurrentGuestCount(reservationId, guestLimitUpdateRequest.guestLimit());
+        reservationDao.updateGuestLimit(reservationId, guestLimitUpdateRequest.guestLimit());
     }
 
     public void cancelReservation(Long reservationId) {
